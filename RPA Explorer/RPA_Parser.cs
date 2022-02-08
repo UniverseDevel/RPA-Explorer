@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Ionic.Zlib;
 using Razorvine.Pickle;
@@ -18,7 +19,7 @@ namespace RPA_Explorer
 
         private readonly string _filePath;
         private readonly string _firstLine;
-        public readonly FileInfo _fileInfo;
+        private readonly FileInfo _fileInfo;
         private readonly double _version;
         private readonly string[] _metadata;
         private readonly long _offset;
@@ -140,14 +141,43 @@ namespace RPA_Explorer
             SortedDictionary<string,ArchiveIndex> indexes = new SortedDictionary<string,ArchiveIndex>();
             object unpickledIndexes = new object[]{};
             
-            using (BinaryReader reader = new BinaryReader(File.Open(_filePath, FileMode.Open), Encoding.UTF8))
+            using (BinaryReader reader = new BinaryReader(File.OpenRead(_filePath), Encoding.UTF8))
             {
                 if (_version == 2 || _version == 3 || _version == 3.2)
                 {
                     reader.BaseStream.Seek(_offset, SeekOrigin.Begin);
                 }
 
-                byte[] fileCompressed = reader.ReadBytes((int) reader.BaseStream.Length);
+                long blockOffset = _offset;
+                long blockSize = 2046;
+                long payloadSize = reader.BaseStream.Length;
+                byte[] fileCompressed = new byte[0];
+
+                while (blockSize > 0)
+                {
+                    long remaining = payloadSize - blockOffset;
+                    if (blockOffset + blockSize > payloadSize)
+                    {
+                        blockSize = payloadSize - blockOffset;
+
+                        if (blockSize < 0)
+                        {
+                            blockSize = 0;
+                        }
+                    }
+
+                    if (blockSize != 0)
+                    {
+                        byte[] buffer = new byte[blockSize];
+                        buffer = reader.ReadBytes((int) blockSize);
+                        fileCompressed = fileCompressed.Concat(buffer).ToArray();
+
+                        blockOffset += blockSize;
+                        reader.BaseStream.Seek(blockOffset, SeekOrigin.Begin);
+                    }
+                }
+
+
                 byte[] fileUncompressed = ZlibStream.UncompressBuffer(fileCompressed);
                 using (Unpickler unpickler = new Unpickler())
                 {
@@ -209,7 +239,7 @@ namespace RPA_Explorer
             {
                 reader.BaseStream.Seek(_indexes[fileName].offset, SeekOrigin.Begin);
                 byte[] prefixData = Encoding.UTF8.GetBytes(_indexes[fileName].prefix);
-                byte[] fileData = reader.ReadBytes((int) _indexes[fileName].length -  _indexes[fileName].prefix.Length);
+                byte[] fileData = reader.ReadBytes((int) _indexes[fileName].length -  _indexes[fileName].prefix.Length); // Exported file max size ~2.14 GB
                 byte[] finalData = new byte[prefixData.Length + fileData.Length];
                 Buffer.BlockCopy(prefixData, 0, finalData, 0, prefixData.Length);
                 Buffer.BlockCopy(fileData, 0, finalData, prefixData.Length, fileData.Length);

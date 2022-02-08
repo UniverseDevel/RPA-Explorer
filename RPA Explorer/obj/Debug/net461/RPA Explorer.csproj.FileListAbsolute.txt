@@ -1,0 +1,23 @@
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA Explorer.csproj.AssemblyReference.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA Explorer.exe.config
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\RPA Explorer.exe.config
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\RPA Explorer.exe
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\RPA Explorer.pdb
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\DotNetZip.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\NeoSmart.PrettySize.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\Razorvine.Pyrolite.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\Razorvine.Serpent.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\System.Buffers.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\System.Memory.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\System.Numerics.Vectors.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\System.Resources.Extensions.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net461\System.Runtime.CompilerServices.Unsafe.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA Explorer.GeneratedMSBuildEditorConfig.editorconfig
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA Explorer.AssemblyInfoInputs.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA Explorer.AssemblyInfo.cs
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA Explorer.csproj.CoreCompileInputs.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA Explorer.csproj.CopyComplete
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA Explorer.exe
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA Explorer.pdb
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA Explorer.csproj.GenerateResource.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net461\RPA_Explorer.RpaExplorer.resources

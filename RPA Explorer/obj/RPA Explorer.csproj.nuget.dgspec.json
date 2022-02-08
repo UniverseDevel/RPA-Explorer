@@ -23,15 +23,15 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
         ],
         "originalTargetFrameworks": [
-          "net451"
+          "net461"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://www.nuget.org/api/v2/": {}
         },
         "frameworks": {
-          "net451": {
-            "targetAlias": "net451",
+          "net461": {
+            "targetAlias": "net461",
             "projectReferences": {}
           }
         },
@@ -42,8 +42,8 @@
         }
       },
       "frameworks": {
-        "net451": {
-          "targetAlias": "net451",
+        "net461": {
+          "targetAlias": "net461",
           "dependencies": {
             "DotNetZip": {
               "target": "Package",
@@ -56,14 +56,13 @@
             "Razorvine.Pyrolite": {
               "target": "Package",
               "version": "[4.19.0, )"
+            },
+            "System.Resources.Extensions": {
+              "target": "Package",
+              "version": "[6.0.2-mauipre.1.22054.8, )"
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
-        }
-      },
-      "runtimes": {
-        "win7-x86": {
-          "#import": []
         }
       }
     }

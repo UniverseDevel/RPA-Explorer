@@ -1,13 +1,18 @@
 {
   "version": 2,
-  "dgSpecHash": "eD7bEjlmn27yocMFvRq2a0IkKyyu5MI20BJW94pZwcEEAt/3u2UCLZVFy1Of0ToM64yGLvmLvTRFuTjoT7IJsw==",
+  "dgSpecHash": "isL/DgoZ8By5b62HuWJnPwqir2+rLXJjFo+MHVk81Re0njSlSfSHRxe8VbZwyRJNo9Xgzcg88ZJOnsq4TsME/g==",
   "success": true,
   "projectFilePath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\dotnetzip\\1.16.0\\dotnetzip.1.16.0.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\neosmart.prettysize\\2.1.0\\neosmart.prettysize.2.1.0.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.pyrolite\\4.19.0\\razorvine.pyrolite.4.19.0.nupkg.sha512",
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.serpent\\1.18.0\\razorvine.serpent.1.18.0.nupkg.sha512"
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.serpent\\1.18.0\\razorvine.serpent.1.18.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.resources.extensions\\6.0.2-mauipre.1.22054.8\\system.resources.extensions.6.0.2-mauipre.1.22054.8.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.3\\system.runtime.compilerservices.unsafe.4.5.3.nupkg.sha512"
   ],
   "logs": []
 }

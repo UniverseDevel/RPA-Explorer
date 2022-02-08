@@ -2,16 +2,41 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net451</TargetFramework>
+        <TargetFramework>net461</TargetFramework>
         <RootNamespace>RPA_Explorer</RootNamespace>
         <UseWindowsForms>true</UseWindowsForms>
         <LangVersion>default</LangVersion>
+        <Nullable>disable</Nullable>
+        <ApplicationIcon>RPA Explorer.ico</ApplicationIcon>
+        <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+        <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <PlatformTarget>AnyCPU</PlatformTarget>
+      <DefineConstants>TRACE;</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <PlatformTarget>AnyCPU</PlatformTarget>
+      <DefineConstants>TRACE;</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="DotNetZip" Version="1.16.0" />
       <PackageReference Include="NeoSmart.PrettySize" Version="2.1.0" />
       <PackageReference Include="Razorvine.Pyrolite" Version="4.19.0" />
+      <PackageReference Include="System.Resources.Extensions" Version="6.0.2-mauipre.1.22054.8" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="RPA_Explorer.Designer.cs">
+        <DependentUpon>RPA_Explorer.cs</DependentUpon>
+      </Compile>
+      <EmbeddedResource Include="RPA_Explorer.resx">
+        <DependentUpon>RPA_Explorer.cs</DependentUpon>
+        <SubType>Designer</SubType>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
