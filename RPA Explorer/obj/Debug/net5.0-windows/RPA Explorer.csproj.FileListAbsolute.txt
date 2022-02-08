@@ -1,0 +1,16 @@
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net5.0-windows\RPA Explorer.exe
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net5.0-windows\RPA Explorer.deps.json
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net5.0-windows\RPA Explorer.runtimeconfig.json
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net5.0-windows\RPA Explorer.runtimeconfig.dev.json
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net5.0-windows\RPA Explorer.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net5.0-windows\ref\RPA Explorer.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net5.0-windows\RPA Explorer.pdb
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net5.0-windows\RPA Explorer.csproj.AssemblyReference.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net5.0-windows\RPA Explorer.GeneratedMSBuildEditorConfig.editorconfig
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net5.0-windows\RPA Explorer.AssemblyInfoInputs.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net5.0-windows\RPA Explorer.AssemblyInfo.cs
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net5.0-windows\RPA Explorer.csproj.CoreCompileInputs.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net5.0-windows\RPA Explorer.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net5.0-windows\ref\RPA Explorer.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net5.0-windows\RPA Explorer.pdb
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net5.0-windows\RPA Explorer.genruntimeconfig.cache

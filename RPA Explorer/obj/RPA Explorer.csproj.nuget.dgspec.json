@@ -1,0 +1,70 @@
+{
+  "format": 1,
+  "restore": {
+    "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj": {}
+  },
+  "projects": {
+    "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
+        "projectName": "RPA Explorer",
+        "projectPath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
+        "packagesPath": "C:\\Users\\Martin Suchy\\.nuget\\packages\\",
+        "outputPath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Explorer\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Martin Suchy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://www.nuget.org/api/v2/": {}
+        },
+        "frameworks": {
+          "net5.0-windows7.0": {
+            "targetAlias": "net5.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0-windows7.0": {
+          "targetAlias": "net5.0-windows",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WindowsForms": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
