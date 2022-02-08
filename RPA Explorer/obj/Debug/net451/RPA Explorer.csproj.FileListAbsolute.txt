@@ -1,0 +1,17 @@
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net451\RPA Explorer.csproj.AssemblyReference.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net451\RPA Explorer.GeneratedMSBuildEditorConfig.editorconfig
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net451\RPA Explorer.AssemblyInfoInputs.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net451\RPA Explorer.AssemblyInfo.cs
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net451\RPA Explorer.csproj.CoreCompileInputs.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net451\RPA Explorer.exe.config
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net451\RPA Explorer.exe
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net451\RPA Explorer.pdb
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net451\RPA Explorer.exe
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net451\RPA Explorer.pdb
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net451\RPA_Explorer.RPA_Explorer.resources
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net451\RPA Explorer.csproj.GenerateResource.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net451\RPA Explorer.csproj.CopyComplete
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net451\DotNetZip.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net451\Razorvine.Pyrolite.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net451\Razorvine.Serpent.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net451\NeoSmart.PrettySize.dll

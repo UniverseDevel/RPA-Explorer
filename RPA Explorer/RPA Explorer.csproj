@@ -2,9 +2,16 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net5.0-windows</TargetFramework>
+        <TargetFramework>net451</TargetFramework>
         <RootNamespace>RPA_Explorer</RootNamespace>
         <UseWindowsForms>true</UseWindowsForms>
+        <LangVersion>default</LangVersion>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DotNetZip" Version="1.16.0" />
+      <PackageReference Include="NeoSmart.PrettySize" Version="2.1.0" />
+      <PackageReference Include="Razorvine.Pyrolite" Version="4.19.0" />
+    </ItemGroup>
 
 </Project>

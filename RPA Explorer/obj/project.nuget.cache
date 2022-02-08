@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "8Ilpxs78DRjqt721vEoyQ8qgSUtbBtAr9B4y1ftClkyAsPF15EgXND9jrKqFV4cyZpDQbgIzFvx6qmXWF2mJIA==",
+  "dgSpecHash": "eD7bEjlmn27yocMFvRq2a0IkKyyu5MI20BJW94pZwcEEAt/3u2UCLZVFy1Of0ToM64yGLvmLvTRFuTjoT7IJsw==",
   "success": true,
   "projectFilePath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\dotnetzip\\1.16.0\\dotnetzip.1.16.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\neosmart.prettysize\\2.1.0\\neosmart.prettysize.2.1.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.pyrolite\\4.19.0\\razorvine.pyrolite.4.19.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.serpent\\1.18.0\\razorvine.serpent.1.18.0.nupkg.sha512"
+  ],
   "logs": []
 }

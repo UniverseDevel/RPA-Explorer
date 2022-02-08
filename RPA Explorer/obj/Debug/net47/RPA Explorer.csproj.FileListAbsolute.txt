@@ -1,0 +1,10 @@
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net47\RPA Explorer.exe.config
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net47\RPA Explorer.exe
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Debug\net47\RPA Explorer.pdb
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net47\RPA Explorer.csproj.AssemblyReference.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net47\RPA Explorer.GeneratedMSBuildEditorConfig.editorconfig
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net47\RPA Explorer.AssemblyInfoInputs.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net47\RPA Explorer.AssemblyInfo.cs
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net47\RPA Explorer.csproj.CoreCompileInputs.cache
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net47\RPA Explorer.exe
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Debug\net47\RPA Explorer.pdb

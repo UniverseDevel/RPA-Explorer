@@ -1,11 +1,152 @@
 {
   "version": 3,
   "targets": {
-    "net5.0-windows7.0": {}
+    ".NETFramework,Version=v4.5.1": {
+      "DotNetZip/1.16.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/DotNetZip.dll": {}
+        },
+        "runtime": {
+          "lib/net40/DotNetZip.dll": {}
+        }
+      },
+      "NeoSmart.PrettySize/2.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/NeoSmart.PrettySize.dll": {}
+        },
+        "runtime": {
+          "lib/net40/NeoSmart.PrettySize.dll": {}
+        }
+      },
+      "Razorvine.Pyrolite/4.19.0": {
+        "type": "package",
+        "dependencies": {
+          "Razorvine.Serpent": "1.18.0"
+        },
+        "compile": {
+          "lib/net40/Razorvine.Pyrolite.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Razorvine.Pyrolite.dll": {}
+        }
+      },
+      "Razorvine.Serpent/1.18.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/Razorvine.Serpent.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Razorvine.Serpent.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.5.1/win7-x86": {
+      "DotNetZip/1.16.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/DotNetZip.dll": {}
+        },
+        "runtime": {
+          "lib/net40/DotNetZip.dll": {}
+        }
+      },
+      "NeoSmart.PrettySize/2.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/NeoSmart.PrettySize.dll": {}
+        },
+        "runtime": {
+          "lib/net40/NeoSmart.PrettySize.dll": {}
+        }
+      },
+      "Razorvine.Pyrolite/4.19.0": {
+        "type": "package",
+        "dependencies": {
+          "Razorvine.Serpent": "1.18.0"
+        },
+        "compile": {
+          "lib/net40/Razorvine.Pyrolite.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Razorvine.Pyrolite.dll": {}
+        }
+      },
+      "Razorvine.Serpent/1.18.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/Razorvine.Serpent.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Razorvine.Serpent.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "DotNetZip/1.16.0": {
+      "sha512": "CS9sjjXF23FLIbwlLT5k/jXBYxVnLMn01lyAvN/hxFM+UDvSicjTPB9ZMA+Wp/QlvBPbD2pzkAXUp1O50gP/Lw==",
+      "type": "package",
+      "path": "dotnetzip/1.16.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "dotnetzip.1.16.0.nupkg.sha512",
+        "dotnetzip.nuspec",
+        "lib/net40/DotNetZip.dll",
+        "lib/net40/DotNetZip.pdb",
+        "lib/net40/DotNetZip.xml",
+        "lib/netstandard2.0/DotNetZip.dll",
+        "lib/netstandard2.0/DotNetZip.pdb",
+        "lib/netstandard2.0/DotNetZip.xml"
+      ]
+    },
+    "NeoSmart.PrettySize/2.1.0": {
+      "sha512": "1M3ihd7tp8S+MFVPErIKKse+npL2ykWaZKL8WSOudD1icyiusjlSwsWRWs44TyEmJCQ0oJtax/L0itdGxGlz1A==",
+      "type": "package",
+      "path": "neosmart.prettysize/2.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net20/NeoSmart.PrettySize.dll",
+        "lib/net40/NeoSmart.PrettySize.dll",
+        "lib/netstandard1.3/NeoSmart.PrettySize.dll",
+        "neosmart.prettysize.2.1.0.nupkg.sha512",
+        "neosmart.prettysize.nuspec"
+      ]
+    },
+    "Razorvine.Pyrolite/4.19.0": {
+      "sha512": "dMzWr5TnoRYJ3Vf0kR7RRZ04fu7ad2c76YwGyNJXk/+liOhvnC3/OJgM8AN1iKJ6whZJD0Cda1HsdaDZkxIsRA==",
+      "type": "package",
+      "path": "razorvine.pyrolite/4.19.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/Razorvine.Pyrolite.dll",
+        "razorvine.pyrolite.4.19.0.nupkg.sha512",
+        "razorvine.pyrolite.nuspec"
+      ]
+    },
+    "Razorvine.Serpent/1.18.0": {
+      "sha512": "VbjNim6OFqjgwrt3B/ZJjMlJVBoTm3hMy3eOajGIjp6IO5+ODY0Cu34lAEsW3+z0wK+wTfNw6XBwY66g/vmopw==",
+      "type": "package",
+      "path": "razorvine.serpent/1.18.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/Razorvine.Serpent.dll",
+        "razorvine.serpent.1.18.0.nupkg.sha512",
+        "razorvine.serpent.nuspec"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net5.0-windows7.0": []
+    ".NETFramework,Version=v4.5.1": [
+      "DotNetZip >= 1.16.0",
+      "NeoSmart.PrettySize >= 2.1.0",
+      "Razorvine.Pyrolite >= 4.19.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\": {},
@@ -31,15 +172,15 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
       ],
       "originalTargetFrameworks": [
-        "net5.0-windows"
+        "net451"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://www.nuget.org/api/v2/": {}
       },
       "frameworks": {
-        "net5.0-windows7.0": {
-          "targetAlias": "net5.0-windows",
+        "net451": {
+          "targetAlias": "net451",
           "projectReferences": {}
         }
       },
@@ -50,27 +191,28 @@
       }
     },
     "frameworks": {
-      "net5.0-windows7.0": {
-        "targetAlias": "net5.0-windows",
-        "imports": [
-          "net461",
-          "net462",
-          "net47",
-          "net471",
-          "net472",
-          "net48"
-        ],
-        "assetTargetFallback": true,
-        "warn": true,
-        "frameworkReferences": {
-          "Microsoft.NETCore.App": {
-            "privateAssets": "all"
+      "net451": {
+        "targetAlias": "net451",
+        "dependencies": {
+          "DotNetZip": {
+            "target": "Package",
+            "version": "[1.16.0, )"
           },
-          "Microsoft.WindowsDesktop.App.WindowsForms": {
-            "privateAssets": "none"
+          "NeoSmart.PrettySize": {
+            "target": "Package",
+            "version": "[2.1.0, )"
+          },
+          "Razorvine.Pyrolite": {
+            "target": "Package",
+            "version": "[4.19.0, )"
           }
         },
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
+      }
+    },
+    "runtimes": {
+      "win7-x86": {
+        "#import": []
       }
     }
   }
