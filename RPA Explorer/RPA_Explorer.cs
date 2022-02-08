@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using NeoSmart.PrettySize;
@@ -11,6 +13,7 @@ namespace RPA_Explorer
         private RpaParser rpaParser;
         private Thread opration;
         private bool operationEnabled = true;
+        private SortedDictionary<string, RpaParser.ArchiveIndex> fileList = new ();
         
         public RpaExplorer()
         {
@@ -19,8 +22,15 @@ namespace RPA_Explorer
 
         private void exportFiles(List<string> exportFilesList, FolderBrowserDialog folderBrowserDialog)
         {
+            int counter = 0;
+            int jobSize = exportFilesList.Count;
             foreach (string file in exportFilesList)
             {
+                counter++;
+                int pctProcessed = (int) Math.Ceiling((double) counter / jobSize * 100);
+                label1.PerformSafely(() => label1.Text = counter + " / " + jobSize);
+                progressBar1.PerformSafely(() => progressBar1.Value = pctProcessed);
+                
                 statusBar1.PerformSafely(() => statusBar1.Text = "Exporting file: " + file);
                         
                 rpaParser.Extract(file, folderBrowserDialog.SelectedPath);
@@ -35,7 +45,8 @@ namespace RPA_Explorer
             button2.PerformSafely(() => button2.Enabled = true);
             button3.PerformSafely(() => button3.Enabled = true);
             button4.PerformSafely(() => button4.Enabled = true);
-                        
+            progressBar1.PerformSafely(() => progressBar1.Value = 0);
+            label1.PerformSafely(() => label1.Text = "");
             statusBar1.PerformSafely(() => statusBar1.Text = "Ready");
             
             operationEnabled = true;
@@ -46,7 +57,7 @@ namespace RPA_Explorer
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Title = "Select RenPy Archive";
-                openFileDialog.Filter = "RPA files (*.rpa)|*.rpa|RPI files (*.rpi)|*.rpi)";
+                openFileDialog.Filter = "RPA/RPI files (*.rpa,*.rpi)|*.rpa;*.rpi)";
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -56,12 +67,13 @@ namespace RPA_Explorer
                         
                         rpaParser = new RpaParser(openFileDialog.FileName);
 
-                        SortedDictionary<string, RpaParser.ArchiveIndex> fileList = rpaParser.GetFileList();
+                        fileList = rpaParser.GetFileList();
 
                         listView1.Items.Clear();
                         foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in fileList)
                         {
                             ListViewItem item = new ListViewItem(kvp.Key);
+                            item.Name = kvp.Key;
                             item.SubItems.Add(PrettySize.Format(kvp.Value.length));
                             listView1.Items.Add(item);
                         }
@@ -73,6 +85,7 @@ namespace RPA_Explorer
                         button2.Enabled = true;
                         button3.Enabled = true;
                         button4.Enabled = true;
+                        textBox2.Enabled = true;
 
                         statusBar1.Text = "Ready";
                     }
@@ -100,6 +113,20 @@ namespace RPA_Explorer
         {
             using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
             {
+                List<string> exportFilesList = new List<string>();
+                foreach (ListViewItem item in listView1.Items)
+                {
+                    if (item.Checked)
+                    {
+                        exportFilesList.Add(item.Text);
+                    }
+                }
+                
+                if (exportFilesList.Count == 0)
+                {
+                    return;
+                }
+                
                 folderBrowserDialog.SelectedPath = rpaParser.GetArchiveInfo().DirectoryName;
                 if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -108,20 +135,8 @@ namespace RPA_Explorer
                     button3.Enabled = false;
                     button4.Enabled = false;
                     button5.Enabled = true;
-
-                    List<string> exportFilesList = new List<string>();
-                    foreach (ListViewItem item in listView1.Items)
-                    {
-                        if (item.Checked)
-                        {
-                            exportFilesList.Add(item.Text);
-                        }
-                    }
-
-                    if (exportFilesList.Count == 0)
-                    {
-                        return;
-                    }
+                    progressBar1.Value = 0;
+                    label1.PerformSafely(() => label1.Text = "");
                     
                     opration = new Thread(() => exportFiles(exportFilesList, folderBrowserDialog));
                     opration.Start();
@@ -132,6 +147,52 @@ namespace RPA_Explorer
         private void button5_Click(object sender, EventArgs e)
         {
             operationEnabled = false;
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            if (fileList.Count == 0)
+            {
+                return;
+            }
+
+            statusBar1.Text = "Filtering...";
+            
+            string filter = textBox2.Text;
+            if (filter.Length < 2)
+            {
+                filter = String.Empty;
+            }
+            
+            Regex rgx = new Regex("");
+            
+            try
+            {
+                rgx = new Regex(textBox2.Text);
+            }
+            catch {
+                filter = String.Empty;
+            }
+
+            foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in fileList)
+            {
+                if (rgx.IsMatch(kvp.Key) || filter == String.Empty)
+                {
+                    if (!listView1.Items.ContainsKey(kvp.Key))
+                    {
+                        ListViewItem item = new ListViewItem(kvp.Key);
+                        item.Name = kvp.Key;
+                        item.SubItems.Add(PrettySize.Format(kvp.Value.length));
+                        listView1.Items.Add(item);
+                    }
+                }
+                else
+                {
+                    listView1.Items.RemoveByKey(kvp.Key);
+                }
+            }
+
+            statusBar1.Text = "Ready";
         }
     }
     
