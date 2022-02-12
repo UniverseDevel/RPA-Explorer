@@ -146,7 +146,7 @@ namespace RPA_Explorer
 
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage0;
-                        textBox2.Text = "Select file from list on the side to preview contents. Check and export to save it locally";
+                        label2.Text = "Select file from list on the side to preview contents. Check and export to save it locally";
 
                         button2.Enabled = true;
 
@@ -222,10 +222,11 @@ namespace RPA_Explorer
 
         private void treeView1_AfterSelect(object sender, EventArgs e)
         {
+            bool unsupportedFile = true;
             pictureBox1.Image = null;
             foreach (TreeNode node in treeView1.Nodes.All())
             {
-                if (node.IsSelected)
+                if (node.IsSelected && fileList.ContainsKey(NormalizeTreePath(node.FullPath)))
                 {
                     KeyValuePair<string, object> data = rpaParser.GetPreview(NormalizeTreePath(node.FullPath));
                     if (data.Key == RpaParser.PreviewTypes.Image)
@@ -234,24 +235,27 @@ namespace RPA_Explorer
                         textBox2.Text = String.Empty;
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage1;
+                        unsupportedFile = false;
                     } else if (data.Key == RpaParser.PreviewTypes.Text)
                     {
                         pictureBox1.Image = null;
                         textBox2.Text = (string) data.Value;
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage2;
-                    }
-                    else
-                    {
-                        pictureBox1.Image = null;
-                        textBox2.Text = String.Empty;
-                        switchTabs = true;
-                        tabControl1.SelectedTab = tabPage0;
-                        textBox2.Text = "Preview is not supported for this file.";
+                        unsupportedFile = false;
                     }
 
                     break;
                 }
+            }
+
+            if (unsupportedFile)
+            {
+                pictureBox1.Image = null;
+                textBox2.Text = String.Empty;
+                switchTabs = true;
+                tabControl1.SelectedTab = tabPage0;
+                label2.Text = "Preview is not supported for this file.";
             }
         }
 
