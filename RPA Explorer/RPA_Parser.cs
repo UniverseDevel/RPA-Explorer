@@ -56,6 +56,7 @@ namespace RPA_Explorer
         public string[] audioExtList = {
             ".mp3",
             ".wma",
+            ".ogg",
             ".cpc"
         };
 

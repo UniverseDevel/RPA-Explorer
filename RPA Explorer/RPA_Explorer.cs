@@ -220,10 +220,15 @@ namespace RPA_Explorer
 
         private void treeView1_AfterSelect(object sender, EventArgs e)
         {
+            TreeNode selectedNode = new TreeNode();
             bool unsupportedFile = true;
             pictureBox1.Image = null;
             foreach (TreeNode node in treeView1.Nodes.All())
             {
+                if (node.IsSelected)
+                {
+                    selectedNode = node;
+                }
                 if (node.IsSelected && fileList.ContainsKey(NormalizeTreePath(node.FullPath)))
                 {
                     KeyValuePair<string, object> data = rpaParser.GetPreview(NormalizeTreePath(node.FullPath));
@@ -255,6 +260,10 @@ namespace RPA_Explorer
                 tabControl1.SelectedTab = tabPage0;
                 label2.Text = "Preview is not supported for this file.";
             }
+            
+            treeView1.SelectedNode = selectedNode;
+            treeView1.SelectedNode.EnsureVisible();
+            treeView1.Focus();
         }
 
         private void CheckAllChildNodes(TreeNode node, bool isChecked)
