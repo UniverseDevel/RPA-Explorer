@@ -5,7 +5,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using Ionic.Zlib;
 using Razorvine.Pickle;
 
@@ -39,6 +38,8 @@ namespace RPA_Explorer
             public const string None = "none";
             public const string Image = "image";
             public const string Text = "text";
+            public const string Video = "video";
+            public const string Audio = "audio";
         }
 
         public string[] imageExtList = {
@@ -47,10 +48,27 @@ namespace RPA_Explorer
             ".bmp",
             ".tiff",
             ".png",
+            //".webp", // Not yet supported
+            ".exif",
             ".gif"
         };
 
+        public string[] audioExtList = {
+            ".mp3",
+            ".wma",
+            ".cpc"
+        };
+
+        public string[] videoExtList = {
+            ".mp4",
+            ".avi",
+            ".mkv",
+            ".wmv",
+            ".webm"
+        };
+
         public string[] textExtList = {
+            ".rpy~",
             ".rpy",
             ".txt",
             ".log",
@@ -220,12 +238,12 @@ namespace RPA_Explorer
                 ArchiveIndex index = new ArchiveIndex();
                 if ((long) value.Length == 2)
                 {
-                    index.offset = (long) value.GetValue(0);
+                    index.offset = Convert.ToInt64(value.GetValue(0));
                     index.length = Convert.ToInt64(value.GetValue(1));
                 }
                 else
                 {
-                    index.offset = (long) value.GetValue(0);
+                    index.offset = Convert.ToInt64(value.GetValue(0));
                     index.length = Convert.ToInt64(value.GetValue(1));
                     index.prefix = (string) value.GetValue(2);
                 }
@@ -272,7 +290,16 @@ namespace RPA_Explorer
             else if (textExtList.Contains(fileInfo.Extension.ToLower()))
             {
                 data = new KeyValuePair<string, object>(PreviewTypes.Text, Encoding.UTF8.GetString(bytes, 0, bytes.Length));
-            } else if (rpycExtList.Contains(fileInfo.Extension.ToLower()))
+            }
+            else if (audioExtList.Contains(fileInfo.Extension.ToLower()))
+            {
+                data = new KeyValuePair<string, object>(PreviewTypes.Audio, bytes);
+            }
+            else if (videoExtList.Contains(fileInfo.Extension.ToLower()))
+            {
+                data = new KeyValuePair<string, object>(PreviewTypes.Video, bytes);
+            }
+            else if (rpycExtList.Contains(fileInfo.Extension.ToLower()))
             {
                 data = new KeyValuePair<string, object>(PreviewTypes.Text, DeobfuscateRPC(bytes));
             }

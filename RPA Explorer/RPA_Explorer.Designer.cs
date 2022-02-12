@@ -164,6 +164,7 @@
             this.label2.Size = new System.Drawing.Size(542, 470);
             this.label2.TabIndex = 0;
             this.label2.Text = "Start by loading archive file or drag and drop archive file to this window.";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tabPage1
             // 
