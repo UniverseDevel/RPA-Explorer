@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using Ionic.Zlib;
 using Razorvine.Pickle;
 
@@ -11,11 +13,11 @@ namespace RPA_Explorer
 {
     public class RpaParser
     {
-        // Inspiration: https://github.com/Shizmob/rpatool/blob/master/rpatool
-        
         private const string RPA2_MAGIC = "RPA-2.0 ";
         private const string RPA3_MAGIC = "RPA-3.0 ";
         private const string RPA3_2_MAGIC = "RPA-3.2 ";
+        
+        private const string RPC2_MAGIC = "RENPY RPC2";
 
         private readonly string _filePath;
         private readonly string _firstLine;
@@ -32,8 +34,38 @@ namespace RPA_Explorer
             public string prefix = String.Empty;
         }
 
+        public class PreviewTypes
+        {
+            public const string None = "none";
+            public const string Image = "image";
+            public const string Text = "text";
+        }
+
+        public string[] imageExtList = {
+            ".jpeg",
+            ".jpg",
+            ".bmp",
+            ".tiff",
+            ".png",
+            ".gif"
+        };
+
+        public string[] textExtList = {
+            ".rpy",
+            ".txt",
+            ".log",
+            ".nfo"
+        };
+
+        public string[] rpycExtList = {
+            ".rpyc",
+            ".rpymc"
+        };
+
         internal RpaParser(string filePath)
         {
+            // Inspired by: https://github.com/Shizmob/rpatool/blob/master/rpatool
+            
             _filePath = filePath;
             _fileInfo = GetFileInfo();
             _firstLine = GetFirstLine();
@@ -69,11 +101,6 @@ namespace RPA_Explorer
             using (var streamReader = new StreamReader(_filePath, Encoding.UTF8))
             {
                 var firstLine = streamReader.ReadLine();
-
-                if (firstLine == null)
-                {
-                    throw new Exception("File is either not valid RenPy Archive or version is not supported.");
-                }
 
                 return firstLine;
             }
@@ -228,7 +255,62 @@ namespace RPA_Explorer
             return _fileInfo;
         }
 
-        public string Extract(string fileName, string exportPath)
+        public KeyValuePair<string, object> GetPreview(string fileName)
+        {
+            KeyValuePair<string, object> data = new KeyValuePair<string, object>(PreviewTypes.None, null);
+
+            FileInfo fileInfo = new FileInfo(fileName);
+
+            byte[] bytes = ExtractData(fileName);
+            if (imageExtList.Contains(fileInfo.Extension.ToLower()))
+            {
+                using (var ms = new MemoryStream(bytes))
+                {
+                    data = new KeyValuePair<string, object>(PreviewTypes.Image, new Bitmap(ms));
+                }
+            }
+            else if (textExtList.Contains(fileInfo.Extension.ToLower()))
+            {
+                data = new KeyValuePair<string, object>(PreviewTypes.Text, Encoding.UTF8.GetString(bytes, 0, bytes.Length));
+            } else if (rpycExtList.Contains(fileInfo.Extension.ToLower()))
+            {
+                data = new KeyValuePair<string, object>(PreviewTypes.Text, DeobfuscateRPC(bytes));
+            }
+
+            return data;
+        }
+
+        private string DeobfuscateRPC(byte[] fileData)
+        {
+            // Inspired by: https://github.com/CensoredUsername/unrpyc
+            
+            string fileText = String.Empty;
+            byte[] magicBytes = new byte[10] ;
+            Buffer.BlockCopy(fileData,0, magicBytes,0,10);
+            
+            if (Encoding.UTF8.GetString(magicBytes, 0, magicBytes.Length).StartsWith(RPC2_MAGIC))
+            {
+                // TODO: rpyc parser?
+                fileText = Encoding.UTF8.GetString(fileData, 0, fileData.Length);
+                fileText = "Not yet supported."; // TODO: remove when implemented
+            }
+            else
+            {
+                // Legacy files might not have header so we should assume that its a zlib package unless zlib fails to do anything with it
+                try
+                {
+                    // TODO: handle legacy files
+                }
+                catch
+                {
+                    throw new Exception("File is either not valid RenPy Compilation or version is not supported.");
+                }
+            }
+            
+            return fileText;
+        }
+
+        public byte[] ExtractData(string fileName)
         {
             if (!_indexes.ContainsKey(fileName))
             {
@@ -243,25 +325,32 @@ namespace RPA_Explorer
                 byte[] finalData = new byte[prefixData.Length + fileData.Length];
                 Buffer.BlockCopy(prefixData, 0, finalData, 0, prefixData.Length);
                 Buffer.BlockCopy(fileData, 0, finalData, prefixData.Length, fileData.Length);
-                string finalPath = String.Empty;
-                if (exportPath.Trim() == null || exportPath.Trim() == String.Empty)
-                {
-                    finalPath = _fileInfo.DirectoryName + @"\" + fileName;
-                }
-                else
-                {
-                    if (!Directory.Exists(exportPath.Trim()))
-                    {
-                        throw new Exception("Selected export path does not exist.");
-                    }
-                    finalPath = exportPath.Trim() + @"\" + fileName;
-                }
 
-                Directory.CreateDirectory(Path.GetDirectoryName(finalPath));
-                File.WriteAllBytes(finalPath, finalData);
-
-                return _fileInfo.DirectoryName + @"\" + fileName;
+                return finalData;
             }
+        }
+
+        public string Extract(string fileName, string exportPath)
+        {
+            byte[] finalData = ExtractData(fileName);
+            string finalPath = String.Empty;
+            if (exportPath.Trim() == null || exportPath.Trim() == String.Empty)
+            {
+                finalPath = _fileInfo.DirectoryName + @"\" + fileName;
+            }
+            else
+            {
+                if (!Directory.Exists(exportPath.Trim()))
+                {
+                    throw new Exception("Selected export path does not exist.");
+                }
+                finalPath = exportPath.Trim() + @"\" + fileName;
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(finalPath));
+            File.WriteAllBytes(finalPath, finalData);
+
+            return _fileInfo.DirectoryName + @"\" + fileName;
         }
     }
 }

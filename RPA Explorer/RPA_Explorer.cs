@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
@@ -14,10 +16,18 @@ namespace RPA_Explorer
         private Thread opration;
         private bool operationEnabled = true;
         private SortedDictionary<string, RpaParser.ArchiveIndex> fileList = new ();
+        private string[] args;
+        private bool switchTabs = false;
         
         public RpaExplorer()
         {
             InitializeComponent();
+            
+            args = Environment.GetCommandLineArgs();
+            if (args.Length >= 2)
+            {
+                loadArchive(args[1]);
+            }
         }
 
         private void exportFiles(List<string> exportFilesList, FolderBrowserDialog folderBrowserDialog)
@@ -43,8 +53,7 @@ namespace RPA_Explorer
                     
             button1.PerformSafely(() => button1.Enabled = true);
             button2.PerformSafely(() => button2.Enabled = true);
-            button3.PerformSafely(() => button3.Enabled = true);
-            button4.PerformSafely(() => button4.Enabled = true);
+            button3.PerformSafely(() => button3.Enabled = false);
             progressBar1.PerformSafely(() => progressBar1.Value = 0);
             label1.PerformSafely(() => label1.Text = "");
             statusBar1.PerformSafely(() => statusBar1.Text = "Ready");
@@ -52,14 +61,28 @@ namespace RPA_Explorer
             operationEnabled = true;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void loadArchive(string openFile)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Title = "Select RenPy Archive";
                 openFileDialog.Filter = "RPA/RPI files (*.rpa,*.rpi)|*.rpa;*.rpi)";
 
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                DialogResult dialogResult = DialogResult.None;
+                if (openFile == String.Empty)
+                {
+                    dialogResult = openFileDialog.ShowDialog();
+                }
+                else
+                {
+                    if (openFile.EndsWith(".rpa") || openFile.EndsWith(".rpi"))
+                    {
+                        dialogResult = DialogResult.OK;
+                        openFileDialog.FileName = openFile;
+                    }
+                }
+
+                if (dialogResult == DialogResult.OK)
                 {
                     if (openFileDialog.CheckFileExists)
                     {
@@ -69,23 +92,63 @@ namespace RPA_Explorer
 
                         fileList = rpaParser.GetFileList();
 
-                        listView1.Items.Clear();
+                        treeView1.Nodes.Clear();
+                        TreeNode root = new TreeNode();
+                        TreeNode node = root;
+                        root.Name = "";
+                        root.Text = "/";
+                        root.BackColor = Color.SandyBrown;
+                        treeView1.Nodes.Add(root);
+                        string pathBuild = String.Empty;
                         foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in fileList)
                         {
-                            ListViewItem item = new ListViewItem(kvp.Key);
-                            item.Name = kvp.Key;
-                            item.SubItems.Add(PrettySize.Format(kvp.Value.length));
-                            listView1.Items.Add(item);
+                            node = root;
+                            pathBuild = String.Empty;
+                            foreach (string pathBits in kvp.Key.Split('/'))
+                            {
+                                if (pathBuild == String.Empty)
+                                {
+                                    pathBuild = pathBits;
+                                }
+                                else
+                                {
+                                    pathBuild += "/" + pathBits;
+                                }
+
+                                if (node.Nodes.ContainsKey(pathBits))
+                                {
+                                    node = node.Nodes[pathBits];
+                                }
+                                else
+                                {
+                                    string sizeInfo = String.Empty;
+                                    if (fileList.ContainsKey(pathBuild))
+                                    {
+                                        sizeInfo = " (" + PrettySize.Format(fileList[pathBuild].length) + ")";
+                                    }
+                                    else
+                                    {
+                                        // Loop trough fileList and find all .StartsWith(pathBuild) keys and sum their .length
+                                    }
+                                    node = node.Nodes.Add(pathBits, pathBits + sizeInfo);
+                                    if (!fileList.ContainsKey(pathBuild))
+                                    {
+                                        node.BackColor = Color.SandyBrown;
+                                    }
+                                }
+                            }
                         }
+                        root.Expand();
 
                         textBox1.Text = "File location: " + rpaParser.GetArchiveInfo().FullName + Environment.NewLine +
                                         "File size: " + PrettySize.Format(rpaParser.GetArchiveInfo().Length) + Environment.NewLine +
-                                        "Object count: " + rpaParser.GetFileList().Count + Environment.NewLine;
+                                        "Object count: " + fileList.Count + Environment.NewLine;
+
+                        switchTabs = true;
+                        tabControl1.SelectedTab = tabPage0;
+                        textBox2.Text = "Select file from list on the side to preview contents. Check and export to save it locally";
 
                         button2.Enabled = true;
-                        button3.Enabled = true;
-                        button4.Enabled = true;
-                        textBox2.Enabled = true;
 
                         statusBar1.Text = "Ready";
                     }
@@ -93,32 +156,26 @@ namespace RPA_Explorer
             }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            loadArchive("");
+        }
+
+        private string NormalizeTreePath(string path)
+        {
+            return Regex.Replace(Regex.Replace(path, "^//", ""), " [(].+[)]$", "");
+        }
+
         private void button2_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listView1.Items)
-            {
-                item.Checked = true;
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listView1.Items)
-            {
-                item.Checked = false;
-            }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
         {
             using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
             {
                 List<string> exportFilesList = new List<string>();
-                foreach (ListViewItem item in listView1.Items)
+                foreach (TreeNode node in treeView1.Nodes.All())
                 {
-                    if (item.Checked)
+                    if (node.Checked && fileList.ContainsKey(NormalizeTreePath(node.FullPath)))
                     {
-                        exportFilesList.Add(item.Text);
+                        exportFilesList.Add(NormalizeTreePath(node.FullPath));
                     }
                 }
                 
@@ -132,9 +189,7 @@ namespace RPA_Explorer
                 {
                     button1.Enabled = false;
                     button2.Enabled = false;
-                    button3.Enabled = false;
-                    button4.Enabled = false;
-                    button5.Enabled = true;
+                    button3.Enabled = true;
                     progressBar1.Value = 0;
                     label1.PerformSafely(() => label1.Text = "");
                     
@@ -144,55 +199,120 @@ namespace RPA_Explorer
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
             operationEnabled = false;
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void RpaExplorer_DragEnter(object sender, DragEventArgs e)
         {
-            if (fileList.Count == 0)
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                return;
+                e.Effect = DragDropEffects.Copy;
             }
+        }
 
-            statusBar1.Text = "Filtering...";
-            
-            string filter = textBox2.Text;
-            if (filter.Length < 2)
+        private void RpaExplorer_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                filter = String.Empty;
+                loadArchive(((string[]) e.Data.GetData(DataFormats.FileDrop))[0]);
             }
-            
-            Regex rgx = new Regex("");
-            
-            try
-            {
-                rgx = new Regex(textBox2.Text);
-            }
-            catch {
-                filter = String.Empty;
-            }
+        }
 
-            foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in fileList)
+        private void treeView1_AfterSelect(object sender, EventArgs e)
+        {
+            pictureBox1.Image = null;
+            foreach (TreeNode node in treeView1.Nodes.All())
             {
-                if (rgx.IsMatch(kvp.Key) || filter == String.Empty)
+                if (node.IsSelected)
                 {
-                    if (!listView1.Items.ContainsKey(kvp.Key))
+                    KeyValuePair<string, object> data = rpaParser.GetPreview(NormalizeTreePath(node.FullPath));
+                    if (data.Key == RpaParser.PreviewTypes.Image)
                     {
-                        ListViewItem item = new ListViewItem(kvp.Key);
-                        item.Name = kvp.Key;
-                        item.SubItems.Add(PrettySize.Format(kvp.Value.length));
-                        listView1.Items.Add(item);
+                        pictureBox1.Image = (Bitmap) data.Value;
+                        textBox2.Text = String.Empty;
+                        switchTabs = true;
+                        tabControl1.SelectedTab = tabPage1;
+                    } else if (data.Key == RpaParser.PreviewTypes.Text)
+                    {
+                        pictureBox1.Image = null;
+                        textBox2.Text = (string) data.Value;
+                        switchTabs = true;
+                        tabControl1.SelectedTab = tabPage2;
+                    }
+                    else
+                    {
+                        pictureBox1.Image = null;
+                        textBox2.Text = String.Empty;
+                        switchTabs = true;
+                        tabControl1.SelectedTab = tabPage0;
+                        textBox2.Text = "Preview is not supported for this file.";
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        private void CheckAllChildNodes(TreeNode node, bool isChecked)
+        {
+            if (node.Nodes.Count == 0)
+            {
+                node.Checked = isChecked;
+            }
+            else
+            {
+                foreach (TreeNode childNode in node.Nodes)
+                {
+                    CheckAllChildNodes(childNode, isChecked);
+                }
+                node.Checked = isChecked;
+            }
+        }
+
+        private void ParentCheckControl(TreeNode parentNode)
+        {
+            foreach (TreeNode node in parentNode.Nodes.All())
+            {
+                if (!node.Checked)
+                {
+                    parentNode.Checked = false;
+                    break;
+                }
+                parentNode.Checked = true;
+            }
+            if (parentNode.Parent != null)
+            {
+                ParentCheckControl(parentNode.Parent);
+            }
+        }
+
+        private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            if (e.Action != TreeViewAction.Unknown)
+            {
+                if (e.Node.Nodes.Count == 0)
+                {
+                    if (e.Node.Parent != null)
+                    {
+                        ParentCheckControl(e.Node.Parent);
                     }
                 }
-                else
+                else if (e.Node.Nodes.Count > 0)
                 {
-                    listView1.Items.RemoveByKey(kvp.Key);
+                    CheckAllChildNodes(e.Node, e.Node.Checked);
                 }
             }
+        }
 
-            statusBar1.Text = "Ready";
+        private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (!switchTabs)
+            {
+                e.Cancel = true;
+            }
+            switchTabs = false;
         }
     }
     
@@ -231,6 +351,20 @@ namespace RPA_Explorer
             else
             {
                 action(p1,p2);
+            }
+        }
+    }
+    
+        
+    public static class Extensions
+    {
+        public static IEnumerable<TreeNode> All( this TreeNodeCollection nodes )
+        {
+            foreach( TreeNode n in nodes )
+            {
+                yield return n;
+                foreach( TreeNode child in n.Nodes.All( ) )
+                    yield return child;
             }
         }
     }

@@ -1,3 +1,7 @@
 /.idea
 /RPA Explorer/bin/Debug/net451/scripts.rpa
 /RPA Explorer/bin/Debug/net461/scripts.rpa
+/RPA Explorer/bin/Release/net461/scripts.rpa
+/RPA Explorer/bin/Release/net461/an.rpyc
+/RPA Explorer/bin/Debug/net461/an.rpyc
+/RPA Explorer/bin/Debug/net461/an.rpy
