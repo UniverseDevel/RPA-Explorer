@@ -32,7 +32,11 @@
         "frameworks": {
           "net461": {
             "targetAlias": "net461",
-            "projectReferences": {}
+            "projectReferences": {
+              "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj": {
+                "projectPath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -45,10 +49,6 @@
         "net461": {
           "targetAlias": "net461",
           "dependencies": {
-            "DotNetZip": {
-              "target": "Package",
-              "version": "[1.16.0, )"
-            },
             "LibVLCSharp": {
               "target": "Package",
               "version": "[3.6.5, )"
@@ -67,10 +67,6 @@
               "target": "Package",
               "version": "[2.1.0, )"
             },
-            "Razorvine.Pyrolite": {
-              "target": "Package",
-              "version": "[4.19.0, )"
-            },
             "System.Resources.Extensions": {
               "target": "Package",
               "version": "[6.0.2-mauipre.1.22054.8, )"
@@ -82,10 +78,59 @@
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
         }
+      }
+    },
+    "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj",
+        "projectName": "RPAParser",
+        "projectPath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj",
+        "packagesPath": "C:\\Users\\Martin Suchy\\.nuget\\packages\\",
+        "outputPath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Martin Suchy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        ],
+        "originalTargetFrameworks": [
+          "net461"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://www.nuget.org/api/v2/": {}
+        },
+        "frameworks": {
+          "net461": {
+            "targetAlias": "net461",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
       },
-      "runtimes": {
-        "win7-x86": {
-          "#import": []
+      "frameworks": {
+        "net461": {
+          "targetAlias": "net461",
+          "dependencies": {
+            "Ionic.Zlib": {
+              "target": "Package",
+              "version": "[1.9.1.5, )"
+            },
+            "Razorvine.Pyrolite": {
+              "target": "Package",
+              "version": "[4.19.0, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
         }
       }
     }

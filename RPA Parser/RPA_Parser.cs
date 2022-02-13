@@ -9,7 +9,7 @@ using Ionic.Zlib;
 using Razorvine.Pickle;
 using WebPWrapper;
 
-namespace RPA_Explorer
+namespace RPA_Parser
 {
     public class RpaParser
     {
@@ -83,7 +83,7 @@ namespace RPA_Explorer
             ".rpymc"
         };
 
-        internal RpaParser(string filePath)
+        public RpaParser(string filePath)
         {
             // Inspired by: https://github.com/Shizmob/rpatool/blob/master/rpatool
             

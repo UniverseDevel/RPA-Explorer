@@ -2,13 +2,13 @@
   "version": 3,
   "targets": {
     ".NETFramework,Version=v4.6.1": {
-      "DotNetZip/1.16.0": {
+      "Ionic.Zlib/1.9.1.5": {
         "type": "package",
         "compile": {
-          "lib/net40/DotNetZip.dll": {}
+          "lib/Ionic.Zlib.dll": {}
         },
         "runtime": {
-          "lib/net40/DotNetZip.dll": {}
+          "lib/Ionic.Zlib.dll": {}
         }
       },
       "LibVLCSharp/3.6.5": {
@@ -200,226 +200,34 @@
         "build": {
           "build/VideoLAN.LibVLC.Windows.targets": {}
         }
-      }
-    },
-    ".NETFramework,Version=v4.6.1/win7-x86": {
-      "DotNetZip/1.16.0": {
-        "type": "package",
-        "compile": {
-          "lib/net40/DotNetZip.dll": {}
-        },
-        "runtime": {
-          "lib/net40/DotNetZip.dll": {}
-        }
       },
-      "LibVLCSharp/3.6.5": {
-        "type": "package",
+      "RPAParser/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.6.1",
         "dependencies": {
-          "Microsoft.Bcl.Async": "1.0.168",
-          "System.ValueTuple": "4.5.0"
+          "Ionic.Zlib": "1.9.1.5",
+          "Razorvine.Pyrolite": "4.19.0"
         },
         "compile": {
-          "lib/net40/LibVLCSharp.dll": {}
+          "bin/placeholder/RPAParser.dll": {}
         },
         "runtime": {
-          "lib/net40/LibVLCSharp.dll": {}
-        }
-      },
-      "LibVLCSharp.WinForms/3.6.5": {
-        "type": "package",
-        "dependencies": {
-          "LibVLCSharp": "3.6.5"
-        },
-        "compile": {
-          "lib/net40/LibVLCSharp.WinForms.dll": {}
-        },
-        "runtime": {
-          "lib/net40/LibVLCSharp.WinForms.dll": {}
-        }
-      },
-      "Microsoft.Bcl/1.1.8": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Bcl.Build": "1.0.14"
-        },
-        "compile": {
-          "lib/net45/_._": {}
-        },
-        "runtime": {
-          "lib/net45/_._": {}
-        }
-      },
-      "Microsoft.Bcl.Async/1.0.168": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Bcl": "1.1.8"
-        },
-        "frameworkAssemblies": [
-          "System.Net"
-        ],
-        "compile": {
-          "lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.dll": {},
-          "lib/net40/Microsoft.Threading.Tasks.Extensions.dll": {},
-          "lib/net40/Microsoft.Threading.Tasks.dll": {}
-        },
-        "runtime": {
-          "lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.dll": {},
-          "lib/net40/Microsoft.Threading.Tasks.Extensions.dll": {},
-          "lib/net40/Microsoft.Threading.Tasks.dll": {}
-        }
-      },
-      "Microsoft.Bcl.Build/1.0.14": {
-        "type": "package"
-      },
-      "Microsoft.NETFramework.ReferenceAssemblies/1.0.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.NETFramework.ReferenceAssemblies.net461": "1.0.0"
-        }
-      },
-      "Microsoft.NETFramework.ReferenceAssemblies.net461/1.0.0": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.NETFramework.ReferenceAssemblies.net461.targets": {}
-        }
-      },
-      "NeoSmart.PrettySize/2.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/net40/NeoSmart.PrettySize.dll": {}
-        },
-        "runtime": {
-          "lib/net40/NeoSmart.PrettySize.dll": {}
-        }
-      },
-      "Razorvine.Pyrolite/4.19.0": {
-        "type": "package",
-        "dependencies": {
-          "Razorvine.Serpent": "1.18.0"
-        },
-        "compile": {
-          "lib/net40/Razorvine.Pyrolite.dll": {}
-        },
-        "runtime": {
-          "lib/net40/Razorvine.Pyrolite.dll": {}
-        }
-      },
-      "Razorvine.Serpent/1.18.0": {
-        "type": "package",
-        "compile": {
-          "lib/net40/Razorvine.Serpent.dll": {}
-        },
-        "runtime": {
-          "lib/net40/Razorvine.Serpent.dll": {}
-        }
-      },
-      "System.Buffers/4.5.1": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net45/System.Buffers.dll": {}
-        },
-        "runtime": {
-          "lib/net461/System.Buffers.dll": {}
-        }
-      },
-      "System.Memory/4.5.4": {
-        "type": "package",
-        "dependencies": {
-          "System.Buffers": "4.5.1",
-          "System.Numerics.Vectors": "4.5.0",
-          "System.Runtime.CompilerServices.Unsafe": "4.5.3"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "lib/net461/System.Memory.dll": {}
-        },
-        "runtime": {
-          "lib/net461/System.Memory.dll": {}
-        }
-      },
-      "System.Numerics.Vectors/4.5.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System.Numerics",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Numerics.Vectors.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Numerics.Vectors.dll": {}
-        }
-      },
-      "System.Resources.Extensions/6.0.2-mauipre.1.22054.8": {
-        "type": "package",
-        "dependencies": {
-          "System.Memory": "4.5.4"
-        },
-        "compile": {
-          "lib/net461/System.Resources.Extensions.dll": {}
-        },
-        "runtime": {
-          "lib/net461/System.Resources.Extensions.dll": {}
-        },
-        "build": {
-          "buildTransitive/net461/System.Resources.Extensions.targets": {}
-        }
-      },
-      "System.Runtime.CompilerServices.Unsafe/4.5.3": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
-        },
-        "runtime": {
-          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
-        }
-      },
-      "System.ValueTuple/4.5.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net461/System.ValueTuple.dll": {}
-        },
-        "runtime": {
-          "lib/net461/System.ValueTuple.dll": {}
-        }
-      },
-      "VideoLAN.LibVLC.Windows/3.0.16": {
-        "type": "package",
-        "build": {
-          "build/VideoLAN.LibVLC.Windows.targets": {}
+          "bin/placeholder/RPAParser.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "DotNetZip/1.16.0": {
-      "sha512": "CS9sjjXF23FLIbwlLT5k/jXBYxVnLMn01lyAvN/hxFM+UDvSicjTPB9ZMA+Wp/QlvBPbD2pzkAXUp1O50gP/Lw==",
+    "Ionic.Zlib/1.9.1.5": {
+      "sha512": "1bjZKoYaH+bsqBS4ikgTTU46m3hYeppuMVuqGF2fHCq3pNuIjE3WoQoFLzdmn4POgYDzTfXddNQXKgWTlH87Sw==",
       "type": "package",
-      "path": "dotnetzip/1.16.0",
+      "path": "ionic.zlib/1.9.1.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "dotnetzip.1.16.0.nupkg.sha512",
-        "dotnetzip.nuspec",
-        "lib/net40/DotNetZip.dll",
-        "lib/net40/DotNetZip.pdb",
-        "lib/net40/DotNetZip.xml",
-        "lib/netstandard2.0/DotNetZip.dll",
-        "lib/netstandard2.0/DotNetZip.pdb",
-        "lib/netstandard2.0/DotNetZip.xml"
+        "ionic.zlib.1.9.1.5.nupkg.sha512",
+        "ionic.zlib.nuspec",
+        "lib/Ionic.Zlib.dll"
       ]
     },
     "LibVLCSharp/3.6.5": {
@@ -2577,16 +2385,20 @@
         "videolan.libvlc.windows.3.0.16.nupkg.sha512",
         "videolan.libvlc.windows.nuspec"
       ]
+    },
+    "RPAParser/1.0.0": {
+      "type": "project",
+      "path": "../RPA Parser/RPAParser.csproj",
+      "msbuildProject": "../RPA Parser/RPAParser.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.6.1": [
-      "DotNetZip >= 1.16.0",
       "LibVLCSharp >= 3.6.5",
       "LibVLCSharp.WinForms >= 3.6.5",
       "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.0",
       "NeoSmart.PrettySize >= 2.1.0",
-      "Razorvine.Pyrolite >= 4.19.0",
+      "RPAParser >= 1.0.0",
       "System.Resources.Extensions >= 6.0.2-mauipre.1.22054.8",
       "VideoLAN.LibVLC.Windows >= 3.0.16"
     ]
@@ -2624,7 +2436,11 @@
       "frameworks": {
         "net461": {
           "targetAlias": "net461",
-          "projectReferences": {}
+          "projectReferences": {
+            "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj": {
+              "projectPath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -2637,10 +2453,6 @@
       "net461": {
         "targetAlias": "net461",
         "dependencies": {
-          "DotNetZip": {
-            "target": "Package",
-            "version": "[1.16.0, )"
-          },
           "LibVLCSharp": {
             "target": "Package",
             "version": "[3.6.5, )"
@@ -2659,10 +2471,6 @@
             "target": "Package",
             "version": "[2.1.0, )"
           },
-          "Razorvine.Pyrolite": {
-            "target": "Package",
-            "version": "[4.19.0, )"
-          },
           "System.Resources.Extensions": {
             "target": "Package",
             "version": "[6.0.2-mauipre.1.22054.8, )"
@@ -2673,11 +2481,6 @@
           }
         },
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
-      }
-    },
-    "runtimes": {
-      "win7-x86": {
-        "#import": []
       }
     }
   }

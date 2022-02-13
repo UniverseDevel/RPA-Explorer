@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "fIYvbLaYCAi3oLIRHgGs0Uhqk7BYKzk4M9KIMsKy7lajRsnJ4EIAu6NHm3uVAvLV7VmmEPBEAt9ZiDDLnyHMQQ==",
+  "dgSpecHash": "Ji2OK5W3zX/9QCmLeTop587d/RwlQXKt6BXdnF2xt5lp+np0AiTtKLi0QjVyoz7sPIg76Y6JADovLmKyL1zfEA==",
   "success": true,
   "projectFilePath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\dotnetzip\\1.16.0\\dotnetzip.1.16.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\ionic.zlib\\1.9.1.5\\ionic.zlib.1.9.1.5.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\libvlcsharp\\3.6.5\\libvlcsharp.3.6.5.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\libvlcsharp.winforms\\3.6.5\\libvlcsharp.winforms.3.6.5.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\microsoft.bcl\\1.1.8\\microsoft.bcl.1.1.8.nupkg.sha512",

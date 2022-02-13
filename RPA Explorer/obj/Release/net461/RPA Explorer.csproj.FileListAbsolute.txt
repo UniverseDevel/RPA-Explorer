@@ -1,10 +1,7 @@
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\RPA Explorer.exe.config
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\RPA Explorer.exe
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\RPA Explorer.pdb
-W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\DotNetZip.dll
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\NeoSmart.PrettySize.dll
-W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\Razorvine.Pyrolite.dll
-W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\Razorvine.Serpent.dll
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\System.Buffers.dll
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\System.Memory.dll
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\System.Numerics.Vectors.dll
@@ -1151,3 +1148,8 @@ W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\libvlc\wi
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\libvlc\win-x86\plugins\visualization\libgoom_plugin.dll
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\libvlc\win-x86\plugins\visualization\libprojectm_plugin.dll
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\libvlc\win-x86\plugins\visualization\libvisual_plugin.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\Ionic.Zlib.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\RPAParser.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\RPAParser.pdb
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\Razorvine.Pyrolite.dll
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\Razorvine.Serpent.dll

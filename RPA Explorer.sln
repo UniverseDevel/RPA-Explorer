@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPA Explorer", "RPA Explorer\RPA Explorer.csproj", "{D2F396AD-92CD-4C2D-97FA-E3D48FECC1D5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{14B716D7-7DB3-44D2-B093-A1A725C736D1} = {14B716D7-7DB3-44D2-B093-A1A725C736D1}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPAParser", "RPA Parser\RPAParser.csproj", "{14B716D7-7DB3-44D2-B093-A1A725C736D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,9 @@ Global
 		{D2F396AD-92CD-4C2D-97FA-E3D48FECC1D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2F396AD-92CD-4C2D-97FA-E3D48FECC1D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2F396AD-92CD-4C2D-97FA-E3D48FECC1D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14B716D7-7DB3-44D2-B093-A1A725C736D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14B716D7-7DB3-44D2-B093-A1A725C736D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14B716D7-7DB3-44D2-B093-A1A725C736D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14B716D7-7DB3-44D2-B093-A1A725C736D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

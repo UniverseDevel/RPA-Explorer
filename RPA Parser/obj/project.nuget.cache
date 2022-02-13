@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "yJID12WhWgNwYRbTeoYlIchGqRpv8dhZA3X2BcbUbIGvNrQ/a7254sq3bzPIpaobHRGZlRA2Hk9y8jqvoIVrpg==",
+  "success": true,
+  "projectFilePath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\ionic.zlib\\1.9.1.5\\ionic.zlib.1.9.1.5.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.pyrolite\\4.19.0\\razorvine.pyrolite.4.19.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.serpent\\1.18.0\\razorvine.serpent.1.18.0.nupkg.sha512"
+  ],
+  "logs": []
+}

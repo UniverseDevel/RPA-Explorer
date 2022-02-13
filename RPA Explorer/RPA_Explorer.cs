@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using LibVLCSharp.Shared;
 using NeoSmart.PrettySize;
+using RPA_Parser;
 
 namespace RPA_Explorer
 {
@@ -174,7 +175,7 @@ namespace RPA_Explorer
 
         private string NormalizeTreePath(string path)
         {
-            return Regex.Replace(Regex.Replace(path, "^//", ""), " [(].+[)]$", "");
+            return Regex.Replace(Regex.Replace(path, "^/+", ""), " [(].+[)]$", "");
         }
 
         private void button2_Click(object sender, EventArgs e)
