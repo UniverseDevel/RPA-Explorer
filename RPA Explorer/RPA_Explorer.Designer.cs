@@ -1,4 +1,6 @@
-﻿namespace RPA_Explorer
+﻿using System.Windows.Forms;
+
+namespace RPA_Explorer
 {
     partial class RpaExplorer
     {
@@ -45,11 +47,15 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.videoView1 = new LibVLCSharp.WinForms.VideoView();
             this.tabControl1.SuspendLayout();
             this.tabPage0.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).BeginInit();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize) (this.videoView1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -138,6 +144,7 @@
             this.tabControl1.Controls.Add(this.tabPage0);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(362, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -211,6 +218,27 @@
             this.textBox2.Size = new System.Drawing.Size(542, 470);
             this.textBox2.TabIndex = 0;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.videoView1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(548, 476);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Media";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // videoView1
+            // 
+            this.videoView1.BackColor = System.Drawing.Color.Black;
+            this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.videoView1.Location = new System.Drawing.Point(3, 3);
+            this.videoView1.MediaPlayer = null;
+            this.videoView1.Name = "videoView1";
+            this.videoView1.Size = new System.Drawing.Size(542, 470);
+            this.videoView1.TabIndex = 1;
+            // 
             // RpaExplorer
             // 
             this.AllowDrop = true;
@@ -240,9 +268,13 @@
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize) (this.videoView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.TabPage tabPage3;
 
         private System.Windows.Forms.Label label2;
 
@@ -254,6 +286,7 @@
         private System.Windows.Forms.TabPage tabPage2;
 
         private System.Windows.Forms.TreeView treeView1;
+        private LibVLCSharp.WinForms.VideoView videoView1;
 
         private System.Windows.Forms.PictureBox pictureBox1;
 

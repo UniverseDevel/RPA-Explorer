@@ -49,6 +49,20 @@
               "target": "Package",
               "version": "[1.16.0, )"
             },
+            "LibVLCSharp": {
+              "target": "Package",
+              "version": "[3.6.5, )"
+            },
+            "LibVLCSharp.WinForms": {
+              "target": "Package",
+              "version": "[3.6.5, )"
+            },
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.0, )",
+              "autoReferenced": true
+            },
             "NeoSmart.PrettySize": {
               "target": "Package",
               "version": "[2.1.0, )"
@@ -60,9 +74,18 @@
             "System.Resources.Extensions": {
               "target": "Package",
               "version": "[6.0.2-mauipre.1.22054.8, )"
+            },
+            "VideoLAN.LibVLC.Windows": {
+              "target": "Package",
+              "version": "[3.0.16, )"
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win7-x86": {
+          "#import": []
         }
       }
     }

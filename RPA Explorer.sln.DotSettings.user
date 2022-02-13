@@ -1,7 +1,12 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CWindows_005CMicrosoft_002ENET_005CDirectX_0020for_0020Managed_0020Code_005C1_002E0_002E2902_002E0_005CMicrosoft_002EDirectX_002EAudioVideoPlayback_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CWindows_005CMicrosoft_002ENET_005CDirectX_0020for_0020Managed_0020Code_005C1_002E0_002E2911_002E0_005CMicrosoft_002EDirectX_002EDirect3DX_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CWindows_005CSystem32_005Cwmp_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CWindows_005CSysWOW64_005Cwmp_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Users\Martin Suchy\.nuget\packages\dotnetzip\1.16.0\lib\net40\DotNetZip.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Martin Suchy\.nuget\packages\neosmart.prettysize\2.1.0\lib\net40\NeoSmart.PrettySize.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\Martin Suchy\.nuget\packages\libvlcsharp\3.6.5\lib\net40\LibVLCSharp.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	
 	

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using LibVLCSharp.Shared;
 using NeoSmart.PrettySize;
 
 namespace RPA_Explorer
@@ -16,11 +18,14 @@ namespace RPA_Explorer
         private SortedDictionary<string, RpaParser.ArchiveIndex> fileList = new ();
         private string[] args;
         private bool switchTabs = false;
-        
+        public LibVLC libVlc;
+
         public RpaExplorer()
         {
             InitializeComponent();
-            
+            Core.Initialize();
+            libVlc = new LibVLC("--input-repeat=2");
+
             args = Environment.GetCommandLineArgs();
             if (args.Length >= 2)
             {
@@ -225,26 +230,44 @@ namespace RPA_Explorer
             pictureBox1.Image = null;
             foreach (TreeNode node in treeView1.Nodes.All())
             {
+                // Reset fields
+                pictureBox1.Image = null;
+                textBox2.Text = String.Empty;
+                if (videoView1.MediaPlayer != null)
+                {
+                    videoView1.MediaPlayer.Pause();
+                    videoView1.MediaPlayer.Dispose();
+                    videoView1.MediaPlayer = null;
+                }
+
                 if (node.IsSelected)
                 {
                     selectedNode = node;
                 }
+                
                 if (node.IsSelected && fileList.ContainsKey(NormalizeTreePath(node.FullPath)))
                 {
                     KeyValuePair<string, object> data = rpaParser.GetPreview(NormalizeTreePath(node.FullPath));
                     if (data.Key == RpaParser.PreviewTypes.Image)
                     {
                         pictureBox1.Image = (Bitmap) data.Value;
-                        textBox2.Text = String.Empty;
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage1;
                         unsupportedFile = false;
-                    } else if (data.Key == RpaParser.PreviewTypes.Text)
+                    }
+                    else if (data.Key == RpaParser.PreviewTypes.Text)
                     {
-                        pictureBox1.Image = null;
                         textBox2.Text = (string) data.Value;
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage2;
+                        unsupportedFile = false;
+                    }
+                    else if (data.Key == RpaParser.PreviewTypes.Audio || data.Key == RpaParser.PreviewTypes.Video)
+                    {
+                        videoView1.MediaPlayer = new MediaPlayer(new Media(libVlc, new StreamMediaInput(new MemoryStream((byte[]) data.Value))));
+                        videoView1.MediaPlayer.Play();
+                        switchTabs = true;
+                        tabControl1.SelectedTab = tabPage3;
                         unsupportedFile = false;
                     }
 
@@ -254,8 +277,6 @@ namespace RPA_Explorer
 
             if (unsupportedFile)
             {
-                pictureBox1.Image = null;
-                textBox2.Text = String.Empty;
                 switchTabs = true;
                 tabControl1.SelectedTab = tabPage0;
                 label2.Text = "Preview is not supported for this file.";

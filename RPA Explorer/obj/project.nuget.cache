@@ -1,10 +1,17 @@
 {
   "version": 2,
-  "dgSpecHash": "DEEIIHTSt7nzyIMTKNBwoOKq7hYNDDe74IyR2dP3WOUNn5GAFgCE9GnWp45ToaPezYiKAzheSulQpSfpJZFimA==",
+  "dgSpecHash": "fIYvbLaYCAi3oLIRHgGs0Uhqk7BYKzk4M9KIMsKy7lajRsnJ4EIAu6NHm3uVAvLV7VmmEPBEAt9ZiDDLnyHMQQ==",
   "success": true,
   "projectFilePath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\dotnetzip\\1.16.0\\dotnetzip.1.16.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\libvlcsharp\\3.6.5\\libvlcsharp.3.6.5.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\libvlcsharp.winforms\\3.6.5\\libvlcsharp.winforms.3.6.5.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\microsoft.bcl\\1.1.8\\microsoft.bcl.1.1.8.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\microsoft.bcl.async\\1.0.168\\microsoft.bcl.async.1.0.168.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\microsoft.bcl.build\\1.0.14\\microsoft.bcl.build.1.0.14.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.0\\microsoft.netframework.referenceassemblies.1.0.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net461\\1.0.0\\microsoft.netframework.referenceassemblies.net461.1.0.0.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\neosmart.prettysize\\2.1.0\\neosmart.prettysize.2.1.0.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.pyrolite\\4.19.0\\razorvine.pyrolite.4.19.0.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.serpent\\1.18.0\\razorvine.serpent.1.18.0.nupkg.sha512",
@@ -12,7 +19,9 @@
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.resources.extensions\\6.0.2-mauipre.1.22054.8\\system.resources.extensions.6.0.2-mauipre.1.22054.8.nupkg.sha512",
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.3\\system.runtime.compilerservices.unsafe.4.5.3.nupkg.sha512"
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.3\\system.runtime.compilerservices.unsafe.4.5.3.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\videolan.libvlc.windows\\3.0.16\\videolan.libvlc.windows.3.0.16.nupkg.sha512"
   ],
   "logs": []
 }
