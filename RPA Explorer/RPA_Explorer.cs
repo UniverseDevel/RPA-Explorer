@@ -18,7 +18,10 @@ namespace RPA_Explorer
         private SortedDictionary<string, RpaParser.ArchiveIndex> fileList = new ();
         private string[] args;
         private bool switchTabs = false;
-        public LibVLC libVlc;
+        private LibVLC libVlc;
+        private MemoryStream memoryStreamVlc;
+        private StreamMediaInput streamMediaInputVlc;
+        private Media mediaVlc;
 
         public RpaExplorer()
         {
@@ -149,7 +152,12 @@ namespace RPA_Explorer
 
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage0;
+                        switchTabs = false;
                         label2.Text = "Select file from list on the side to preview contents. Check and export to save it locally";
+
+                        ResetPreviewFields();
+
+                        treeView1.SelectedNode = null;
 
                         button2.Enabled = true;
 
@@ -223,6 +231,33 @@ namespace RPA_Explorer
             }
         }
 
+        private void ResetPreviewFields()
+        {
+            pictureBox1.Image = null;
+            textBox2.Text = String.Empty;
+            if (videoView1.MediaPlayer != null)
+            {
+                videoView1.MediaPlayer.Pause();
+                videoView1.MediaPlayer.Dispose();
+                videoView1.MediaPlayer = null;
+            }
+            if (mediaVlc != null)
+            {
+                mediaVlc.Dispose();
+                mediaVlc = null;
+            }
+            if (streamMediaInputVlc != null)
+            {
+                streamMediaInputVlc.Dispose();
+                streamMediaInputVlc = null;
+            }
+            if (memoryStreamVlc != null)
+            {
+                memoryStreamVlc.Dispose();
+                memoryStreamVlc = null;
+            }
+        }
+
         private void treeView1_AfterSelect(object sender, EventArgs e)
         {
             TreeNode selectedNode = new TreeNode();
@@ -231,14 +266,7 @@ namespace RPA_Explorer
             foreach (TreeNode node in treeView1.Nodes.All())
             {
                 // Reset fields
-                pictureBox1.Image = null;
-                textBox2.Text = String.Empty;
-                if (videoView1.MediaPlayer != null)
-                {
-                    videoView1.MediaPlayer.Pause();
-                    videoView1.MediaPlayer.Dispose();
-                    videoView1.MediaPlayer = null;
-                }
+                ResetPreviewFields();
 
                 if (node.IsSelected)
                 {
@@ -250,9 +278,10 @@ namespace RPA_Explorer
                     KeyValuePair<string, object> data = rpaParser.GetPreview(NormalizeTreePath(node.FullPath));
                     if (data.Key == RpaParser.PreviewTypes.Image)
                     {
-                        pictureBox1.Image = (Bitmap) data.Value;
+                        pictureBox1.Image = (Image) data.Value;
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage1;
+                        switchTabs = false;
                         unsupportedFile = false;
                     }
                     else if (data.Key == RpaParser.PreviewTypes.Text)
@@ -260,14 +289,19 @@ namespace RPA_Explorer
                         textBox2.Text = (string) data.Value;
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage2;
+                        switchTabs = false;
                         unsupportedFile = false;
                     }
                     else if (data.Key == RpaParser.PreviewTypes.Audio || data.Key == RpaParser.PreviewTypes.Video)
                     {
-                        videoView1.MediaPlayer = new MediaPlayer(new Media(libVlc, new StreamMediaInput(new MemoryStream((byte[]) data.Value))));
+                        memoryStreamVlc = new MemoryStream((byte[]) data.Value);
+                        streamMediaInputVlc = new StreamMediaInput(memoryStreamVlc);
+                        mediaVlc = new Media(libVlc, streamMediaInputVlc);
+                        videoView1.MediaPlayer = new MediaPlayer(mediaVlc);
                         videoView1.MediaPlayer.Play();
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage3;
+                        switchTabs = false;
                         unsupportedFile = false;
                     }
 
@@ -279,6 +313,7 @@ namespace RPA_Explorer
             {
                 switchTabs = true;
                 tabControl1.SelectedTab = tabPage0;
+                switchTabs = false;
                 label2.Text = "Preview is not supported for this file.";
             }
             

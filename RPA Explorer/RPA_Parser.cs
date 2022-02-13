@@ -285,23 +285,26 @@ namespace RPA_Explorer
             byte[] bytes = ExtractData(fileName);
             if (imageExtList.Contains(fileInfo.Extension.ToLower()))
             {
-                Bitmap bmp = null;
-                if (fileInfo.Extension.ToLower() == ".webp")
+                byte[] magicBytes = new byte[16] ;
+                Buffer.BlockCopy(bytes,0, magicBytes,0,16);
+
+                Image image = null;
+                if (fileInfo.Extension.ToLower() == ".webp" || Encoding.UTF8.GetString(magicBytes, 0, magicBytes.Length).Contains("WEBP"))
                 {
                     using (WebP ww = new WebP())
                     {
-                        bmp = ww.Decode(bytes);
+                        image = ww.Decode(bytes);
                     }
                 }
                 else
                 {
                     using (MemoryStream ms = new MemoryStream(bytes))
                     {
-                        bmp = new Bitmap(ms);
+                        image = Image.FromStream(ms);
                     }
                 }
 
-                data = new KeyValuePair<string, object>(PreviewTypes.Image, bmp);
+                data = new KeyValuePair<string, object>(PreviewTypes.Image, image);
             }
             else if (textExtList.Contains(fileInfo.Extension.ToLower()))
             {
