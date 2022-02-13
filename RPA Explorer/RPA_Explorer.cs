@@ -19,16 +19,22 @@ namespace RPA_Explorer
         private SortedDictionary<string, RpaParser.ArchiveIndex> fileList = new ();
         private string[] args;
         private bool switchTabs = false;
-        private LibVLC libVlc;
+        private LibVLC libVlc; // https://code.videolan.org/mfkl/libvlcsharp-samples
         private MemoryStream memoryStreamVlc;
         private StreamMediaInput streamMediaInputVlc;
         private Media mediaVlc;
+        private System.ComponentModel.ComponentResourceManager resources = new (typeof(RpaExplorer));
 
         public RpaExplorer()
         {
             InitializeComponent();
             Core.Initialize();
-            libVlc = new LibVLC("--input-repeat=2");
+            libVlc = new LibVLC("--input-repeat=9999999"); // --input-repeat=X : Loop X times
+            videoView1.MediaPlayer = new MediaPlayer(libVlc);
+            videoView1.MediaPlayer.Volume = 80;
+            videoView1.MediaPlayer.TimeChanged += videoView1_MediaPlayer_TimeChanged;
+            videoView1.BackgroundImage = null;
+            SetMediaTimeLabel(0, 0);
 
             args = Environment.GetCommandLineArgs();
             if (args.Length >= 2)
@@ -237,11 +243,9 @@ namespace RPA_Explorer
         {
             pictureBox1.Image = null;
             textBox2.Text = String.Empty;
-            if (videoView1.MediaPlayer != null)
+            if (videoView1.MediaPlayer.IsPlaying)
             {
                 videoView1.MediaPlayer.Pause();
-                videoView1.MediaPlayer.Dispose();
-                videoView1.MediaPlayer = null;
             }
             if (mediaVlc != null)
             {
@@ -258,9 +262,10 @@ namespace RPA_Explorer
                 memoryStreamVlc.Dispose();
                 memoryStreamVlc = null;
             }
+            SetMediaTimeLabel(0, 0);
         }
 
-        private void treeView1_AfterSelect(object sender, EventArgs e)
+        private void PreviewSelectedItem()
         {
             TreeNode selectedNode = new TreeNode();
             bool unsupportedFile = true;
@@ -299,8 +304,16 @@ namespace RPA_Explorer
                         memoryStreamVlc = new MemoryStream((byte[]) data.Value);
                         streamMediaInputVlc = new StreamMediaInput(memoryStreamVlc);
                         mediaVlc = new Media(libVlc, streamMediaInputVlc);
-                        videoView1.MediaPlayer = new MediaPlayer(mediaVlc);
-                        videoView1.MediaPlayer.Play();
+                        SetMediaTimeLabel(mediaVlc.Duration, 0);
+                        videoView1.MediaPlayer.Play(mediaVlc);
+                        if (data.Key == RpaParser.PreviewTypes.Audio)
+                        {
+                            videoView1.BackgroundImage = (Image) resources.GetObject("videoView1.BackgroundImage");
+                        }
+                        else
+                        {
+                            videoView1.BackgroundImage = null;
+                        }
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage3;
                         switchTabs = false;
@@ -322,6 +335,11 @@ namespace RPA_Explorer
             treeView1.SelectedNode = selectedNode;
             treeView1.SelectedNode.EnsureVisible();
             treeView1.Focus();
+        }
+
+        private void treeView1_AfterSelect(object sender, EventArgs e)
+        {
+            PreviewSelectedItem();
         }
 
         private void CheckAllChildNodes(TreeNode node, bool isChecked)
@@ -382,6 +400,58 @@ namespace RPA_Explorer
                 e.Cancel = true;
             }
             switchTabs = false;
+        }
+
+        private void PlayPauseMedia()
+        {
+            if (videoView1.MediaPlayer.IsPlaying)
+            {
+                videoView1.MediaPlayer.Pause();
+                button4.Text = "Play";
+            }
+            else
+            {
+                videoView1.MediaPlayer.Play();
+                button4.Text = "Pause";
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            PlayPauseMedia();
+        }
+
+        private void SetMediaTimeLabel(long totalTimeMillies, long currentTimeMillies)
+        {
+            TimeSpan totalTime = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(totalTimeMillies));
+            TimeSpan currentTime = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(currentTimeMillies));
+            TimeSpan remainingTime = new TimeSpan(0, 0, 0, 0, Convert.ToInt32(totalTimeMillies - currentTimeMillies));
+
+            string timeFormat = "hh':'mm':'ss'.'f";
+            string timeText = currentTime.ToString(timeFormat) + " / " + totalTime.ToString(timeFormat) + " (-" + remainingTime.ToString(timeFormat) + ")";
+            if (label3.InvokeRequired)
+            {
+                try
+                {
+                    label3.PerformSafely(() => label3.Text = timeText);
+                }
+                catch
+                { }
+            }
+            else
+            {
+                label3.Text = timeText;
+            }
+        }
+
+        private void videoView1_MediaPlayer_TimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
+        {
+            SetMediaTimeLabel(videoView1.MediaPlayer.Media.Duration, e.Time);
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            videoView1.MediaPlayer.Volume = trackBar1.Value;
         }
     }
     

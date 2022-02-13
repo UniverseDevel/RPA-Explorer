@@ -48,6 +48,10 @@ namespace RPA_Explorer
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.button4 = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.videoView1 = new LibVLCSharp.WinForms.VideoView();
             this.tabControl1.SuspendLayout();
             this.tabPage0.SuspendLayout();
@@ -55,6 +59,7 @@ namespace RPA_Explorer
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize) (this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.videoView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -220,6 +225,10 @@ namespace RPA_Explorer
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.trackBar1);
+            this.tabPage3.Controls.Add(this.button4);
+            this.tabPage3.Controls.Add(this.label3);
+            this.tabPage3.Controls.Add(this.progressBar2);
             this.tabPage3.Controls.Add(this.videoView1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -229,14 +238,58 @@ namespace RPA_Explorer
             this.tabPage3.Text = "Media";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // trackBar1
+            // 
+            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBar1.AutoSize = false;
+            this.trackBar1.Location = new System.Drawing.Point(375, 453);
+            this.trackBar1.Maximum = 100;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(170, 20);
+            this.trackBar1.TabIndex = 5;
+            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBar1.Value = 80;
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            // 
+            // button4
+            // 
+            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button4.Location = new System.Drawing.Point(3, 450);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 4;
+            this.button4.Text = "Pause";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.BackColor = System.Drawing.SystemColors.Control;
+            this.label3.Location = new System.Drawing.Point(76, 453);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(302, 20);
+            this.label3.TabIndex = 3;
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // progressBar2
+            // 
+            this.progressBar2.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar2.Location = new System.Drawing.Point(3, 450);
+            this.progressBar2.Name = "progressBar2";
+            this.progressBar2.Size = new System.Drawing.Size(542, 23);
+            this.progressBar2.TabIndex = 2;
+            // 
             // videoView1
             // 
+            this.videoView1.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.videoView1.BackColor = System.Drawing.Color.Black;
-            this.videoView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.videoView1.BackgroundImage = ((System.Drawing.Image) (resources.GetObject("videoView1.BackgroundImage")));
+            this.videoView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.videoView1.Location = new System.Drawing.Point(3, 3);
             this.videoView1.MediaPlayer = null;
             this.videoView1.Name = "videoView1";
-            this.videoView1.Size = new System.Drawing.Size(542, 470);
+            this.videoView1.Size = new System.Drawing.Size(542, 444);
             this.videoView1.TabIndex = 1;
             // 
             // RpaExplorer
@@ -269,10 +322,18 @@ namespace RPA_Explorer
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize) (this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize) (this.videoView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.TrackBar trackBar1;
+
+        private System.Windows.Forms.Button button4;
+
+        private System.Windows.Forms.ProgressBar progressBar2;
+        private System.Windows.Forms.Label label3;
 
         private System.Windows.Forms.TabPage tabPage3;
 
