@@ -96,6 +96,7 @@ namespace RPA_Parser
         public string[] rpycExtList = {
             ".rpyc",
             ".rpymc"
+            // ".rpyb" ?
         };
 
         public RpaParser(string filePath)
