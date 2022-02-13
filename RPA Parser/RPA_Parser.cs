@@ -36,7 +36,7 @@ namespace RPA_Parser
 
         public class PreviewTypes
         {
-            public const string None = "none";
+            public const string Unknown = "unknown";
             public const string Image = "image";
             public const string Text = "text";
             public const string Video = "video";
@@ -51,10 +51,14 @@ namespace RPA_Parser
             ".png",
             ".webp",
             ".exif",
+            ".ico",
             ".gif"
         };
 
         public string[] audioExtList = {
+            ".aac",
+            ".ac3",
+            ".flac",
             ".mp3",
             ".wma",
             ".wav",
@@ -63,7 +67,14 @@ namespace RPA_Parser
         };
 
         public string[] videoExtList = {
+            ".3gp",
+            ".flv",
+            ".mov",
             ".mp4",
+            ".ogv",
+            ".swf",
+            ".mpg",
+            ".mpeg",
             ".avi",
             ".mkv",
             ".wmv",
@@ -71,11 +82,15 @@ namespace RPA_Parser
         };
 
         public string[] textExtList = {
+            ".py",
             ".rpy~",
             ".rpy",
             ".txt",
             ".log",
-            ".nfo"
+            ".nfo",
+            ".htm",
+            ".html",
+            ".csv"
         };
 
         public string[] rpycExtList = {
@@ -276,9 +291,20 @@ namespace RPA_Parser
             return _fileInfo;
         }
 
-        public KeyValuePair<string, object> GetPreview(string fileName)
+        public double GetArchiveVersion()
         {
-            KeyValuePair<string, object> data = new KeyValuePair<string, object>(PreviewTypes.None, null);
+            return _version;
+        }
+
+        public KeyValuePair<string, byte[]> GetPreviewRaw(string fileName)
+        {
+            KeyValuePair<string, object> data = GetPreview(fileName, true);
+            return new KeyValuePair<string, byte[]>(data.Key, (byte[]) data.Value);
+        }
+
+        public KeyValuePair<string, object> GetPreview(string fileName, bool returnRaw = false)
+        {
+            KeyValuePair<string, object> data = new KeyValuePair<string, object>(PreviewTypes.Unknown, null);
 
             FileInfo fileInfo = new FileInfo(fileName);
 
@@ -320,13 +346,30 @@ namespace RPA_Parser
             }
             else if (rpycExtList.Contains(fileInfo.Extension.ToLower()))
             {
-                data = new KeyValuePair<string, object>(PreviewTypes.Text, DeobfuscateRPC(bytes));
+                bytes = DeobfuscateRPC(bytes);
+                data = new KeyValuePair<string, object>(PreviewTypes.Text, Encoding.UTF8.GetString(bytes, 0, bytes.Length));
+            }
+            else
+            {
+                data = new KeyValuePair<string, object>(PreviewTypes.Unknown, bytes);
+            }
+
+            if (returnRaw)
+            {
+                if (rpycExtList.Contains(fileInfo.Extension.ToLower()))
+                {
+                    data = new KeyValuePair<string, object>(data.Key, bytes);
+                }
+                else
+                {
+                    data = new KeyValuePair<string, object>(data.Key, bytes);
+                }
             }
 
             return data;
         }
 
-        private string DeobfuscateRPC(byte[] fileData)
+        private byte[] DeobfuscateRPC(byte[] fileData)
         {
             // Inspired by: https://github.com/CensoredUsername/unrpyc
             
@@ -353,7 +396,7 @@ namespace RPA_Parser
                 }
             }
             
-            return fileText;
+            return Encoding.UTF8.GetBytes(fileText);
         }
 
         public byte[] ExtractData(string fileName)

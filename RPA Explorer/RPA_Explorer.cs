@@ -147,7 +147,8 @@ namespace RPA_Explorer
                         }
                         root.Expand();
 
-                        textBox1.Text = "File location: " + rpaParser.GetArchiveInfo().FullName + Environment.NewLine +
+                        textBox1.Text = "Archive version: " + rpaParser.GetArchiveVersion() + Environment.NewLine +
+                                        "File location: " + rpaParser.GetArchiveInfo().FullName + Environment.NewLine +
                                         "File size: " + PrettySize.Format(rpaParser.GetArchiveInfo().Length) + Environment.NewLine +
                                         "Object count: " + fileList.Count + Environment.NewLine;
 
