@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Ionic.Zlib;
 using Razorvine.Pickle;
+using WebPWrapper;
 
 namespace RPA_Explorer
 {
@@ -48,7 +49,7 @@ namespace RPA_Explorer
             ".bmp",
             ".tiff",
             ".png",
-            //".webp", // Not yet supported
+            ".webp",
             ".exif",
             ".gif"
         };
@@ -283,10 +284,23 @@ namespace RPA_Explorer
             byte[] bytes = ExtractData(fileName);
             if (imageExtList.Contains(fileInfo.Extension.ToLower()))
             {
-                using (var ms = new MemoryStream(bytes))
+                Bitmap bmp = null;
+                if (fileInfo.Extension.ToLower() == ".webp")
                 {
-                    data = new KeyValuePair<string, object>(PreviewTypes.Image, new Bitmap(ms));
+                    using (WebP ww = new WebP())
+                    {
+                        bmp = ww.Decode(bytes);
+                    }
                 }
+                else
+                {
+                    using (MemoryStream ms = new MemoryStream(bytes))
+                    {
+                        bmp = new Bitmap(ms);
+                    }
+                }
+
+                data = new KeyValuePair<string, object>(PreviewTypes.Image, bmp);
             }
             else if (textExtList.Contains(fileInfo.Extension.ToLower()))
             {
