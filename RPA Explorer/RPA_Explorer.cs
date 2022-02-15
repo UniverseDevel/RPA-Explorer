@@ -503,7 +503,7 @@ namespace RPA_Explorer
             
             expandedList.Clear();
             rpaParser = new RpaParser();
-            rpaParser.CreateArchive(RpaParser.Version.RPA_3);
+            rpaParser.CreateArchive(RpaParser.Version.RPA_3); // TODO: Choose version
             fileList = rpaParser.GetFileList();
             
             GenerateTreeView();
