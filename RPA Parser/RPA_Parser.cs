@@ -13,6 +13,9 @@ using WebPWrapper;
 
 namespace RPA_Parser
 {
+    // Inspired by: https://github.com/Shizmob/rpatool/blob/master/rpatool
+    // Inspired by: https://github.com/CensoredUsername/unrpyc
+    
     public class RpaParser
     {
         public class Version
@@ -43,7 +46,7 @@ namespace RPA_Parser
         private string[] _metadata;
         private long _offset;
         private long _step;
-        private SortedDictionary<string,ArchiveIndex> _indexes = new SortedDictionary<string,ArchiveIndex>();
+        private SortedDictionary<string,ArchiveIndex> _indexes = new ();
 
         public class ArchiveIndex
         {
@@ -125,15 +128,13 @@ namespace RPA_Parser
             // Init
         }
 
-        public void CreateArchive(double version)
+        public void CreateArchive()
         {
-            _version = version;
+            _step = 0xDEADBEEF;
         }
 
         public void LoadArchive(string filePath)
         {
-            // Inspired by: https://github.com/Shizmob/rpatool/blob/master/rpatool
-            
             _filePath = filePath;
             _fileInfo = GetFileInfo();
             _firstLine = GetFirstLine();
@@ -289,7 +290,7 @@ namespace RPA_Parser
                 }
 
                 string key = kvp.Key as string;
-                object[] value = (kvp.Value as ArrayList)?.ToArray()[0] as object[];
+                object[] value = (kvp.Value as ArrayList).ToArray()[0] as object[];
                 ArchiveIndex index = new ArchiveIndex();
                 index.offset = Convert.ToInt64(value.GetValue(0));
                 index.length = Convert.ToInt64(value.GetValue(1));
@@ -466,8 +467,6 @@ namespace RPA_Parser
 
         private byte[] DeobfuscateRPC(byte[] fileData)
         {
-            // Inspired by: https://github.com/CensoredUsername/unrpyc
-            
             string fileText = String.Empty;
             byte[] magicBytes = new byte[10] ;
             Buffer.BlockCopy(fileData,0, magicBytes,0,10);
@@ -542,6 +541,140 @@ namespace RPA_Parser
             File.WriteAllBytes(finalPath, finalData);
 
             return _fileInfo.DirectoryName + @"\" + fileName;
+        }
+
+        public string SaveArchive(string path, double version, int padding = 0, long step = 0xDEADBEEF)
+        {
+            if (_version == Version.RPA_1)
+            {
+                if (!path.EndsWith(".rpi"))
+                {
+                    path = path + ".rpi";
+                }
+            }
+            else
+            {
+                if (!path.EndsWith(".rpa"))
+                {
+                    path = path + ".rpa";
+                }
+            }
+
+            if (path == _filePath && _filePath != String.Empty)
+            {
+                throw new Exception("Cannot overwrite same archive that is loaded.");
+            }
+            
+            BuildArchive(path, version, padding, step);
+
+            return path;
+        }
+
+        private void BuildArchive(string path, double version, int padding, long step)
+        {
+            using (Stream stream = File.Open(path, FileMode.Open))
+            {
+                int archiveOffset = 34; // Default: Version.RPA_3
+                switch (version)
+                {
+                    case Version.RPA_3_2:
+                        archiveOffset = 34;
+                        break;
+                    case Version.RPA_3:
+                        archiveOffset = 34;
+                        break;
+                    case Version.RPA_2:
+                        archiveOffset = 25;
+                        break;
+                    default:
+                        throw new Exception("Specified version is not supported.");
+                }
+
+                stream.Position = archiveOffset;
+                
+                Random rnd = new Random();
+                
+                // Update indexes
+                Hashtable indexes = new Hashtable();
+                foreach (KeyValuePair<string, ArchiveIndex> index in _indexes)
+                {
+                    byte[] content = ExtractData(index.Key);
+
+                    if (padding > 0)
+                    {
+                        string paddingStr = String.Empty;
+                        int paddingLength = rnd.Next(1, padding);
+
+                        while (paddingLength > 0)
+                        {
+                            paddingStr += Encoding.ASCII.GetString(new byte[] {(byte) rnd.Next(1, 255)});
+                            paddingLength--;
+                        }
+
+                        byte[] paddingBytes = Encoding.ASCII.GetBytes(paddingStr);
+                        archiveOffset += paddingBytes.Length;
+                    }
+
+                    if (version == Version.RPA_3)
+                    {
+                        index.Value.length = content.Length ^ step;
+                        index.Value.offset = archiveOffset ^ step;
+                    }
+                    else if (version == Version.RPA_2)
+                    {
+                        index.Value.length = content.Length;
+                        index.Value.offset = archiveOffset;
+                    }
+
+                    stream.Position = archiveOffset;
+                    stream.Write(content, 0, content.Length);
+
+                    archiveOffset += content.Length;
+
+                    
+                    List<object[]> indexData = new List<object[]>();
+                    switch (version) {
+                        case Version.RPA_3_2:
+                            indexData.Add(new object[] { index.Value.offset, index.Value.length, index.Value.prefix });
+                            break;
+                        default:
+                            indexData.Add(new object[] { index.Value.offset, index.Value.length });
+                            break;
+                    }
+
+                    indexes.Add(index.Value.relativePath, indexData);
+                }
+
+                byte[] pickledIndexes;
+                using (Pickler pickler = new Pickler())
+                {
+                    pickledIndexes = pickler.dumps(indexes);
+                }
+                byte[] fileCompressed = ZlibStream.CompressBuffer(pickledIndexes);
+                
+                stream.Position = archiveOffset;
+                stream.Write(fileCompressed, 0, fileCompressed.Length);
+
+                string headerContent = String.Empty;
+
+                switch (version)
+                {
+                    case Version.RPA_3_2:
+                        headerContent = ArchiveMagic.RPA_3_2 + archiveOffset.ToString("x").PadLeft(16, '0') + " " + step.ToString("x").PadLeft(8, '0')+ "\n";
+                        break;
+                    case Version.RPA_3:
+                        headerContent = ArchiveMagic.RPA_3 + archiveOffset.ToString("x").PadLeft(16, '0') + " " + step.ToString("x").PadLeft(8, '0') + "\n";
+                        break;
+                    case Version.RPA_2:
+                        headerContent = ArchiveMagic.RPA_2 + archiveOffset.ToString("x").PadLeft(16, '0') + "\n";
+                        break;
+                }
+
+                byte[] headerContentByte = Encoding.UTF8.GetBytes(headerContent);
+
+                stream.Position = 0;
+                stream.Write(headerContentByte, 0, headerContentByte.Length);
+            }
         }
     }
 }

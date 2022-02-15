@@ -14,6 +14,7 @@ namespace RPA_Explorer
     public partial class RpaExplorer : Form
     {
         private RpaParser rpaParser;
+        private RpaParser rpaParserBak;
         private Thread opration;
         private bool operationEnabled = true;
         private bool archiveChanged = false;
@@ -503,7 +504,7 @@ namespace RPA_Explorer
             
             expandedList.Clear();
             rpaParser = new RpaParser();
-            rpaParser.CreateArchive(RpaParser.Version.RPA_3); // TODO: Choose version
+            rpaParser.CreateArchive();
             fileList = rpaParser.GetFileList();
             
             GenerateTreeView();
@@ -539,12 +540,16 @@ namespace RPA_Explorer
                 }
             }
 
-            archiveInfo += "Archive version: " + rpaParser.GetArchiveVersion() + Environment.NewLine;
+            if (rpaParser.GetArchiveVersion() != null)
+            {
+                archiveInfo += "Archive version: " + rpaParser.GetArchiveVersion() + Environment.NewLine;
+            }
+
             archiveInfo += "File location: " + rpaParser.GetArchiveInfo()?.FullName + Environment.NewLine;
             archiveInfo += "Objects count: " + fileList.Count + Environment.NewLine;
             archiveInfo += "Unsaved objects count: " + unsavedCount + Environment.NewLine;
 
-            textBox1.Text = archiveInfo;
+            textBox1.Text = archiveInfo.Trim();
         }
 
         private bool CheckIfChanged(string message)
@@ -697,9 +702,33 @@ namespace RPA_Explorer
                 return;
             }
             
-            // TODO: Save archive
-            throw new System.NotImplementedException();
-            // Load saved archive at the end (maybe also check if successful and load old archive and store changed indexes from old to restore changes)
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Save RenPy Archive";
+            saveFileDialog.Filter = "RPA/RPI files (*.rpa,*.rpi)|*.rpa;*.rpi)";
+            saveFileDialog.InitialDirectory = rpaParser.GetArchiveInfo().DirectoryName;
+            saveFileDialog.CheckFileExists = true;  
+            saveFileDialog.CheckPathExists = true;  
+            
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                rpaParserBak = rpaParser;
+                // TODO: Dialog to get version = 3, padlength = 0, key = 0xDEADBEEF
+                string saveName = rpaParser.SaveArchive(saveFileDialog.FileName, RpaParser.Version.RPA_3);
+
+                try
+                {
+                    LoadArchive(saveName);
+                }
+                catch
+                {
+                    rpaParser = rpaParserBak;
+                    MessageBox.Show(
+                        "Loading archive after saving failed which indicates corrupted archive. Attempting to restore changes from before save.",
+                        "Save failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                
+                GenerateTreeView();
+            }
         }
 
         private void treeView1_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
