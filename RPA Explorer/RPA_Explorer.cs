@@ -16,7 +16,12 @@ namespace RPA_Explorer
         private RpaParser rpaParser;
         private Thread opration;
         private bool operationEnabled = true;
+        private bool archiveChanged = false;
+        private bool cancelAdd = false;
+        private bool archiveLoaded = false;
         private SortedDictionary<string, RpaParser.ArchiveIndex> fileList = new ();
+        private SortedDictionary<string, RpaParser.ArchiveIndex> fileListNew = new ();
+        private List<string> expandedList = new ();
         private string[] args;
         private bool switchTabs = false;
         private LibVLC libVlc; // https://code.videolan.org/mfkl/libvlcsharp-samples
@@ -39,7 +44,7 @@ namespace RPA_Explorer
             args = Environment.GetCommandLineArgs();
             if (args.Length >= 2)
             {
-                loadArchive(args[1]);
+                LoadArchive(args[1]);
             }
         }
 
@@ -74,15 +79,20 @@ namespace RPA_Explorer
             operationEnabled = true;
         }
 
-        private void loadArchive(string openFile)
+        private void LoadArchive(string openFile)
         {
+            if (CheckIfChanged("Archive was modified, do you really want to load a new one and lose changes?"))
+            {
+                return;
+            }
+            
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Title = "Select RenPy Archive";
                 openFileDialog.Filter = "RPA/RPI files (*.rpa,*.rpi)|*.rpa;*.rpi)";
 
                 DialogResult dialogResult = DialogResult.None;
-                if (openFile == String.Empty)
+                if (openFile == String.Empty || openFile == null)
                 {
                     dialogResult = openFileDialog.ShowDialog();
                 }
@@ -101,83 +111,116 @@ namespace RPA_Explorer
                     {
                         statusBar1.Text = "Loading file: " + openFileDialog.FileName;
                         
-                        rpaParser = new RpaParser(openFileDialog.FileName);
-
+                        expandedList.Clear();
+                        rpaParser = new RpaParser();
+                        rpaParser.LoadArchive(openFileDialog.FileName);
                         fileList = rpaParser.GetFileList();
 
-                        treeView1.Nodes.Clear();
-                        TreeNode root = new TreeNode();
-                        TreeNode node = root;
-                        root.Name = "";
-                        root.Text = "/";
-                        root.BackColor = Color.SandyBrown;
-                        treeView1.Nodes.Add(root);
-                        string pathBuild = String.Empty;
-                        foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in fileList)
-                        {
-                            node = root;
-                            pathBuild = String.Empty;
-                            foreach (string pathBits in kvp.Key.Split('/'))
-                            {
-                                if (pathBuild == String.Empty)
-                                {
-                                    pathBuild = pathBits;
-                                }
-                                else
-                                {
-                                    pathBuild += "/" + pathBits;
-                                }
-
-                                if (node.Nodes.ContainsKey(pathBits))
-                                {
-                                    node = node.Nodes[pathBits];
-                                }
-                                else
-                                {
-                                    string sizeInfo = String.Empty;
-                                    if (fileList.ContainsKey(pathBuild))
-                                    {
-                                        sizeInfo = " (" + PrettySize.Format(fileList[pathBuild].length) + ")";
-                                    }
-                                    else
-                                    {
-                                        // Loop trough fileList and find all .StartsWith(pathBuild) keys and sum their .length
-                                    }
-                                    node = node.Nodes.Add(pathBits, pathBits + sizeInfo);
-                                    if (!fileList.ContainsKey(pathBuild))
-                                    {
-                                        node.BackColor = Color.SandyBrown;
-                                    }
-                                }
-                            }
-                        }
-                        root.Expand();
-
-                        textBox1.Text = "Archive version: " + rpaParser.GetArchiveVersion() + Environment.NewLine +
-                                        "File location: " + rpaParser.GetArchiveInfo().FullName + Environment.NewLine +
-                                        "File size: " + PrettySize.Format(rpaParser.GetArchiveInfo().Length) + Environment.NewLine +
-                                        "Object count: " + fileList.Count + Environment.NewLine;
+                        GenerateTreeView();
 
                         switchTabs = true;
                         tabControl1.SelectedTab = tabPage0;
                         switchTabs = false;
-                        label2.Text = "Select file from list on the side to preview contents. Check and export to save it locally";
+                        label2.Text = "Choose file from list on the side to preview contents. Check and export to save it locally.";
 
                         ResetPreviewFields();
 
                         treeView1.SelectedNode = null;
 
                         button2.Enabled = true;
+                        button6.Enabled = true;
+                        button7.Enabled = true;
 
                         statusBar1.Text = "Ready";
                     }
+
+                    archiveChanged = false;
                 }
             }
         }
 
+        private void GenerateTreeView()
+        {
+            treeView1.Nodes.Clear();
+            TreeNode root = new TreeNode();
+            TreeNode node = root;
+            root.Name = "";
+            root.Text = "/";
+            root.BackColor = Color.SandyBrown;
+            treeView1.Nodes.Add(root);
+            string pathBuild = String.Empty;
+            bool newFileFound = false;
+            foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in fileList)
+            {
+                node = root;
+                pathBuild = String.Empty;
+                foreach (string pathBits in kvp.Key.Split('/'))
+                {
+                    if (pathBuild == String.Empty)
+                    {
+                        pathBuild = pathBits;
+                    }
+                    else
+                    {
+                        pathBuild += "/" + pathBits;
+                    }
+
+                    if (node.Nodes.ContainsKey(pathBits))
+                    {
+                        node = node.Nodes[pathBits];
+                    }
+                    else
+                    {
+                        string sizeInfo = String.Empty;
+                        if (fileList.ContainsKey(pathBuild))
+                        {
+                            
+                            sizeInfo = " (" + PrettySize.Format(fileList[pathBuild].length) + ")";
+                        }
+                        else
+                        {
+                            // Loop trough fileList and find all .StartsWith(pathBuild) keys and sum their .length
+                        }
+                        node = node.Nodes.Add(pathBits, pathBits + sizeInfo);
+                        if (!fileList.ContainsKey(pathBuild))
+                        {
+                            node.BackColor = Color.SandyBrown;
+                        }
+                    }
+                    
+                    if (!kvp.Value.inArchive)
+                    {
+                        newFileFound = true;
+                        node.ForeColor = Color.Green;
+                    }
+                }
+            }
+
+            if (newFileFound)
+            {
+                root.ForeColor = Color.Green;
+            }
+
+            if (expandedList.Count > 0)
+            {
+                foreach (TreeNode nodeExpands in treeView1.Nodes.All())
+                {
+                    if (expandedList.Contains(nodeExpands.FullPath))
+                    {
+                        nodeExpands.Expand();
+                    }
+                }
+            }
+
+            root.Expand();
+            archiveLoaded = true;
+
+            GenerateArchiveInfo();
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
-            loadArchive("");
+            LoadArchive(String.Empty);
         }
 
         private string NormalizeTreePath(string path)
@@ -221,22 +264,6 @@ namespace RPA_Explorer
         private void button3_Click(object sender, EventArgs e)
         {
             operationEnabled = false;
-        }
-
-        private void RpaExplorer_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-        }
-
-        private void RpaExplorer_DragDrop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                loadArchive(((string[]) e.Data.GetData(DataFormats.FileDrop))[0]);
-            }
         }
 
         private void ResetPreviewFields()
@@ -452,6 +479,240 @@ namespace RPA_Explorer
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             videoView1.MediaPlayer.Volume = trackBar1.Value;
+        }
+
+        private void RpaExplorer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (CheckIfChanged("Archive was modified, do you really want to exit without saving and lose changes?"))
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            CreateNewArchive();
+        }
+
+        private void CreateNewArchive()
+        {
+            if (CheckIfChanged("Archive was modified, do you really want to create a new one and lose changes?"))
+            {
+                return;
+            }
+            
+            expandedList.Clear();
+            rpaParser = new RpaParser();
+            rpaParser.CreateArchive(RpaParser.Version.RPA_3);
+            fileList = rpaParser.GetFileList();
+            
+            GenerateTreeView();
+
+            switchTabs = true;
+            tabControl1.SelectedTab = tabPage0;
+            switchTabs = false;
+            label2.Text = "Choose file from list on the side to preview contents. Check and export to save it locally.";
+
+            ResetPreviewFields();
+
+            treeView1.SelectedNode = null;
+
+            button2.Enabled = true;
+            button6.Enabled = true;
+            button7.Enabled = true;
+
+            statusBar1.Text = "Ready";
+            
+            archiveChanged = true;
+        }
+
+        private void GenerateArchiveInfo()
+        {
+            string archiveInfo = String.Empty;
+
+            int unsavedCount = 0;
+            foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in fileList)
+            {
+                if (!kvp.Value.inArchive)
+                {
+                    unsavedCount++;
+                }
+            }
+
+            archiveInfo += "Archive version: " + rpaParser.GetArchiveVersion() + Environment.NewLine;
+            archiveInfo += "File location: " + rpaParser.GetArchiveInfo()?.FullName + Environment.NewLine;
+            archiveInfo += "Objects count: " + fileList.Count + Environment.NewLine;
+            archiveInfo += "Unsaved objects count: " + unsavedCount + Environment.NewLine;
+
+            textBox1.Text = archiveInfo;
+        }
+
+        private bool CheckIfChanged(string message)
+        {
+            if (message != String.Empty && archiveChanged)
+            {
+                if (MessageBox.Show(message, "Archive modified", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                {
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            return archiveChanged;
+        }
+
+        private void treeView1_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                fileListNew.Clear();
+                fileListNew = rpaParser.DeepCopyIndex(fileList);
+                cancelAdd = false;
+                
+                foreach (string path in (string[]) e.Data.GetData(DataFormats.FileDrop))
+                {
+                    string originalPath = path;
+                    if (Directory.Exists(path))
+                    {
+                        originalPath = new DirectoryInfo(path).Parent?.FullName;
+                    }
+                    if (File.Exists(path))
+                    {
+                        originalPath = new FileInfo(path).DirectoryName;
+                    }
+                    AddPathToIndex(path, originalPath);
+                }
+
+                if (!cancelAdd)
+                {
+                    fileList = rpaParser.DeepCopyIndex(fileListNew);
+                    rpaParser.SetFileList(fileList);
+                }
+
+                fileListNew.Clear();
+
+                GenerateTreeView();
+            }
+        }
+
+        private void AddPathToIndex(string path, string originalPath)
+        {
+            archiveChanged = true;
+            string key = String.Empty;
+            RpaParser.ArchiveIndex index = new RpaParser.ArchiveIndex();
+            index.inArchive = false;
+                    
+            if (Directory.Exists(path))
+            {
+                foreach (string pathFile in Directory.GetFiles(path))
+                {
+                    AddPathToIndex(pathFile, originalPath);
+                }
+                foreach (string pathDir in Directory.GetDirectories(path))
+                {
+                    AddPathToIndex(pathDir, originalPath);
+                }
+            }
+
+            if (File.Exists(path) && !cancelAdd)
+            {
+                index.path = path.Replace(@"\", "/");
+                index.relativePath = index.path.Replace(originalPath.Replace(@"\", "/") + "/", String.Empty);
+                index.length = new FileInfo(path).Length;
+                index.inArchive = false;
+                if (fileListNew.ContainsKey(index.relativePath))
+                {
+                    /*if (fileListNew[index.relativePath].inArchive)
+                    {
+                        DialogResult dialogResult = MessageBox.Show("File '" + index.relativePath + "' exists in archive, do you want to replace it?", "File exists in archive", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                        if (dialogResult == DialogResult.Cancel)
+                        {
+                            cancelAdd = true;
+                            return;
+                        }
+                        if (dialogResult == DialogResult.No)
+                        {
+                            return;
+                        }
+                    }*/
+                    
+                    fileListNew.Remove(index.relativePath);
+                }
+                fileListNew.Add(index.relativePath, index);
+            }
+        }
+
+        private void treeView1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) && archiveLoaded)
+            {
+                e.Effect = DragDropEffects.Copy;
+                return;
+            }
+            e.Effect = DragDropEffects.None;
+        }
+
+        private void tabControl1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            e.Effect = DragDropEffects.None;
+        }
+
+        private void tabControl1_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                LoadArchive(((string[]) e.Data.GetData(DataFormats.FileDrop))[0]);
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            bool changed = false;
+            foreach (TreeNode node in treeView1.Nodes.All())
+            {
+                if (node.Checked && fileList.ContainsKey(NormalizeTreePath(node.FullPath)))
+                {
+                    fileList.Remove(NormalizeTreePath(node.FullPath));
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                archiveChanged = true;
+                GenerateTreeView();
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (fileList.Count == 0)
+            {
+                MessageBox.Show("Archive does not contain any files, cannot save empty archive.","Empty archive", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            
+            // TODO: Save archive
+            throw new System.NotImplementedException();
+            // Load saved archive at the end (maybe also check if successful and load old archive and store changed indexes from old to restore changes)
+        }
+
+        private void treeView1_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            if (expandedList.Contains(e.Node.FullPath))
+            {
+                expandedList.Remove(e.Node.FullPath);
+            }
+        }
+
+        private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            expandedList.Add(e.Node.FullPath);
         }
     }
     
