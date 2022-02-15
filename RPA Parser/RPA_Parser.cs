@@ -20,6 +20,7 @@ namespace RPA_Parser
     {
         public class Version
         {
+            public const double Unknown = -1;
             public const double RPA_1 = 1;
             public const double RPA_2 = 2;
             public const double RPA_3 = 3;
@@ -130,6 +131,7 @@ namespace RPA_Parser
 
         public void CreateArchive()
         {
+            _version = Version.Unknown;
             _step = 0xDEADBEEF;
         }
 
