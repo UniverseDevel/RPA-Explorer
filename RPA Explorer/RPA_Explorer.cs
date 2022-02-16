@@ -180,23 +180,21 @@ namespace RPA_Explorer
                     }
                     else
                     {
-                        string sizeInfo = String.Empty;
-                        if (rpaParser._indexes.ContainsKey(pathBuild))
-                        {
-                            
-                            sizeInfo = " (" + PrettySize.Format(rpaParser._indexes[pathBuild].length) + ")";
-                        }
-                        else
-                        {
-                            // TODO: Loop trough rpaParser._indexes and find all .StartsWith(pathBuild) keys and sum their .length
-                        }
-                        node = node.Nodes.Add(pathBits, pathBits + sizeInfo);
+                        node = node.Nodes.Add(pathBits, pathBits);
                     }
                 }
             }
             
             foreach (TreeNode nodeVisuals in treeView1.Nodes.All())
             {
+                string nodeName = NormalizeTreePath(nodeVisuals.FullPath);
+
+                bool includeFolders = false;
+                if (nodeVisuals.Nodes.Count == 0 || includeFolders)
+                {
+                    nodeVisuals.Text += " (" + PrettySize.Format(GetNodeSize(nodeVisuals)) + "*)";
+                }
+                
                 if (expandedList.Contains(nodeVisuals.FullPath))
                 {
                     nodeVisuals.Expand();
@@ -213,9 +211,9 @@ namespace RPA_Explorer
                     nodeVisuals.ImageIndex = 1;
                 }
 
-                if (rpaParser._indexes.ContainsKey(NormalizeTreePath(nodeVisuals.FullPath)))
+                if (rpaParser._indexes.ContainsKey(nodeName))
                 {
-                    if (!rpaParser._indexes[NormalizeTreePath(nodeVisuals.FullPath)].inArchive)
+                    if (!rpaParser._indexes[nodeName].inArchive)
                     {
                         nodeVisuals.ForeColor = Color.Green;
                         nodeVisuals.ImageIndex = 2;
@@ -229,6 +227,37 @@ namespace RPA_Explorer
             archiveLoaded = true;
 
             GenerateArchiveInfo();
+        }
+
+        private long GetNodeSize(TreeNode node)
+        {
+            long size = 0;
+
+            if (node.Nodes.Count > 0)
+            {
+                foreach (TreeNode nodeChild in node.Nodes.All())
+                {
+                    if (nodeChild.Nodes.Count == 0)
+                    {
+                        if (rpaParser._indexes.ContainsKey(NormalizeTreePath(nodeChild.FullPath)))
+                        {
+                            size += rpaParser._indexes[NormalizeTreePath(nodeChild.FullPath)].length;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (node.Nodes.Count == 0)
+                {
+                    if (rpaParser._indexes.ContainsKey(NormalizeTreePath(node.FullPath)))
+                    {
+                        size = rpaParser._indexes[NormalizeTreePath(node.FullPath)].length;
+                    }
+                }
+            }
+
+            return size;
         }
 
         private void MarkChanged(TreeNode node)
@@ -247,7 +276,7 @@ namespace RPA_Explorer
 
         private string NormalizeTreePath(string path)
         {
-            return Regex.Replace(Regex.Replace(path, "^/+", ""), " [(].+[)]$", "");
+            return Regex.Replace(Regex.Replace(path, @" [(](\d+?(\.\d+?)*? (bytes|.iB))\*[)](/|$)", "$4"), "^/+", "");
         }
 
         private void button2_Click(object sender, EventArgs e)
