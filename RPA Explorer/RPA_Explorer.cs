@@ -220,10 +220,9 @@ namespace RPA_Explorer
                     if (!fileList[NormalizeTreePath(nodeVisuals.FullPath)].inArchive)
                     {
                         nodeVisuals.ForeColor = Color.Green;
-                        root.ForeColor = Color.Green;
                         nodeVisuals.ImageIndex = 2;
-                        
-                        // TODO: mark green for parent nodes as well
+
+                        MarkChanged(nodeVisuals);
                     }
                 }
             }
@@ -232,6 +231,15 @@ namespace RPA_Explorer
             archiveLoaded = true;
 
             GenerateArchiveInfo();
+        }
+
+        private void MarkChanged(TreeNode node)
+        {
+            if (node.Parent != null)
+            {
+                node.Parent.ForeColor = Color.Green;
+                MarkChanged(node.Parent);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
