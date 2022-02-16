@@ -38,6 +38,10 @@
         <DependentUpon>RPA_Explorer.cs</DependentUpon>
         <SubType>Designer</SubType>
       </EmbeddedResource>
+      <Compile Update="ArchiveSave.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <EmbeddedResource Include="ArchiveSave.resx" />
     </ItemGroup>
 
     <ItemGroup>

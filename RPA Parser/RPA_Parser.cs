@@ -28,7 +28,8 @@ namespace RPA_Parser
         
         private class ArchiveMagic
         {
-            public const string RPA_1 = ".rpi";
+            public const string RPA_1_RPA = ".rpa";
+            public const string RPA_1_RPI = ".rpi";
             public const string RPA_2 = "RPA-2.0 ";
             public const string RPA_3 = "RPA-3.0 ";
             public const string RPA_3_2 = "RPA-3.2 ";
@@ -39,14 +40,17 @@ namespace RPA_Parser
             public const string RPC_2 = "RENPY RPC2";
         }
 
+        public FileInfo _fileInfo;
+        public double _version;
+        public long _offset;
+        public int _padding = 0;
+        public long _step;
+        public bool optionsConfirmed = false;
+        public SortedDictionary<string,ArchiveIndex> _indexes = new ();
+        
         private string _filePath;
         private string _firstLine;
-        private FileInfo _fileInfo;
-        private double _version;
         private string[] _metadata;
-        private long _offset;
-        private long _step;
-        private SortedDictionary<string,ArchiveIndex> _indexes = new ();
 
         public class ArchiveIndex
         {
@@ -66,6 +70,13 @@ namespace RPA_Parser
             public const string Video = "video";
             public const string Audio = "audio";
         }
+        
+        /*
+        RenPy Supports:
+        Images: JPEG/JPG, PNG, WEBP, BMP, GIF
+        Sound/Music: OPUS, OGG Vorbis, FLAC, WAV, MP3, MP2
+        Movies: WEBM, OGG Theora, VP9, VP8, MPEG 41, MPEG 2, MPEG 1
+        */
 
         public string[] imageExtList = {
             ".jpeg",
@@ -142,7 +153,7 @@ namespace RPA_Parser
             _filePath = filePath;
             _fileInfo = GetFileInfo();
             _firstLine = GetFirstLine();
-            _version = GetVersion();
+            _version = CheckSupportedVersion(GetVersion());
             
             if (_version == Version.RPA_2 || _version == Version.RPA_3 || _version == Version.RPA_3_2)
             {
@@ -152,6 +163,24 @@ namespace RPA_Parser
             }
 
             _indexes = GetIndexes();
+        }
+
+        public static double CheckSupportedVersion(double version)
+        {
+            switch (version)
+            {
+                case Version.RPA_3_2:
+                case Version.RPA_3:
+                case Version.RPA_2:
+                    // Version is OK
+                    break;
+                case Version.RPA_1: // Contains index in .rpi file and archive in .rpa file without much to go on with, for now we won't support it
+                    throw new Exception("Archive version 1 is not supported at this moment.");
+                default:
+                    throw new Exception("Specified version is not supported.");
+            }
+            
+            return version;
         }
 
         private FileInfo GetFileInfo()
@@ -196,7 +225,7 @@ namespace RPA_Parser
                 return 2;
             }
 
-            if (_filePath.EndsWith(ArchiveMagic.RPA_1))
+            if (_filePath.EndsWith(ArchiveMagic.RPA_1_RPA) || _filePath.EndsWith(ArchiveMagic.RPA_1_RPI))
             {
                 return 1;
             }
@@ -339,26 +368,6 @@ namespace RPA_Parser
             }
             
             return indexCopy;
-        }
-
-        public SortedDictionary<string, ArchiveIndex> GetFileList()
-        {
-            return _indexes;
-        }
-
-        public void SetFileList(SortedDictionary<string,ArchiveIndex> index)
-        {
-            _indexes = index;
-        }
-
-        public FileInfo GetArchiveInfo()
-        {
-            return _fileInfo;
-        }
-
-        public double GetArchiveVersion()
-        {
-            return _version;
         }
 
         public KeyValuePair<string, byte[]> GetPreviewRaw(string fileName)
@@ -510,9 +519,7 @@ namespace RPA_Parser
                 {
                     reader.BaseStream.Seek(_indexes[fileName].offset, SeekOrigin.Begin);
                     byte[] prefixData = Encoding.UTF8.GetBytes(_indexes[fileName].prefix);
-                    byte[] fileData =
-                        reader.ReadBytes((int) _indexes[fileName].length -
-                                         _indexes[fileName].prefix.Length); // Exported file max size ~2.14 GB
+                    byte[] fileData = reader.ReadBytes((int) _indexes[fileName].length - _indexes[fileName].prefix.Length); // Exported file max size ~2.14 GB
                     byte[] finalData = new byte[prefixData.Length + fileData.Length];
                     Buffer.BlockCopy(prefixData, 0, finalData, 0, prefixData.Length);
                     Buffer.BlockCopy(fileData, 0, finalData, prefixData.Length, fileData.Length);
@@ -547,21 +554,11 @@ namespace RPA_Parser
             return _fileInfo.DirectoryName + @"\" + fileName;
         }
 
-        public string SaveArchive(string path, double version, int padding = 0, long step = 0xDEADBEEF)
+        public string SaveArchive(string path)
         {
-            if (_version == Version.RPA_1)
+            if (!path.EndsWith(".rpa"))
             {
-                if (!path.EndsWith(".rpi"))
-                {
-                    path = path + ".rpi";
-                }
-            }
-            else
-            {
-                if (!path.EndsWith(".rpa"))
-                {
-                    path = path + ".rpa";
-                }
+                path += ".rpa";
             }
 
             if (path == _filePath && _filePath != String.Empty)
@@ -569,17 +566,17 @@ namespace RPA_Parser
                 throw new Exception("Cannot overwrite same archive that is loaded.");
             }
             
-            BuildArchive(path, version, padding, step);
+            BuildArchive(path);
 
             return path;
         }
 
-        private void BuildArchive(string path, double version, int padding, long step)
+        private void BuildArchive(string path)
         {
-            using (Stream stream = File.Open(path, FileMode.Open))
+            using (Stream stream = File.Open(path, FileMode.OpenOrCreate))
             {
                 int archiveOffset = 34; // Default: Version.RPA_3
-                switch (version)
+                switch (_version)
                 {
                     case Version.RPA_3_2:
                         archiveOffset = 34;
@@ -589,6 +586,9 @@ namespace RPA_Parser
                         break;
                     case Version.RPA_2:
                         archiveOffset = 25;
+                        break;
+                    case Version.RPA_1:
+                        archiveOffset = 0;
                         break;
                     default:
                         throw new Exception("Specified version is not supported.");
@@ -604,14 +604,14 @@ namespace RPA_Parser
                 {
                     byte[] content = ExtractData(index.Key);
 
-                    if (padding > 0)
+                    if (_padding > 0)
                     {
                         string paddingStr = String.Empty;
-                        int paddingLength = rnd.Next(1, padding);
+                        int paddingLength = rnd.Next(1, _padding);
 
                         while (paddingLength > 0)
                         {
-                            paddingStr += Encoding.ASCII.GetString(new byte[] {(byte) rnd.Next(1, 255)});
+                            paddingStr += Encoding.ASCII.GetString(new [] {(byte) rnd.Next(1, 255)});
                             paddingLength--;
                         }
 
@@ -619,12 +619,12 @@ namespace RPA_Parser
                         archiveOffset += paddingBytes.Length;
                     }
 
-                    if (version == Version.RPA_3)
+                    if (_version == Version.RPA_3 || _version == Version.RPA_3_2)
                     {
-                        index.Value.length = content.Length ^ step;
-                        index.Value.offset = archiveOffset ^ step;
+                        index.Value.length = content.Length ^ _step;
+                        index.Value.offset = archiveOffset ^ _step;
                     }
-                    else if (version == Version.RPA_2)
+                    else
                     {
                         index.Value.length = content.Length;
                         index.Value.offset = archiveOffset;
@@ -637,7 +637,7 @@ namespace RPA_Parser
 
                     
                     List<object[]> indexData = new List<object[]>();
-                    switch (version) {
+                    switch (_version) {
                         case Version.RPA_3_2:
                             indexData.Add(new object[] { index.Value.offset, index.Value.length, index.Value.prefix });
                             break;
@@ -661,13 +661,13 @@ namespace RPA_Parser
 
                 string headerContent = String.Empty;
 
-                switch (version)
+                switch (_version)
                 {
                     case Version.RPA_3_2:
-                        headerContent = ArchiveMagic.RPA_3_2 + archiveOffset.ToString("x").PadLeft(16, '0') + " " + step.ToString("x").PadLeft(8, '0')+ "\n";
+                        headerContent = ArchiveMagic.RPA_3_2 + archiveOffset.ToString("x").PadLeft(16, '0') + " " + _step.ToString("x").PadLeft(8, '0')+ "\n";
                         break;
                     case Version.RPA_3:
-                        headerContent = ArchiveMagic.RPA_3 + archiveOffset.ToString("x").PadLeft(16, '0') + " " + step.ToString("x").PadLeft(8, '0') + "\n";
+                        headerContent = ArchiveMagic.RPA_3 + archiveOffset.ToString("x").PadLeft(16, '0') + " " + _step.ToString("x").PadLeft(8, '0') + "\n";
                         break;
                     case Version.RPA_2:
                         headerContent = ArchiveMagic.RPA_2 + archiveOffset.ToString("x").PadLeft(16, '0') + "\n";
