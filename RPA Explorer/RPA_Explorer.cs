@@ -297,7 +297,7 @@ namespace RPA_Explorer
                     return;
                 }
                 
-                folderBrowserDialog.SelectedPath = rpaParser._fileInfo.DirectoryName;
+                folderBrowserDialog.SelectedPath = rpaParser._archiveInfo.DirectoryName;
                 if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 {
                     button1.Enabled = false;
@@ -595,7 +595,7 @@ namespace RPA_Explorer
                 archiveInfo += "Archive version: " + rpaParser._version + Environment.NewLine;
             }
 
-            archiveInfo += "File location: " + rpaParser._fileInfo.FullName + Environment.NewLine;
+            archiveInfo += "File location: " + rpaParser._archiveInfo.FullName + Environment.NewLine;
             archiveInfo += "Objects count: " + rpaParser._indexes.Count + Environment.NewLine;
             archiveInfo += "Unsaved objects count: " + unsavedCount + Environment.NewLine;
 
@@ -755,9 +755,9 @@ namespace RPA_Explorer
             statusBar1.Text = "Saving archive...";
 
             string initPath = System.Reflection.Assembly.GetEntryAssembly().Location;
-            if (rpaParser._fileInfo.DirectoryName != null)
+            if (rpaParser._archiveInfo.DirectoryName != null)
             {
-                initPath = rpaParser._fileInfo.DirectoryName;
+                initPath = rpaParser._archiveInfo.DirectoryName;
             }
             
             SaveFileDialog saveFileDialog = new SaveFileDialog();
