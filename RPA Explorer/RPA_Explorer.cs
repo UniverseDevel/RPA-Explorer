@@ -41,6 +41,12 @@ namespace RPA_Explorer
             videoView1.MediaPlayer.TimeChanged += videoView1_MediaPlayer_TimeChanged;
             videoView1.BackgroundImage = null;
             SetMediaTimeLabel(0, 0);
+            
+            ImageList imageList = new ImageList();
+            imageList.Images.Add((Image) resources.GetObject("treeView1.Image.folder"), Color.Transparent);
+            imageList.Images.Add((Image) resources.GetObject("treeView1.Image.file"), Color.Transparent);
+            imageList.Images.Add((Image) resources.GetObject("treeView1.Image.fileChanged"), Color.Transparent);
+            treeView1.ImageList = imageList;
 
             args = Environment.GetCommandLineArgs();
             if (args.Length >= 2)
@@ -151,6 +157,7 @@ namespace RPA_Explorer
             root.Name = "";
             root.Text = "/";
             root.BackColor = Color.SandyBrown;
+            root.ImageIndex = 0;
             treeView1.Nodes.Add(root);
             string pathBuild = String.Empty;
             bool newFileFound = false;
@@ -186,32 +193,37 @@ namespace RPA_Explorer
                             // Loop trough fileList and find all .StartsWith(pathBuild) keys and sum their .length
                         }
                         node = node.Nodes.Add(pathBits, pathBits + sizeInfo);
-                        if (!fileList.ContainsKey(pathBuild))
-                        {
-                            node.BackColor = Color.SandyBrown;
-                        }
-                    }
-                    
-                    if (!kvp.Value.inArchive)
-                    {
-                        newFileFound = true;
-                        node.ForeColor = Color.Green;
                     }
                 }
             }
-
-            if (newFileFound)
+            
+            foreach (TreeNode nodeVisuals in treeView1.Nodes.All())
             {
-                root.ForeColor = Color.Green;
-            }
-
-            if (expandedList.Count > 0)
-            {
-                foreach (TreeNode nodeExpands in treeView1.Nodes.All())
+                if (expandedList.Contains(nodeVisuals.FullPath))
                 {
-                    if (expandedList.Contains(nodeExpands.FullPath))
+                    nodeVisuals.Expand();
+                }
+
+                if (nodeVisuals.Nodes.Count > 0)
+                {
+                    nodeVisuals.BackColor = Color.SandyBrown;
+                    nodeVisuals.ImageIndex = 0;
+                }
+                else
+                {
+                    nodeVisuals.BackColor = Color.Transparent;
+                    nodeVisuals.ImageIndex = 1;
+                }
+
+                if (fileList.ContainsKey(NormalizeTreePath(nodeVisuals.FullPath)))
+                {
+                    if (!fileList[NormalizeTreePath(nodeVisuals.FullPath)].inArchive)
                     {
-                        nodeExpands.Expand();
+                        nodeVisuals.ForeColor = Color.Green;
+                        root.ForeColor = Color.Green;
+                        nodeVisuals.ImageIndex = 2;
+                        
+                        // TODO: mark green for parent nodes as well
                     }
                 }
             }
@@ -364,6 +376,7 @@ namespace RPA_Explorer
             }
             
             treeView1.SelectedNode = selectedNode;
+            treeView1.SelectedNode.SelectedImageIndex = selectedNode.ImageIndex;
             treeView1.SelectedNode.EnsureVisible();
             treeView1.Focus();
         }
@@ -721,7 +734,7 @@ namespace RPA_Explorer
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 rpaParserBak = rpaParser;
-                // TODO: Dialog to get version = 3, padlength = 0, key = 0xDEADBEEF
+                // TODO: Dialog to get version = 3, padlength = 0, key = 0xDEADBEEF (use new form and add radio button and text fields)
                 try
                 {
                     string saveName = rpaParser.SaveArchive(saveFileDialog.FileName, RpaParser.Version.RPA_3);
