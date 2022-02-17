@@ -21,6 +21,7 @@ namespace RPA_Explorer
         private bool cancelAdd = false;
         private bool archiveLoaded = false;
         private SortedDictionary<string, RpaParser.ArchiveIndex> fileListBackup = new ();
+        private Dictionary<string, long> indexPathSize = new ();
         private List<string> expandedList = new ();
         private string[] args;
         private bool switchTabs = false;
@@ -157,6 +158,7 @@ namespace RPA_Explorer
             root.BackColor = Color.SandyBrown;
             root.ImageIndex = 0;
             treeView1.Nodes.Add(root);
+            indexPathSize.Add("", 0);
             string pathBuild = String.Empty;
             
             foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in rpaParser._indexes)
@@ -180,7 +182,31 @@ namespace RPA_Explorer
                     }
                     else
                     {
-                        node = node.Nodes.Add(pathBits, pathBits);
+                        bool includeFileSize = true;
+                        string fileSize = String.Empty;
+                        if (rpaParser._indexes.ContainsKey(pathBuild) && includeFileSize)
+                        {
+                            fileSize = " (" + PrettySize.Format(rpaParser._indexes[pathBuild].length) + "*)";
+                        }
+
+                        node = node.Nodes.Add(pathBits, pathBits + fileSize);
+                    }
+
+                    if (pathBuild != kvp.Key)
+                    {
+                        if (!indexPathSize.ContainsKey(pathBuild))
+                        {
+                            indexPathSize.Add(pathBuild, 0);
+                        }
+
+                        if (rpaParser._indexes.ContainsKey(kvp.Key))
+                        {
+                            indexPathSize[pathBuild] += rpaParser._indexes[kvp.Key].length;
+                        }
+                    }
+                    else
+                    {
+                        indexPathSize[""] += rpaParser._indexes[kvp.Key].length;
                     }
                 }
             }
@@ -189,10 +215,10 @@ namespace RPA_Explorer
             {
                 string nodeName = NormalizeTreePath(nodeVisuals.FullPath);
 
-                bool includeFolders = false;
-                if ((nodeVisuals.Nodes.Count == 0 && nodeName != String.Empty) || includeFolders)
+                bool includeFolderSize = true;
+                if (indexPathSize.ContainsKey(nodeName) && includeFolderSize)
                 {
-                    //nodeVisuals.Text += " (" + PrettySize.Format(GetNodeSize(nodeVisuals)) + "*)"; // Causes huge performance drop on archives with a lot of objects
+                    nodeVisuals.Text += " (" + PrettySize.Format(indexPathSize[nodeName]) + "*)";
                 }
 
                 if (nodeName != String.Empty)
@@ -242,9 +268,10 @@ namespace RPA_Explorer
                 {
                     if (nodeChild.Nodes.Count == 0)
                     {
-                        if (rpaParser._indexes.ContainsKey(NormalizeTreePath(nodeChild.FullPath)))
+                        string childName = NormalizeTreePath(nodeChild.FullPath);
+                        if (rpaParser._indexes.ContainsKey(childName))
                         {
-                            size += rpaParser._indexes[NormalizeTreePath(nodeChild.FullPath)].length;
+                            size += rpaParser._indexes[childName].length;
                         }
                     }
                 }
@@ -253,9 +280,10 @@ namespace RPA_Explorer
             {
                 if (node.Nodes.Count == 0)
                 {
-                    if (rpaParser._indexes.ContainsKey(NormalizeTreePath(node.FullPath)))
+                    string name = NormalizeTreePath(node.FullPath);
+                    if (rpaParser._indexes.ContainsKey(name))
                     {
-                        size = rpaParser._indexes[NormalizeTreePath(node.FullPath)].length;
+                        size = rpaParser._indexes[name].length;
                     }
                 }
             }
