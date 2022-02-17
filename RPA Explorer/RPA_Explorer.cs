@@ -277,39 +277,6 @@ namespace RPA_Explorer
             GenerateArchiveInfo();
         }
 
-        private long GetNodeSize(TreeNode node)
-        {
-            long size = 0;
-
-            if (node.Nodes.Count > 0)
-            {
-                foreach (TreeNode nodeChild in node.Nodes.All())
-                {
-                    if (nodeChild.Nodes.Count == 0)
-                    {
-                        string childName = NormalizeTreePath(nodeChild.FullPath);
-                        if (rpaParser._indexes.ContainsKey(childName))
-                        {
-                            size += rpaParser._indexes[childName].length;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (node.Nodes.Count == 0)
-                {
-                    string name = NormalizeTreePath(node.FullPath);
-                    if (rpaParser._indexes.ContainsKey(name))
-                    {
-                        size = rpaParser._indexes[name].length;
-                    }
-                }
-            }
-
-            return size;
-        }
-
         private void MarkChanged(TreeNode node)
         {
             if (node.Parent != null)
@@ -519,6 +486,10 @@ namespace RPA_Explorer
                 else if (e.Node.Nodes.Count > 0)
                 {
                     CheckAllChildNodes(e.Node, e.Node.Checked);
+                    if (e.Node.Parent != null)
+                    {
+                        ParentCheckControl(e.Node.Parent);
+                    }
                 }
             }
         }
