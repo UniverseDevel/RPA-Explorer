@@ -150,6 +150,7 @@ namespace RPA_Explorer
 
         private void GenerateTreeView()
         {
+            indexPathSize.Clear();
             treeView1.Nodes.Clear();
             TreeNode root = new TreeNode();
             TreeNode node = root;
