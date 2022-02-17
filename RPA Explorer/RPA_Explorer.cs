@@ -192,7 +192,7 @@ namespace RPA_Explorer
                 bool includeFolders = false;
                 if ((nodeVisuals.Nodes.Count == 0 && nodeName != String.Empty) || includeFolders)
                 {
-                    nodeVisuals.Text += " (" + PrettySize.Format(GetNodeSize(nodeVisuals)) + "*)";
+                    //nodeVisuals.Text += " (" + PrettySize.Format(GetNodeSize(nodeVisuals)) + "*)"; // Causes huge performance drop on archives with a lot of objects
                 }
 
                 if (nodeName != String.Empty)
