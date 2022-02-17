@@ -34,6 +34,10 @@
       <Compile Update="RPA_Explorer.Designer.cs">
         <DependentUpon>RPA_Explorer.cs</DependentUpon>
       </Compile>
+      <EmbeddedResource Include="Global.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Global.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
       <EmbeddedResource Include="RPA_Explorer.resx">
         <DependentUpon>RPA_Explorer.cs</DependentUpon>
         <SubType>Designer</SubType>
@@ -42,6 +46,11 @@
         <SubType>Form</SubType>
       </Compile>
       <EmbeddedResource Include="ArchiveSave.resx" />
+      <Compile Update="Global.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>resources.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

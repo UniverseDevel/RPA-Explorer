@@ -29,7 +29,7 @@ namespace RPA_Explorer
         private MemoryStream memoryStreamVlc;
         private StreamMediaInput streamMediaInputVlc;
         private Media mediaVlc;
-        private System.ComponentModel.ComponentResourceManager resources = new (typeof(RpaExplorer));
+        private System.ComponentModel.ComponentResourceManager resources = new (typeof(Global));
 
         public RpaExplorer()
         {
@@ -182,14 +182,7 @@ namespace RPA_Explorer
                     }
                     else
                     {
-                        bool includeFileSize = true;
-                        string fileSize = String.Empty;
-                        if (rpaParser._indexes.ContainsKey(pathBuild) && includeFileSize)
-                        {
-                            fileSize = " (" + PrettySize.Format(rpaParser._indexes[pathBuild].length) + "*)";
-                        }
-
-                        node = node.Nodes.Add(pathBits, pathBits + fileSize);
+                        node = node.Nodes.Add(pathBits, pathBits);
                     }
 
                     if (pathBuild != kvp.Key)
@@ -214,12 +207,6 @@ namespace RPA_Explorer
             foreach (TreeNode nodeVisuals in treeView1.Nodes.All())
             {
                 string nodeName = NormalizeTreePath(nodeVisuals.FullPath);
-
-                bool includeFolderSize = true;
-                if (indexPathSize.ContainsKey(nodeName) && includeFolderSize)
-                {
-                    nodeVisuals.Text += " (" + PrettySize.Format(indexPathSize[nodeName]) + "*)";
-                }
 
                 if (nodeName != String.Empty)
                 {
@@ -307,7 +294,7 @@ namespace RPA_Explorer
 
         private string NormalizeTreePath(string path)
         {
-            return Regex.Replace(Regex.Replace(path, @" [(](\d+?(\.\d+?)*? (bytes|.iB))\*[)](/|$)", "$4"), "^/+", "");
+            return Regex.Replace(path, "^/+", "");
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -450,6 +437,7 @@ namespace RPA_Explorer
         private void treeView1_AfterSelect(object sender, EventArgs e)
         {
             PreviewSelectedItem();
+            GenerateArchiveInfo();
         }
 
         private void CheckAllChildNodes(TreeNode node, bool isChecked)
@@ -612,6 +600,16 @@ namespace RPA_Explorer
         {
             string archiveInfo = String.Empty;
 
+            string selectedPath = String.Empty;
+            foreach (TreeNode node in treeView1.Nodes.All())
+            {
+                if (node.IsSelected)
+                {
+                    selectedPath = NormalizeTreePath(node.FullPath);
+                }
+            }
+
+            long selectedSize = -1;
             int unsavedCount = 0;
             foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in rpaParser._indexes)
             {
@@ -619,16 +617,32 @@ namespace RPA_Explorer
                 {
                     unsavedCount++;
                 }
+
+                if (selectedPath == kvp.Key)
+                {
+                    selectedSize = kvp.Value.length;
+                }
+            }
+
+            if (indexPathSize.ContainsKey(selectedPath))
+            {
+                selectedSize = indexPathSize[selectedPath];
             }
 
             if (rpaParser._version != RpaParser.Version.Unknown)
             {
                 archiveInfo += "Archive version: " + rpaParser._version + Environment.NewLine;
-                archiveInfo += "File location: " + rpaParser._archiveInfo.FullName + Environment.NewLine;
+                archiveInfo += "Archive file location: " + rpaParser._archiveInfo.FullName + Environment.NewLine;
+                archiveInfo += "Archive file size: " + PrettySize.Format(indexPathSize[""]) + Environment.NewLine;
             }
 
             archiveInfo += "Objects count: " + rpaParser._indexes.Count + Environment.NewLine;
             archiveInfo += "Unsaved objects count: " + unsavedCount + Environment.NewLine;
+
+            if (selectedSize != -1)
+            {
+                archiveInfo += "Object size: " + PrettySize.Format(selectedSize) + Environment.NewLine;
+            }
 
             textBox1.Text = archiveInfo.Trim();
         }

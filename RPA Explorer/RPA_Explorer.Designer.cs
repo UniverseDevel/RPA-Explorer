@@ -114,7 +114,7 @@ namespace RPA_Explorer
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(344, 80);
+            this.textBox1.Size = new System.Drawing.Size(344, 102);
             this.textBox1.TabIndex = 8;
             // 
             // progressBar1
@@ -141,10 +141,10 @@ namespace RPA_Explorer
             this.treeView1.CheckBoxes = true;
             this.treeView1.FullRowSelect = true;
             this.treeView1.HideSelection = false;
-            this.treeView1.Location = new System.Drawing.Point(12, 256);
+            this.treeView1.Location = new System.Drawing.Point(12, 278);
             this.treeView1.Name = "treeView1";
             this.treeView1.PathSeparator = "/";
-            this.treeView1.Size = new System.Drawing.Size(344, 438);
+            this.treeView1.Size = new System.Drawing.Size(344, 416);
             this.treeView1.TabIndex = 14;
             this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             this.treeView1.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeCollapse);
@@ -317,7 +317,7 @@ namespace RPA_Explorer
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(12, 240);
+            this.label4.Location = new System.Drawing.Point(12, 262);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(100, 13);
             this.label4.TabIndex = 17;
