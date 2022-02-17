@@ -190,25 +190,23 @@ namespace RPA_Explorer
                 string nodeName = NormalizeTreePath(nodeVisuals.FullPath);
 
                 bool includeFolders = false;
-                if (nodeVisuals.Nodes.Count == 0 || includeFolders)
+                if ((nodeVisuals.Nodes.Count == 0 && nodeName != String.Empty) || includeFolders)
                 {
                     nodeVisuals.Text += " (" + PrettySize.Format(GetNodeSize(nodeVisuals)) + "*)";
                 }
-                
-                if (expandedList.Contains(nodeVisuals.FullPath))
-                {
-                    nodeVisuals.Expand();
-                }
 
-                if (nodeVisuals.Nodes.Count > 0)
+                if (nodeName != String.Empty)
                 {
-                    nodeVisuals.BackColor = Color.SandyBrown;
-                    nodeVisuals.ImageIndex = 0;
-                }
-                else
-                {
-                    nodeVisuals.BackColor = Color.Transparent;
-                    nodeVisuals.ImageIndex = 1;
+                    if (nodeVisuals.Nodes.Count > 0)
+                    {
+                        nodeVisuals.BackColor = Color.SandyBrown;
+                        nodeVisuals.ImageIndex = 0;
+                    }
+                    else
+                    {
+                        nodeVisuals.BackColor = Color.Transparent;
+                        nodeVisuals.ImageIndex = 1;
+                    }
                 }
 
                 if (rpaParser._indexes.ContainsKey(nodeName))
@@ -220,6 +218,11 @@ namespace RPA_Explorer
 
                         MarkChanged(nodeVisuals);
                     }
+                }
+                
+                if (expandedList.Contains(nodeVisuals.FullPath))
+                {
+                    nodeVisuals.Expand();
                 }
             }
 
@@ -593,9 +596,9 @@ namespace RPA_Explorer
             if (rpaParser._version != RpaParser.Version.Unknown)
             {
                 archiveInfo += "Archive version: " + rpaParser._version + Environment.NewLine;
+                archiveInfo += "File location: " + rpaParser._archiveInfo.FullName + Environment.NewLine;
             }
 
-            archiveInfo += "File location: " + rpaParser._archiveInfo.FullName + Environment.NewLine;
             archiveInfo += "Objects count: " + rpaParser._indexes.Count + Environment.NewLine;
             archiveInfo += "Unsaved objects count: " + unsavedCount + Environment.NewLine;
 
@@ -755,7 +758,7 @@ namespace RPA_Explorer
             statusBar1.Text = "Saving archive...";
 
             string initPath = System.Reflection.Assembly.GetEntryAssembly().Location;
-            if (rpaParser._archiveInfo.DirectoryName != null)
+            if (rpaParser._archiveInfo?.DirectoryName != null)
             {
                 initPath = rpaParser._archiveInfo.DirectoryName;
             }
