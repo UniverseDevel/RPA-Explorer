@@ -161,7 +161,38 @@ namespace RPA_Explorer
             treeView1.Nodes.Add(root);
             indexPathSize.Add("", 0);
             string pathBuild = String.Empty;
-            
+
+            // Folders first
+            foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in rpaParser._indexes)
+            {
+                node = root;
+                pathBuild = String.Empty;
+                foreach (string pathBits in kvp.Key.Split('/'))
+                {
+                    if (pathBuild == String.Empty)
+                    {
+                        pathBuild = pathBits;
+                    }
+                    else
+                    {
+                        pathBuild += "/" + pathBits;
+                    }
+
+                    if (node.Nodes.ContainsKey(pathBits))
+                    {
+                        node = node.Nodes[pathBits];
+                    }
+                    else
+                    {
+                        if (pathBuild != kvp.Key)
+                        {
+                            node = node.Nodes.Add(pathBits, pathBits);
+                        }
+                    }
+                }
+            }
+
+            // Files second
             foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in rpaParser._indexes)
             {
                 node = root;
