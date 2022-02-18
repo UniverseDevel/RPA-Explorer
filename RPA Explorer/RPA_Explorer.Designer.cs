@@ -204,7 +204,7 @@ namespace RPA_Explorer
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackgroundImage = ((System.Drawing.Image) (resources.GetObject("pictureBox1.BackgroundImage")));
+            this.pictureBox1.BackgroundImage = ((System.Drawing.Image) (resources.GetObject("pictureBox1_BackgroundImage")));
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
@@ -297,7 +297,6 @@ namespace RPA_Explorer
             // 
             this.videoView1.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.videoView1.BackColor = System.Drawing.Color.Black;
-            this.videoView1.BackgroundImage = ((System.Drawing.Image) (resources.GetObject("videoView1.BackgroundImage")));
             this.videoView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.videoView1.Location = new System.Drawing.Point(3, 3);
             this.videoView1.MediaPlayer = null;

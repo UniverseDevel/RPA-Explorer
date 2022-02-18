@@ -40,33 +40,33 @@ namespace RPA_Parser
             public const string RPC_2 = "RENPY RPC2";
         }
 
-        public FileInfo _archiveInfo;
-        public FileInfo _indexInfo;
-        public double _version;
-        public long _offset = 0;
-        public int _padding = 0;
-        public long _step = 0;
-        public bool optionsConfirmed = false;
-        public SortedDictionary<string,ArchiveIndex> _indexes = new ();
+        public FileInfo ArchiveInfo;
+        public FileInfo IndexInfo;
+        public double ArchiveVersion = Version.Unknown;
+        public long Offset;
+        public int Padding = 0;
+        public long Step = 0xDEADBEEF;
+        public bool OptionsConfirmed = false;
+        public SortedDictionary<string,ArchiveIndex> Index = new ();
         
         private string _archivePath;
         private string _indexPath;
         private string _firstLine;
         private string[] _metadata;
 
-        public class Index
+        public class Tuples
         {
-            public long offset = 0;
-            public long length = 0;
-            public string prefix = String.Empty;
+            public long Offset;
+            public long Length;
+            public string Prefix = String.Empty;
         }
         public class ArchiveIndex
         {
-            public SortedDictionary<int, Index> indexes = new ();
-            public string path = String.Empty;
-            public string relativePath = String.Empty;
-            public bool inArchive = false;
-            public long length = 0;
+            public readonly SortedDictionary<int, Tuples> Tuples = new ();
+            public string Path = String.Empty;
+            public string RelativePath = String.Empty;
+            public bool InArchive;
+            public long Length;
         }
 
         public class PreviewTypes
@@ -85,7 +85,7 @@ namespace RPA_Parser
         Movies: WEBM, OGG Theora, VP9, VP8, MPEG 41, MPEG 2, MPEG 1
         */
 
-        public string[] imageExtList = {
+        public readonly string[] ImageExtList = {
             ".jpeg",
             ".jpg",
             ".bmp",
@@ -97,7 +97,7 @@ namespace RPA_Parser
             ".gif"
         };
 
-        public string[] audioExtList = {
+        public readonly string[] AudioExtList = {
             ".aac",
             ".ac3",
             ".flac",
@@ -108,7 +108,7 @@ namespace RPA_Parser
             ".cpc"
         };
 
-        public string[] videoExtList = {
+        public readonly string[] VideoExtList = {
             ".3gp",
             ".flv",
             ".mov",
@@ -123,7 +123,7 @@ namespace RPA_Parser
             ".webm"
         };
 
-        public string[] textExtList = {
+        public readonly string[] TextExtList = {
             ".py",
             ".rpy~",
             ".rpy",
@@ -138,47 +138,47 @@ namespace RPA_Parser
             ".csv"
         };
 
-        public string[] rpycExtList = {
+        public readonly string[] RpycExtList = {
             ".rpyc",
             ".rpymc"
             // ".rpyb" ?
         };
 
-        public RpaParser()
-        {
-            // Init
-        }
-
-        public void CreateArchive()
-        {
-            _version = Version.Unknown;
-            _step = 0xDEADBEEF;
-        }
-
         public void LoadArchive(string filePath)
         {
             _archivePath = filePath;
-            _archiveInfo = GetArchiveInfo();
+            ArchiveInfo = GetArchiveInfo();
             _firstLine = GetFirstLine();
-            _version = CheckSupportedVersion(GetVersion());
+            ArchiveVersion = CheckSupportedVersion(GetVersion());
             
-            if (_version == Version.RPA_2 || _version == Version.RPA_3 || _version == Version.RPA_3_2)
+            if (CheckVersion(ArchiveVersion, Version.RPA_2) || CheckVersion(ArchiveVersion, Version.RPA_3) || CheckVersion(ArchiveVersion, Version.RPA_3_2))
             {
                 _metadata = GetMetadata();
-                _offset = GetOffset();
-                _step = GetStep();
+                Offset = GetOffset();
+                Step = GetStep();
             }
-            else if (_version == Version.RPA_1)
+            else if (CheckVersion(ArchiveVersion, Version.RPA_1))
             {
                 GetIndexAndArchive();
             }
 
-            _indexes = GetIndexes();
+            Index = GetIndexes();
+        }
+
+        public bool CheckVersion(double version, double check)
+        {
+            double difference = version - check;
+            if (difference == 0)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void GetIndexAndArchive()
         {
-            if (_version == Version.RPA_1)
+            if (CheckVersion(ArchiveVersion, Version.RPA_1))
             {
                 if (_archivePath.EndsWith(ArchiveMagic.RPA_1_RPA))
                 {
@@ -190,8 +190,8 @@ namespace RPA_Parser
                     _archivePath = Regex.Replace(_archivePath, @"\.rpi$", ".rpa", RegexOptions.IgnoreCase);
                 }
                 
-                _archiveInfo = GetArchiveInfo();
-                _indexInfo = GetIndexInfo();
+                ArchiveInfo = GetArchiveInfo();
+                IndexInfo = GetIndexInfo();
             }
         }
 
@@ -244,12 +244,7 @@ namespace RPA_Parser
 
         private string GetFirstLine()
         {
-            using (var streamReader = new StreamReader(_archivePath, Encoding.UTF8))
-            {
-                var firstLine = streamReader.ReadLine();
-
-                return firstLine;
-            }
+            return new StreamReader(_archivePath, Encoding.UTF8).ReadLine();
         }
 
         private double GetVersion()
@@ -291,14 +286,14 @@ namespace RPA_Parser
         {
             long step = 0;
             
-            if (_version == Version.RPA_3)
+            if (CheckVersion(ArchiveVersion, Version.RPA_3))
             {
                 for(var i = 2; i < _metadata.Length; i++)
                 {
                     step ^= Convert.ToInt64(_metadata[i], 16);
                 }
             }
-            else if (_version == Version.RPA_3_2)
+            else if (CheckVersion(ArchiveVersion, Version.RPA_3_2))
             {
                 for(var i = 3; i < _metadata.Length; i++)
                 {
@@ -312,29 +307,29 @@ namespace RPA_Parser
         private SortedDictionary<string,ArchiveIndex> GetIndexes()
         {
             SortedDictionary<string,ArchiveIndex> indexList = new SortedDictionary<string,ArchiveIndex>();
-            object unpickledIndexes = new object[]{};
+            object unpickledIndexes;
 
             string filePath = _archivePath;
-            if (_version == Version.RPA_1)
+            if (CheckVersion(ArchiveVersion, Version.RPA_1))
             {
                 filePath = _indexPath;
             }
             
             using (BinaryReader reader = new BinaryReader(File.OpenRead(filePath), Encoding.UTF8))
             {
-                if (_version == Version.RPA_2 || _version == Version.RPA_3 || _version == Version.RPA_3_2)
+                if (CheckVersion(ArchiveVersion, Version.RPA_2) || CheckVersion(ArchiveVersion, Version.RPA_3) || CheckVersion(ArchiveVersion, Version.RPA_3_2))
                 {
-                    reader.BaseStream.Seek(_offset, SeekOrigin.Begin);
+                    reader.BaseStream.Seek(Offset, SeekOrigin.Begin);
                 }
 
-                long blockOffset = _offset;
+                long blockOffset = Offset;
                 long blockSize = 2046;
                 long payloadSize = reader.BaseStream.Length;
-                byte[] fileCompressed = new byte[0];
+                byte[] fileCompressed = { };
 
                 while (blockSize > 0)
                 {
-                    long remaining = payloadSize - blockOffset;
+                    //long remaining = payloadSize - blockOffset;
                     if (blockOffset + blockSize > payloadSize)
                     {
                         blockSize = payloadSize - blockOffset;
@@ -347,8 +342,7 @@ namespace RPA_Parser
 
                     if (blockSize != 0)
                     {
-                        byte[] buffer = new byte[blockSize];
-                        buffer = reader.ReadBytes((int) blockSize);
+                        var buffer = reader.ReadBytes((int) blockSize);
                         fileCompressed = fileCompressed.Concat(buffer).ToArray();
 
                         blockOffset += blockSize;
@@ -373,37 +367,37 @@ namespace RPA_Parser
                 }
 
                 ArchiveIndex indexEntry = new ArchiveIndex();
-                indexEntry.relativePath = (string) kvp.Key;
-                indexEntry.inArchive = true;
+                indexEntry.RelativePath = (string) kvp.Key;
+                indexEntry.InArchive = true;
                 int counter = 0;
-                foreach (object[] value in (ArrayList) kvp.Value) // Version 1 can contain multiple positions of same file?? Need to nest this without [0]
+                foreach (object[] value in (ArrayList) kvp.Value)
                 { 
-                    Index index = new Index();
-                    index.offset = Convert.ToInt64(value.GetValue(0));
-                    index.length = Convert.ToInt64(value.GetValue(1));
+                    Tuples index = new Tuples();
+                    index.Offset = Convert.ToInt64(value.GetValue(0));
+                    index.Length = Convert.ToInt64(value.GetValue(1));
                     if ((long) value.Length == 3)
                     {
-                        index.prefix = (string) value.GetValue(2);
+                        index.Prefix = (string) value.GetValue(2);
                     }
 
-                    indexEntry.indexes.Add(counter, index);
+                    indexEntry.Tuples.Add(counter, index);
                     counter++;
                 }
-                indexList.Add(indexEntry.relativePath, indexEntry);
+                indexList.Add(indexEntry.RelativePath, indexEntry);
             }
 
             foreach (KeyValuePair<string, ArchiveIndex> kvp in indexList)
             {
-                foreach (KeyValuePair<int, Index> kvpI in kvp.Value.indexes)
+                foreach (KeyValuePair<int, Tuples> kvpI in kvp.Value.Tuples)
                 {
                     // Deobfuscate index data
-                    if (_version >= Version.RPA_3)
+                    if (ArchiveVersion >= Version.RPA_3)
                     {
-                        kvpI.Value.offset ^= _step;
-                        kvpI.Value.length ^= _step;
+                        kvpI.Value.Offset ^= Step;
+                        kvpI.Value.Length ^= Step;
                     }
 
-                    kvp.Value.length += kvpI.Value.length;
+                    kvp.Value.Length += kvpI.Value.Length;
                 }
             }
 
@@ -416,18 +410,23 @@ namespace RPA_Parser
             
             foreach (KeyValuePair<string, ArchiveIndex> kvp in originalIndex)
             {
-                ArchiveIndex archIndex = new ArchiveIndex();
-                archIndex.path = kvp.Value.path;
-                archIndex.inArchive = kvp.Value.inArchive;
-                archIndex.relativePath = kvp.Value.relativePath;
-                foreach (KeyValuePair<int, Index> kvpI in kvp.Value.indexes)
+                ArchiveIndex archIndex = new ArchiveIndex
                 {
-                    Index index = new Index();
-                    index.length = kvpI.Value.length;
-                    index.offset = kvpI.Value.offset;
-                    index.prefix = kvpI.Value.prefix;
+                    Path = kvp.Value.Path,
+                    InArchive = kvp.Value.InArchive,
+                    RelativePath = kvp.Value.RelativePath
+                };
                 
-                    archIndex.indexes.Add(kvpI.Key, index);
+                foreach (KeyValuePair<int, Tuples> kvpI in kvp.Value.Tuples)
+                {
+                    Tuples index = new Tuples
+                    {
+                        Length = kvpI.Value.Length,
+                        Offset = kvpI.Value.Offset,
+                        Prefix = kvpI.Value.Prefix
+                    };
+
+                    archIndex.Tuples.Add(kvpI.Key, index);
                 }
                 
                 indexCopy.Add(kvp.Key, archIndex);
@@ -446,7 +445,7 @@ namespace RPA_Parser
         {
             KeyValuePair<string, object> data = new KeyValuePair<string, object>(PreviewTypes.Unknown, null);
 
-            if (!_indexes.ContainsKey(fileName))
+            if (!Index.ContainsKey(fileName))
             {
                 return data;
             }
@@ -454,42 +453,36 @@ namespace RPA_Parser
             FileInfo fileInfo = new FileInfo(fileName);
             byte[] bytes = ExtractData(fileName);
 
-            if (imageExtList.Contains(fileInfo.Extension.ToLower()))
+            if (ImageExtList.Contains(fileInfo.Extension.ToLower()))
             {
                 byte[] magicBytes = new byte[16] ;
                 Buffer.BlockCopy(bytes,0, magicBytes,0,16);
 
-                Image image = null;
+                Image image;
                 if (fileInfo.Extension.ToLower() == ".webp" || Encoding.UTF8.GetString(magicBytes, 0, magicBytes.Length).Contains("WEBP"))
                 {
-                    using (WebP ww = new WebP())
-                    {
-                        image = ww.Decode(bytes);
-                    }
+                    image = new WebP().Decode(bytes);
                 }
                 else
                 {
-                    using (MemoryStream ms = new MemoryStream(bytes))
-                    {
-                        image = Image.FromStream(ms);
-                    }
+                    image = Image.FromStream(new MemoryStream(bytes));
                 }
 
                 data = new KeyValuePair<string, object>(PreviewTypes.Image, image);
             }
-            else if (textExtList.Contains(fileInfo.Extension.ToLower()))
+            else if (TextExtList.Contains(fileInfo.Extension.ToLower()))
             {
                 data = new KeyValuePair<string, object>(PreviewTypes.Text, NormlizeNewLines(Encoding.UTF8.GetString(bytes, 0, bytes.Length)));
             }
-            else if (audioExtList.Contains(fileInfo.Extension.ToLower()))
+            else if (AudioExtList.Contains(fileInfo.Extension.ToLower()))
             {
                 data = new KeyValuePair<string, object>(PreviewTypes.Audio, bytes);
             }
-            else if (videoExtList.Contains(fileInfo.Extension.ToLower()))
+            else if (VideoExtList.Contains(fileInfo.Extension.ToLower()))
             {
                 data = new KeyValuePair<string, object>(PreviewTypes.Video, bytes);
             }
-            else if (rpycExtList.Contains(fileInfo.Extension.ToLower()))
+            else if (RpycExtList.Contains(fileInfo.Extension.ToLower()))
             {
                 bytes = DeobfuscateRPC(bytes);
                 data = new KeyValuePair<string, object>(PreviewTypes.Text, NormlizeNewLines(Encoding.UTF8.GetString(bytes, 0, bytes.Length)));
@@ -501,7 +494,7 @@ namespace RPA_Parser
 
             if (returnRaw)
             {
-                if (rpycExtList.Contains(fileInfo.Extension.ToLower()))
+                if (RpycExtList.Contains(fileInfo.Extension.ToLower()))
                 {
                     data = new KeyValuePair<string, object>(data.Key, bytes);
                 }
@@ -574,22 +567,22 @@ namespace RPA_Parser
 
         public byte[] ExtractData(string fileName)
         {
-            if (!_indexes.ContainsKey(fileName))
+            if (!Index.ContainsKey(fileName))
             {
                 throw new Exception("Specified file does not exist in RenPy Archive.");
             }
 
-            if (_indexes[fileName].inArchive)
+            if (Index[fileName].InArchive)
             {
                 using (BinaryReader reader = new BinaryReader(File.Open(_archivePath, FileMode.Open), Encoding.UTF8))
                 {
                     byte[] finalData = { };
 
-                    foreach (KeyValuePair<int, Index> kvpI in _indexes[fileName].indexes)
+                    foreach (KeyValuePair<int, Tuples> kvpI in Index[fileName].Tuples)
                     {
-                        reader.BaseStream.Seek(kvpI.Value.offset, SeekOrigin.Begin);
-                        byte[] prefixData = Encoding.UTF8.GetBytes(kvpI.Value.prefix);
-                        byte[] fileData = reader.ReadBytes((int) kvpI.Value.length - kvpI.Value.prefix.Length); // Exported file max size ~2.14 GB
+                        reader.BaseStream.Seek(kvpI.Value.Offset, SeekOrigin.Begin);
+                        byte[] prefixData = Encoding.UTF8.GetBytes(kvpI.Value.Prefix);
+                        byte[] fileData = reader.ReadBytes((int) kvpI.Value.Length - kvpI.Value.Prefix.Length); // Exported file max size ~2.14 GB
                         byte[] partData = new byte[finalData.Length + prefixData.Length + fileData.Length];
                         Buffer.BlockCopy(finalData, 0, partData, 0, finalData.Length);
                         Buffer.BlockCopy(prefixData, 0, partData, finalData.Length, prefixData.Length);
@@ -601,16 +594,16 @@ namespace RPA_Parser
                 }
             }
             
-            return File.ReadAllBytes(_indexes[fileName].path);
+            return File.ReadAllBytes(Index[fileName].Path);
         }
 
         public string Extract(string fileName, string exportPath)
         {
             byte[] finalData = ExtractData(fileName);
-            string finalPath = String.Empty;
-            if (exportPath.Trim() == null || exportPath.Trim() == String.Empty)
+            string finalPath;
+            if (exportPath.Trim() == String.Empty)
             {
-                finalPath = _archiveInfo.DirectoryName + @"\" + fileName;
+                finalPath = ArchiveInfo.DirectoryName + @"\" + fileName;
             }
             else
             {
@@ -621,10 +614,10 @@ namespace RPA_Parser
                 finalPath = exportPath.Trim() + @"\" + fileName;
             }
 
-            Directory.CreateDirectory(Path.GetDirectoryName(finalPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(finalPath) ?? throw new InvalidOperationException());
             File.WriteAllBytes(finalPath, finalData);
 
-            return _archiveInfo.DirectoryName + @"\" + fileName;
+            return ArchiveInfo.DirectoryName + @"\" + fileName;
         }
 
         public string SaveArchive(string archivePath)
@@ -665,8 +658,8 @@ namespace RPA_Parser
             
             using (Stream stream = File.Open(archivePath, FileMode.Truncate))
             {
-                int archiveOffset = 34; // Default: Version.RPA_3
-                switch (_version)
+                int archiveOffset;
+                switch (ArchiveVersion)
                 {
                     case Version.RPA_3_2:
                         archiveOffset = 34;
@@ -690,14 +683,14 @@ namespace RPA_Parser
                 
                 // Update indexes
                 Hashtable indexes = new Hashtable();
-                foreach (KeyValuePair<string, ArchiveIndex> index in _indexes)
+                foreach (KeyValuePair<string, ArchiveIndex> index in Index)
                 {
                     byte[] content = ExtractData(index.Key);
 
-                    if (_padding > 0)
+                    if (Padding > 0)
                     {
                         string paddingStr = String.Empty;
-                        int paddingLength = rnd.Next(1, _padding);
+                        int paddingLength = rnd.Next(1, Padding);
 
                         while (paddingLength > 0)
                         {
@@ -713,9 +706,9 @@ namespace RPA_Parser
                     stream.Write(content, 0, content.Length);
 
                     List<object[]> indexData = new List<object[]>();
-                    if (_version == Version.RPA_3 || _version == Version.RPA_3_2)
+                    if (CheckVersion(ArchiveVersion, Version.RPA_3) || CheckVersion(ArchiveVersion, Version.RPA_3_2))
                     {
-                        indexData.Add(new object[] {archiveOffset ^ _step, content.Length ^ _step, ""}); // Last is prefix
+                        indexData.Add(new object[] {archiveOffset ^ Step, content.Length ^ Step, ""}); // Last is prefix
                     }
                     else
                     {
@@ -724,7 +717,7 @@ namespace RPA_Parser
 
                     archiveOffset += content.Length;
 
-                    indexes.Add(index.Value.relativePath, indexData);
+                    indexes.Add(index.Value.RelativePath, indexData);
                 }
 
                 byte[] pickledIndexes;
@@ -734,22 +727,22 @@ namespace RPA_Parser
                 }
                 byte[] fileCompressed = ZlibStream.CompressBuffer(pickledIndexes);
 
-                if (_version != Version.RPA_1)
+                if (!CheckVersion(ArchiveVersion, Version.RPA_1))
                 {
                     stream.Position = archiveOffset;
                     stream.Write(fileCompressed, 0, fileCompressed.Length);
 
                     string headerContent = String.Empty;
 
-                    switch (_version)
+                    switch (ArchiveVersion)
                     {
                         case Version.RPA_3_2:
                             headerContent = ArchiveMagic.RPA_3_2 + archiveOffset.ToString("x").PadLeft(16, '0') + " " +
-                                            _step.ToString("x").PadLeft(8, '0') + "\n";
+                                            Step.ToString("x").PadLeft(8, '0') + "\n";
                             break;
                         case Version.RPA_3:
                             headerContent = ArchiveMagic.RPA_3 + archiveOffset.ToString("x").PadLeft(16, '0') + " " +
-                                            _step.ToString("x").PadLeft(8, '0') + "\n";
+                                            Step.ToString("x").PadLeft(8, '0') + "\n";
                             break;
                         case Version.RPA_2:
                             headerContent = ArchiveMagic.RPA_2 + archiveOffset.ToString("x").PadLeft(16, '0') + "\n";

@@ -1154,4 +1154,5 @@ W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\RPAParser
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\Razorvine.Pyrolite.dll
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\bin\Release\net461\Razorvine.Serpent.dll
 W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Release\net461\RPA_Explorer.ArchiveSave.resources
-W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Release\net461\RPA_Explorer.Global.resources
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Release\net461\RPA_Explorer.Resources.resources
+W:\Visual Studio\Projects\RPA Explorer\RPA Explorer\obj\Release\net461\RPA_Explorer.Strings_EN.resources

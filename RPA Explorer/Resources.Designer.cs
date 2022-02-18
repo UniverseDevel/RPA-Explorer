@@ -22,14 +22,14 @@ namespace RPA_Explorer {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Global {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Global() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace RPA_Explorer {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPA_Explorer.Global", typeof(Global).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPA_Explorer.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -65,7 +65,7 @@ namespace RPA_Explorer {
         /// </summary>
         internal static System.Drawing.Bitmap treeView1_Image_file {
             get {
-                object obj = ResourceManager.GetObject("treeView1.Image.file", resourceCulture);
+                object obj = ResourceManager.GetObject("treeView1_Image_file", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -75,7 +75,7 @@ namespace RPA_Explorer {
         /// </summary>
         internal static System.Drawing.Bitmap treeView1_Image_fileChanged {
             get {
-                object obj = ResourceManager.GetObject("treeView1.Image.fileChanged", resourceCulture);
+                object obj = ResourceManager.GetObject("treeView1_Image_fileChanged", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -85,7 +85,17 @@ namespace RPA_Explorer {
         /// </summary>
         internal static System.Drawing.Bitmap treeView1_Image_folder {
             get {
-                object obj = ResourceManager.GetObject("treeView1.Image.folder", resourceCulture);
+                object obj = ResourceManager.GetObject("treeView1_Image_folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap videoView1_BackgroundImage {
+            get {
+                object obj = ResourceManager.GetObject("videoView1_BackgroundImage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

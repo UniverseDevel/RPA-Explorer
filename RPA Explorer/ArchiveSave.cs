@@ -6,7 +6,7 @@ namespace RPA_Explorer
 {
     public partial class ArchiveSave : Form
     {
-        private RpaParser _rpaParser;
+        private readonly RpaParser _rpaParser;
         public ArchiveSave(RpaParser rpaParser)
         {
             InitializeComponent();
@@ -18,17 +18,10 @@ namespace RPA_Explorer
             comboBox1.Items.Add(RpaParser.Version.RPA_2);
             comboBox1.Items.Add(RpaParser.Version.RPA_1);
 
-            if (_rpaParser._version == RpaParser.Version.Unknown)
-            {
-                comboBox1.SelectedItem = RpaParser.Version.RPA_3;
-            }
-            else
-            {
-                comboBox1.SelectedItem = _rpaParser._version;
-            }
+            comboBox1.SelectedItem = _rpaParser.CheckVersion(_rpaParser.ArchiveVersion, RpaParser.Version.Unknown) ? RpaParser.Version.RPA_3 : _rpaParser.ArchiveVersion;
 
-            textBox1.Text = _rpaParser._padding.ToString();
-            textBox2.Text = _rpaParser._step.ToString();
+            textBox1.Text = _rpaParser.Padding.ToString();
+            textBox2.Text = _rpaParser.Step.ToString();
 
         }
 
@@ -36,17 +29,17 @@ namespace RPA_Explorer
         {
             try
             {
-                _rpaParser._version = _rpaParser.CheckSupportedVersion((double) comboBox1.SelectedItem);
-                _rpaParser._padding = Convert.ToInt32(textBox1.Text);
-                _rpaParser._step = Convert.ToInt64(textBox2.Text);
-                _rpaParser.optionsConfirmed = true;
+                _rpaParser.ArchiveVersion = _rpaParser.CheckSupportedVersion((double) comboBox1.SelectedItem);
+                _rpaParser.Padding = Convert.ToInt32(textBox1.Text);
+                _rpaParser.Step = Convert.ToInt64(textBox2.Text);
+                _rpaParser.OptionsConfirmed = true;
                 Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
                     ex.Message,
-                    "Invalid values", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Strings_EN.ArchiveSave_button1_Click_Invalid_values, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -63,22 +56,22 @@ namespace RPA_Explorer
                     textBox1.Enabled = false;
                     textBox2.Enabled = false;
 
-                    textBox1.Text = "0";
-                    textBox2.Text = "0";
+                    textBox1.Text = 0.ToString();
+                    textBox2.Text = 0.ToString();
                     break;
                 case RpaParser.Version.RPA_2:
                     textBox2.Enabled = false;
 
-                    textBox2.Text = "0";
+                    textBox2.Text = 0.ToString();
                     break;
                 default:
                     comboBox1.Enabled = true;
                     textBox1.Enabled = true;
                     textBox2.Enabled = true;
                     
-                    comboBox1.SelectedItem = _rpaParser._version;
-                    textBox1.Text = _rpaParser._padding.ToString();
-                    textBox2.Text = _rpaParser._step.ToString();
+                    comboBox1.SelectedItem = _rpaParser.ArchiveVersion;
+                    textBox1.Text = _rpaParser.Padding.ToString();
+                    textBox2.Text = _rpaParser.Step.ToString();
                     break;
             }
         }

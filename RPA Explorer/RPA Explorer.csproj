@@ -34,9 +34,9 @@
       <Compile Update="RPA_Explorer.Designer.cs">
         <DependentUpon>RPA_Explorer.cs</DependentUpon>
       </Compile>
-      <EmbeddedResource Include="Global.resx">
+      <EmbeddedResource Include="Resources.resx">
         <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Global.Designer.cs</LastGenOutput>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <EmbeddedResource Include="RPA_Explorer.resx">
         <DependentUpon>RPA_Explorer.cs</DependentUpon>
@@ -46,10 +46,19 @@
         <SubType>Form</SubType>
       </Compile>
       <EmbeddedResource Include="ArchiveSave.resx" />
-      <Compile Update="Global.Designer.cs">
+      <Compile Update="Resources.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>resources.resx</DependentUpon>
+      </Compile>
+      <EmbeddedResource Include="Strings_EN.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Strings_EN.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <Compile Update="Strings_EN.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Strings_EN.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 
