@@ -289,14 +289,14 @@ namespace RPA_Parser
             
             if (CheckVersion(ArchiveVersion, Version.RPA_3))
             {
-                for(var i = 2; i < _metadata.Length; i++)
+                for(int i = 2; i < _metadata.Length; i++)
                 {
                     step ^= Convert.ToInt64(_metadata[i], 16);
                 }
             }
             else if (CheckVersion(ArchiveVersion, Version.RPA_3_2))
             {
-                for(var i = 3; i < _metadata.Length; i++)
+                for(int i = 3; i < _metadata.Length; i++)
                 {
                     step ^= Convert.ToInt64(_metadata[i], 16);
                 }
@@ -343,7 +343,7 @@ namespace RPA_Parser
 
                     if (blockSize != 0)
                     {
-                        var buffer = reader.ReadBytes((int) blockSize);
+                        byte[] buffer = reader.ReadBytes((int) blockSize);
                         fileCompressed = fileCompressed.Concat(buffer).ToArray();
 
                         blockOffset += blockSize;
