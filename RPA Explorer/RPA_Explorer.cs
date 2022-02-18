@@ -29,9 +29,32 @@ namespace RPA_Explorer
         private StreamMediaInput _streamMediaInputVlc;
         private Media _mediaVlc;
 
+        private readonly FileInfo _appInfo = new (System.Reflection.Assembly.GetEntryAssembly()?.Location ?? throw new InvalidOperationException());
+
+        private static readonly System.ComponentModel.ComponentResourceManager Lang = new (typeof(Lang));
+        private static string _language = "EN";
+
         public RpaExplorer()
         {
+            // Form initiation
             InitializeComponent();
+            
+            // Language initiation
+            toolStripComboBox1.Items.Add("English");
+            //toolStripComboBox1.Items.Add("TEST"); // For testing purposes
+
+            string storedLanguage = "English";
+            if (File.Exists(_appInfo.DirectoryName + @"/lang.ini"))
+            {
+                storedLanguage = File.ReadAllText(_appInfo.DirectoryName + @"/lang.ini");
+            }
+
+            toolStripComboBox1.SelectedItem = toolStripComboBox1.Items.Contains(storedLanguage) ? storedLanguage : "English";
+
+            LoadLanguage(toolStripComboBox1.SelectedItem.ToString());
+            LoadTexts();
+
+            // LibVLC initiation
             Core.Initialize();
             _libVlc = new LibVLC("--input-repeat=9999999"); // --input-repeat=X : Loop X times
             videoView1.MediaPlayer = new MediaPlayer(_libVlc);
@@ -40,17 +63,70 @@ namespace RPA_Explorer
             videoView1.BackgroundImage = null;
             SetMediaTimeLabel(0, 0);
             
+            // TreeView styles initiation
             ImageList imageList = new ImageList();
             imageList.Images.Add(Resources.treeView1_Image_folder);
             imageList.Images.Add(Resources.treeView1_Image_file);
             imageList.Images.Add(Resources.treeView1_Image_fileChanged);
             treeView1.ImageList = imageList;
 
+            // Arguments processing
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length >= 2)
             {
                 LoadArchive(args[1]);
             }
+        }
+
+        private void LoadLanguage(string language)
+        {
+            switch (language)
+            {
+                case "English":
+                    _language = "EN";
+                    break;
+                case "TEST":
+                    _language = "TEST";
+                    break;
+                default:
+                    language = "English";
+                    _language = "EN";
+                    break;
+            }
+            
+            File.WriteAllText(_appInfo.DirectoryName + @"/lang.ini", language);
+        }
+
+        private void LoadTexts()
+        {
+            Text = GetText("Explorer_title");
+            toolStripTextBox1.Text = GetText("Language");
+            button1.Text = GetText("Load_file");
+            button2.Text = GetText("Export_checked");
+            statusBar1.Text = GetText("Ready");
+            button3.Text = GetText("Cancel_operation");
+            tabPage0.Text = GetText("None");
+            label2.Text = GetText("Usage_instructions_new");
+            tabPage1.Text = GetText("Image");
+            tabPage2.Text = GetText("Text");
+            tabPage3.Text = GetText("Media");
+            button4.Text = GetText("Pause");
+            button5.Text = GetText("Create_new_archive");
+            label4.Text = GetText("File_list");
+            button6.Text = GetText("Remove_checked");
+            button7.Text = GetText("Save_archive");
+
+            GenerateArchiveInfo();
+        }
+
+        internal static string GetText(string name)
+        {
+            if (Lang.GetObject(_language + "_" + name) != null)
+            {
+                return Lang.GetObject(_language + "_" + name)?.ToString();
+            }
+
+            return " {!!! MISSING TRANSLATION !!!} ";
         }
 
         private void ExportFiles(List<string> exportFilesList, FolderBrowserDialog folderBrowserDialog)
@@ -64,7 +140,7 @@ namespace RPA_Explorer
                 label1.PerformSafely(() => label1.Text = $@"{counter} / {jobSize}");
                 progressBar1.PerformSafely(() => progressBar1.Value = pctProcessed);
                 
-                statusBar1.PerformSafely(() => statusBar1.Text = Strings_EN.RpaExplorer_exportFiles_Exporting_file__ + file);
+                statusBar1.PerformSafely(() => statusBar1.Text = GetText("Exporting_file") + file);
                         
                 _rpaParser.Extract(file, folderBrowserDialog.SelectedPath);
 
@@ -79,7 +155,7 @@ namespace RPA_Explorer
             button3.PerformSafely(() => button3.Enabled = false);
             progressBar1.PerformSafely(() => progressBar1.Value = 0);
             label1.PerformSafely(() => label1.Text = "");
-            statusBar1.PerformSafely(() => statusBar1.Text = Strings_EN.RpaExplorer_Ready);
+            statusBar1.PerformSafely(() => statusBar1.Text = GetText("Ready"));
             
             _operationEnabled = true;
         }
@@ -88,7 +164,7 @@ namespace RPA_Explorer
         {
             if (!ignoreChanges)
             {
-                if (CheckIfChanged(Strings_EN.RpaExplorer_LoadArchive_Archive_modified))
+                if (CheckIfChanged(GetText("Archive_modified_load")))
                 {
                     return;
                 }
@@ -96,8 +172,8 @@ namespace RPA_Explorer
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Title = Strings_EN.RpaExplorer_LoadArchive_Select_RenPy_Archive;
-                openFileDialog.Filter = Strings_EN.RpaExplorer_RPA_RPI_files;
+                openFileDialog.Title = GetText("Load_RenPy_Archive");
+                openFileDialog.Filter = GetText("RPA_RPI_files") + @" (*.rpa,*.rpi)|*.rpa;*.rpi";
 
                 DialogResult dialogResult = DialogResult.None;
                 if (openFile == String.Empty || openFile == null)
@@ -117,7 +193,7 @@ namespace RPA_Explorer
                 {
                     if (openFileDialog.CheckFileExists)
                     {
-                        statusBar1.Text = Strings_EN.RpaExplorer_LoadArchive_Loading_file__ + openFileDialog.FileName;
+                        statusBar1.Text = GetText("Loading_file") + openFileDialog.FileName;
                         
                         _expandedList.Clear();
                         _rpaParser = new RpaParser();
@@ -128,7 +204,7 @@ namespace RPA_Explorer
                         _switchTabs = true;
                         tabControl1.SelectedTab = tabPage0;
                         _switchTabs = false;
-                        label2.Text = Strings_EN.RpaExplorer_LoadArchive_Choose_file_from_list_on_the_side_to_preview_contents__Check_and_export_to_save_it_locally_;
+                        label2.Text = GetText("Usage_instructions_loaded");
 
                         ResetPreviewFields();
 
@@ -138,7 +214,7 @@ namespace RPA_Explorer
                         button6.Enabled = true;
                         button7.Enabled = true;
 
-                        statusBar1.Text = Strings_EN.RpaExplorer_Ready;
+                        statusBar1.Text = GetText("Ready");
                     }
 
                     _archiveChanged = false;
@@ -415,7 +491,7 @@ namespace RPA_Explorer
                 _switchTabs = true;
                 tabControl1.SelectedTab = tabPage0;
                 _switchTabs = false;
-                label2.Text = Strings_EN.RpaExplorer_PreviewSelectedItem_Preview_is_not_supported_for_this_file_;
+                label2.Text = GetText("Preview_is_not_supported");
             }
             
             treeView1.SelectedNode = selectedNode;
@@ -499,12 +575,12 @@ namespace RPA_Explorer
             if (videoView1.MediaPlayer is {IsPlaying: true})
             {
                 videoView1.MediaPlayer?.Pause();
-                button4.Text = Strings_EN.RpaExplorer_Play;
+                button4.Text = GetText("Play");
             }
             else
             {
                 videoView1.MediaPlayer?.Play();
-                button4.Text = Strings_EN.RpaExplorer_Pause;
+                button4.Text = GetText("Pause");
             }
         }
 
@@ -556,7 +632,7 @@ namespace RPA_Explorer
 
         private void RpaExplorer_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (CheckIfChanged(Strings_EN.RpaExplorer_FormClosing_Archive_modified))
+            if (CheckIfChanged(GetText("Archive_modified_close")))
             {
                 e.Cancel = true;
             }
@@ -569,7 +645,7 @@ namespace RPA_Explorer
 
         private void CreateNewArchive()
         {
-            if (CheckIfChanged(Strings_EN.RpaExplorer_CreateNewArchive_Archive_modified))
+            if (CheckIfChanged(GetText("Archive_modified_new")))
             {
                 return;
             }
@@ -582,7 +658,7 @@ namespace RPA_Explorer
             _switchTabs = true;
             tabControl1.SelectedTab = tabPage0;
             _switchTabs = false;
-            label2.Text = Strings_EN.RpaExplorer_LoadArchive_Choose_file_from_list_on_the_side_to_preview_contents__Check_and_export_to_save_it_locally_;
+            label2.Text = GetText("Usage_instructions_loaded");
 
             ResetPreviewFields();
 
@@ -592,7 +668,7 @@ namespace RPA_Explorer
             button6.Enabled = true;
             button7.Enabled = true;
 
-            statusBar1.Text = Strings_EN.RpaExplorer_Ready;
+            statusBar1.Text = GetText("Ready");
             
             _archiveChanged = true;
         }
@@ -601,48 +677,61 @@ namespace RPA_Explorer
         {
             string archiveInfo = String.Empty;
 
-            string selectedPath = String.Empty;
-            foreach (TreeNode node in treeView1.Nodes.All())
+            if (_archiveLoaded)
             {
-                if (node.IsSelected)
+                string selectedPath = String.Empty;
+                foreach (TreeNode node in treeView1.Nodes.All())
                 {
-                    selectedPath = NormalizeTreePath(node.FullPath);
-                }
-            }
-
-            long selectedSize = -1;
-            int unsavedCount = 0;
-            foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in _rpaParser.Index)
-            {
-                if (!kvp.Value.InArchive)
-                {
-                    unsavedCount++;
+                    if (node.IsSelected)
+                    {
+                        selectedPath = NormalizeTreePath(node.FullPath);
+                    }
                 }
 
-                if (selectedPath == kvp.Key)
+                long selectedSize = -1;
+                int unsavedCount = 0;
+                foreach (KeyValuePair<string, RpaParser.ArchiveIndex> kvp in _rpaParser.Index)
                 {
-                    selectedSize = kvp.Value.Length;
+                    if (!kvp.Value.InArchive)
+                    {
+                        unsavedCount++;
+                    }
+
+                    if (selectedPath == kvp.Key)
+                    {
+                        selectedSize = kvp.Value.Length;
+                    }
                 }
-            }
 
-            if (_indexPathSize.ContainsKey(selectedPath))
-            {
-                selectedSize = _indexPathSize[selectedPath];
-            }
+                if (_indexPathSize.ContainsKey(selectedPath))
+                {
+                    selectedSize = _indexPathSize[selectedPath];
+                }
 
-            if (!_rpaParser.CheckVersion(_rpaParser.ArchiveVersion, RpaParser.Version.Unknown))
-            {
-                archiveInfo += "Archive version: " + _rpaParser.ArchiveVersion + Environment.NewLine;
-                archiveInfo += "Archive file location: " + _rpaParser.ArchiveInfo.FullName + Environment.NewLine;
-                archiveInfo += "Archive file size: " + PrettySize.Format(_indexPathSize[""]) + Environment.NewLine;
-            }
+                if (!_rpaParser.CheckVersion(_rpaParser.ArchiveVersion, RpaParser.Version.Unknown))
+                {
+                    archiveInfo += GetText("Archive_version") + _rpaParser.ArchiveVersion + Environment.NewLine;
+                    archiveInfo += GetText("Archive_file_location") + _rpaParser.ArchiveInfo.FullName +
+                                   Environment.NewLine;
+                    archiveInfo += GetText("Archive_file_size") + PrettySize.Format(_rpaParser.ArchiveInfo.Length) +
+                                   Environment.NewLine;
+                    if (_rpaParser.IndexInfo != null)
+                    {
+                        archiveInfo += GetText("Index_file_location") + _rpaParser.IndexInfo.FullName +
+                                       Environment.NewLine;
+                        archiveInfo += GetText("Index_file_size") + PrettySize.Format(_rpaParser.IndexInfo.Length) +
+                                       Environment.NewLine;
+                    }
+                }
 
-            archiveInfo += "Objects count: " + _rpaParser.Index.Count + Environment.NewLine;
-            archiveInfo += "Unsaved objects count: " + unsavedCount + Environment.NewLine;
+                archiveInfo += GetText("Objects_count") + _rpaParser.Index.Count + Environment.NewLine;
+                archiveInfo += GetText("Unsaved_objects_count") + unsavedCount + Environment.NewLine;
 
-            if (selectedSize != -1)
-            {
-                archiveInfo += "Object size: " + PrettySize.Format(selectedSize) + Environment.NewLine;
+                if (selectedSize != -1)
+                {
+                    archiveInfo += GetText("Selected_object_size") + PrettySize.Format(selectedSize) +
+                                   Environment.NewLine;
+                }
             }
 
             textBox1.Text = archiveInfo.Trim();
@@ -652,7 +741,7 @@ namespace RPA_Explorer
         {
             if (message != String.Empty && _archiveChanged)
             {
-                if (MessageBox.Show(message, Strings_EN.RpaExplorer_CheckIfChanged_Archive_modified, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                if (MessageBox.Show(message, GetText("Archive_modified"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
                 {
                     return true;
                 }
@@ -793,21 +882,21 @@ namespace RPA_Explorer
         {
             if (_rpaParser.Index.Count == 0)
             {
-                MessageBox.Show(Strings_EN.RpaExplorer_button7_Click_Archive_does_not_contain_any_files__cannot_save_empty_archive_,Strings_EN.RpaExplorer_button7_Click_Empty_archive, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(GetText("Empty_archive_save"),GetText("Empty_archive"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            statusBar1.Text = Strings_EN.RpaExplorer_button7_Click_Saving_archive___;
+            statusBar1.Text = GetText("Saving_archive");
 
-            string initPath = System.Reflection.Assembly.GetEntryAssembly()?.Location;
+            string initPath = _appInfo?.DirectoryName;
             if (_rpaParser.ArchiveInfo?.DirectoryName != null)
             {
                 initPath = _rpaParser.ArchiveInfo.DirectoryName;
             }
             
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = Strings_EN.RpaExplorer_button7_Click_Save_RenPy_Archive;
-            saveFileDialog.Filter = Strings_EN.RpaExplorer_RPA_RPI_files;
+            saveFileDialog.Title = GetText("Save_RenPy_Archive");
+            saveFileDialog.Filter = GetText("RPA_RPI_files") + @" (*.rpa,*.rpi)|*.rpa;*.rpi";
             saveFileDialog.InitialDirectory = initPath;
             saveFileDialog.CheckFileExists = false;
             saveFileDialog.CheckPathExists = true;
@@ -834,8 +923,8 @@ namespace RPA_Explorer
                     {
                         _rpaParser = _rpaParserBak;
                         MessageBox.Show(
-                            Strings_EN.RpaExplorer_button7_Click_Loading_archive_after_saving_failed_which_indicates_corrupted_archive__Attempting_to_restore_changes_from_before_save_,
-                            Strings_EN.RpaExplorer_button7_Click_Save_failed, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            GetText("Loading_archive_after_saving_failed"),
+                            GetText("Save_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 catch (Exception ex)
@@ -843,7 +932,7 @@ namespace RPA_Explorer
                     _rpaParser = _rpaParserBak;
                     MessageBox.Show(
                         ex.Message,
-                        Strings_EN.RpaExplorer_button7_Click_Save_failed, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        GetText("Save_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 GenerateTreeView();
@@ -861,6 +950,12 @@ namespace RPA_Explorer
         private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             _expandedList.Add(e.Node.FullPath);
+        }
+
+        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadLanguage(toolStripComboBox1.SelectedItem.ToString());
+            LoadTexts();
         }
     }
     

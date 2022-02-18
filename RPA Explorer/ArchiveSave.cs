@@ -12,6 +12,8 @@ namespace RPA_Explorer
             InitializeComponent();
 
             _rpaParser = rpaParser;
+
+            LoadTexts();
             
             comboBox1.Items.Add(RpaParser.Version.RPA_3_2);
             comboBox1.Items.Add(RpaParser.Version.RPA_3);
@@ -23,6 +25,16 @@ namespace RPA_Explorer
             textBox1.Text = _rpaParser.Padding.ToString();
             textBox2.Text = _rpaParser.Step.ToString();
 
+        }
+
+        private void LoadTexts()
+        {
+            Text = RpaExplorer.GetText("Archive_save_title");
+            label1.Text = RpaExplorer.GetText("Archive_save_version");
+            label2.Text = RpaExplorer.GetText("Archive_save_padding");
+            label3.Text = RpaExplorer.GetText("Archive_save_step");
+            button1.Text = RpaExplorer.GetText("Archive_save_continue");
+            button2.Text = RpaExplorer.GetText("Archive_save_cancel");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -39,7 +51,7 @@ namespace RPA_Explorer
             {
                 MessageBox.Show(
                     ex.Message,
-                    Strings_EN.ArchiveSave_button1_Click_Invalid_values, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    RpaExplorer.GetText("Invalid_values"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

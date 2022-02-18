@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <data name="EN_Invalid_values" xml:space="preserve">
+        <value>Invalid values</value>
+    </data>
+    <data name="EN_Exporting_file" xml:space="preserve">
+        <value>Exporting file: </value>
+    </data>
+    <data name="EN_Ready" xml:space="preserve">
+        <value>Ready</value>
+    </data>
+    <data name="EN_Load_RenPy_Archive" xml:space="preserve">
+        <value>Load RenPy Archive</value>
+    </data>
+    <data name="EN_RPA_RPI_files" xml:space="preserve">
+        <value>RPA/RPI files</value>
+    </data>
+    <data name="EN_Save_RenPy_Archive" xml:space="preserve">
+        <value>Save RenPy Archive</value>
+    </data>
+    <data name="EN_Usage_instructions_loaded" xml:space="preserve">
+        <value>Choose file from list on the side to preview contents. Check and export to save it locally.</value>
+    </data>
+    <data name="EN_Preview_is_not_supported" xml:space="preserve">
+        <value>Preview is not supported for this file.</value>
+    </data>
+    <data name="EN_Play" xml:space="preserve">
+        <value>Play</value>
+    </data>
+    <data name="EN_Pause" xml:space="preserve">
+        <value>Pause</value>
+    </data>
+    <data name="EN_Empty_archive_save" xml:space="preserve">
+        <value>Archive does not contain any files, cannot save empty archive.</value>
+    </data>
+    <data name="EN_Empty_archive" xml:space="preserve">
+        <value>Empty archive</value>
+    </data>
+    <data name="EN_Saving_archive" xml:space="preserve">
+        <value>Saving archive...</value>
+    </data>
+    <data name="EN_Loading_archive_after_saving_failed" xml:space="preserve">
+        <value>Loading archive after saving failed which indicates corrupted archive. Attempting to restore changes from before save.</value>
+    </data>
+    <data name="EN_Save_failed" xml:space="preserve">
+        <value>Save failed</value>
+    </data>
+    <data name="EN_Archive_modified" xml:space="preserve">
+        <value>Archive modified</value>
+    </data>
+    <data name="EN_Loading_file" xml:space="preserve">
+        <value>Loading file: </value>
+    </data>
+    <data name="EN_Archive_modified_load" xml:space="preserve">
+        <value>Archive was modified, do you really want to load a new one and lose changes?</value>
+    </data>
+    <data name="EN_Archive_modified_close" xml:space="preserve">
+        <value>Archive was modified, do you really want to exit without saving and lose changes?</value>
+    </data>
+    <data name="EN_Archive_modified_new" xml:space="preserve">
+        <value>Archive was modified, do you really want to create a new one and lose changes?</value>
+    </data>
+    <data name="EN_Archive_version" xml:space="preserve">
+        <value>Archive version: </value>
+    </data>
+    <data name="EN_Archive_file_location" xml:space="preserve">
+        <value>Archive file location: </value>
+    </data>
+    <data name="EN_Archive_file_size" xml:space="preserve">
+        <value>Archive file size: </value>
+    </data>
+    <data name="EN_Index_file_location" xml:space="preserve">
+        <value>Index file location: </value>
+    </data>
+    <data name="EN_Index_file_size" xml:space="preserve">
+        <value>Index file size: </value>
+    </data>
+    <data name="EN_Objects_count" xml:space="preserve">
+        <value>Objects count: </value>
+    </data>
+    <data name="EN_Unsaved_objects_count" xml:space="preserve">
+        <value>Unsaved objects count: </value>
+    </data>
+    <data name="EN_Selected_object_size" xml:space="preserve">
+        <value>Selected object size: </value>
+    </data>
+    <data name="EN_Explorer_title" xml:space="preserve">
+        <value>RenPy Archive Explorer</value>
+    </data>
+    <data name="EN_Archive_save_title" xml:space="preserve">
+        <value>Archive options</value>
+    </data>
+    <data name="EN_Archive_save_version" xml:space="preserve">
+        <value>Archive version:</value>
+    </data>
+    <data name="EN_Archive_save_padding" xml:space="preserve">
+        <value>Data padding:</value>
+    </data>
+    <data name="EN_Archive_save_step" xml:space="preserve">
+        <value>Data step:</value>
+    </data>
+    <data name="EN_Archive_save_continue" xml:space="preserve">
+        <value>Continue</value>
+    </data>
+    <data name="EN_Archive_save_cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="EN_Load_file" xml:space="preserve">
+        <value>Load file</value>
+    </data>
+    <data name="EN_Export_checked" xml:space="preserve">
+        <value>Export checked</value>
+    </data>
+    <data name="EN_Cancel_operation" xml:space="preserve">
+        <value>Cancel operation</value>
+    </data>
+    <data name="EN_None" xml:space="preserve">
+        <value>None</value>
+    </data>
+    <data name="EN_Usage_instructions_new" xml:space="preserve">
+        <value>Start by creating/loading archive file or drag and drop archive file to this window to load it.</value>
+    </data>
+    <data name="EN_Text" xml:space="preserve">
+        <value>Text</value>
+    </data>
+    <data name="EN_Media" xml:space="preserve">
+        <value>Media</value>
+    </data>
+    <data name="EN_Create_new_archive" xml:space="preserve">
+        <value>Create new archive</value>
+    </data>
+    <data name="EN_File_list" xml:space="preserve">
+        <value>File list:</value>
+    </data>
+    <data name="EN_Remove_checked" xml:space="preserve">
+        <value>Remove checked</value>
+    </data>
+    <data name="EN_Save_archive" xml:space="preserve">
+        <value>Save archive</value>
+    </data>
+    <data name="EN_Image" xml:space="preserve">
+        <value>Image</value>
+    </data>
+    <data name="EN_Language" xml:space="preserve">
+        <value>Langauge:</value>
+    </data>
+</root>

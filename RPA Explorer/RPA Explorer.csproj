@@ -7,7 +7,7 @@
         <UseWindowsForms>true</UseWindowsForms>
         <LangVersion>default</LangVersion>
         <Nullable>disable</Nullable>
-        <ApplicationIcon>RPA Explorer.ico</ApplicationIcon>
+        <ApplicationIcon>images\RPA Explorer.ico</ApplicationIcon>
         <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
         <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     </PropertyGroup>
@@ -34,6 +34,10 @@
       <Compile Update="RPA_Explorer.Designer.cs">
         <DependentUpon>RPA_Explorer.cs</DependentUpon>
       </Compile>
+      <EmbeddedResource Include="Lang.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Lang.resx.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
       <EmbeddedResource Include="Resources.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -51,14 +55,10 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>resources.resx</DependentUpon>
       </Compile>
-      <EmbeddedResource Include="Strings_EN.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Strings_EN.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <Compile Update="Strings_EN.Designer.cs">
+      <Compile Update="Lang.resx.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
-        <DependentUpon>Strings_EN.resx</DependentUpon>
+        <DependentUpon>Lang</DependentUpon>
       </Compile>
     </ItemGroup>
 
