@@ -340,7 +340,7 @@ namespace RPA_Explorer
             textBox2.Text = String.Empty;
             if (videoView1.MediaPlayer.IsPlaying)
             {
-                videoView1.MediaPlayer.Pause();
+                videoView1.MediaPlayer.Stop();
             }
             if (mediaVlc != null)
             {
