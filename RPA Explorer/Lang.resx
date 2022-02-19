@@ -163,4 +163,10 @@
     <data name="EN_Language" xml:space="preserve">
         <value>Langauge:</value>
     </data>
+    <data name="EN_Replace_file" xml:space="preserve">
+        <value>File '{0}' exists in archive, do you want to replace it?</value>
+    </data>
+    <data name="EN_File_exists" xml:space="preserve">
+        <value>File exists in archive</value>
+    </data>
 </root>

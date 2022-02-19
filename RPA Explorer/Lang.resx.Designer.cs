@@ -241,6 +241,15 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File exists in archive.
+        /// </summary>
+        internal static string EN_File_exists {
+            get {
+                return ResourceManager.GetString("EN_File_exists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File list:.
         /// </summary>
         internal static string EN_File_list {
@@ -399,6 +408,15 @@ namespace RPA_Explorer {
         internal static string EN_Remove_checked {
             get {
                 return ResourceManager.GetString("EN_Remove_checked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; exists in archive, do you want to replace it?.
+        /// </summary>
+        internal static string EN_Replace_file {
+            get {
+                return ResourceManager.GetString("EN_Replace_file", resourceCulture);
             }
         }
         

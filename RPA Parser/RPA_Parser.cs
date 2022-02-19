@@ -465,7 +465,7 @@ namespace RPA_Parser
             }
             else if (TextExtList.Contains(fileInfo.Extension.ToLower()))
             {
-                data = new KeyValuePair<string, object>(PreviewTypes.Text, NormlizeNewLines(Encoding.UTF8.GetString(bytes, 0, bytes.Length)));
+                data = new KeyValuePair<string, object>(PreviewTypes.Text, NormalizeNewLines(Encoding.UTF8.GetString(bytes, 0, bytes.Length)));
             }
             else if (AudioExtList.Contains(fileInfo.Extension.ToLower()))
             {
@@ -488,7 +488,7 @@ namespace RPA_Parser
             return data;
         }
 
-        private string NormlizeNewLines(string text)
+        private string NormalizeNewLines(string text)
         {
             const string winNewLine = "\r\n";
             const string linNewLine = "\n";
@@ -527,24 +527,22 @@ namespace RPA_Parser
 
             if (Index[fileName].InArchive)
             {
-                using (BinaryReader reader = new BinaryReader(File.Open(_archivePath, FileMode.Open), Encoding.UTF8))
+                using BinaryReader reader = new BinaryReader(File.Open(_archivePath, FileMode.Open), Encoding.UTF8);
+                byte[] finalData = { };
+
+                foreach (KeyValuePair<int, Tuples> kvpI in Index[fileName].Tuples)
                 {
-                    byte[] finalData = { };
-
-                    foreach (KeyValuePair<int, Tuples> kvpI in Index[fileName].Tuples)
-                    {
-                        reader.BaseStream.Seek(kvpI.Value.Offset, SeekOrigin.Begin);
-                        byte[] prefixData = Encoding.UTF8.GetBytes(kvpI.Value.Prefix);
-                        byte[] fileData = reader.ReadBytes((int) kvpI.Value.Length - kvpI.Value.Prefix.Length); // Exported file max size ~2.14 GB
-                        byte[] partData = new byte[finalData.Length + prefixData.Length + fileData.Length];
-                        Buffer.BlockCopy(finalData, 0, partData, 0, finalData.Length);
-                        Buffer.BlockCopy(prefixData, 0, partData, finalData.Length, prefixData.Length);
-                        Buffer.BlockCopy(fileData, 0, partData, finalData.Length + prefixData.Length, fileData.Length);
-                        finalData = partData;
-                    }
-
-                    return finalData;
+                    reader.BaseStream.Seek(kvpI.Value.Offset, SeekOrigin.Begin);
+                    byte[] prefixData = Encoding.UTF8.GetBytes(kvpI.Value.Prefix);
+                    byte[] fileData = reader.ReadBytes((int) kvpI.Value.Length - kvpI.Value.Prefix.Length); // Exported file max size ~2.14 GB
+                    byte[] partData = new byte[finalData.Length + prefixData.Length + fileData.Length];
+                    Buffer.BlockCopy(finalData, 0, partData, 0, finalData.Length);
+                    Buffer.BlockCopy(prefixData, 0, partData, finalData.Length, prefixData.Length);
+                    Buffer.BlockCopy(fileData, 0, partData, finalData.Length + prefixData.Length, fileData.Length);
+                    finalData = partData;
                 }
+
+                return finalData;
             }
             
             return File.ReadAllBytes(Index[fileName].Path);
