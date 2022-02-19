@@ -351,50 +351,9 @@ namespace RPA_Explorer
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            LoadArchive(String.Empty);
-        }
-
         private string NormalizeTreePath(string path)
         {
             return Regex.Replace(path, "^/+", "");
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            using FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            List<string> exportFilesList = new List<string>();
-            foreach (TreeNode node in treeView1.Nodes.All())
-            {
-                if (node.Checked && _rpaParser.Index.ContainsKey(NormalizeTreePath(node.FullPath)))
-                {
-                    exportFilesList.Add(NormalizeTreePath(node.FullPath));
-                }
-            }
-                
-            if (exportFilesList.Count == 0)
-            {
-                return;
-            }
-                
-            folderBrowserDialog.SelectedPath = _rpaParser.ArchiveInfo.DirectoryName;
-            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-            {
-                button1.Enabled = false;
-                button2.Enabled = false;
-                button3.Enabled = true;
-                progressBar1.Value = 0;
-                label1.PerformSafely(() => label1.Text = "");
-                    
-                _operation = new Thread(() => ExportFiles(exportFilesList, folderBrowserDialog));
-                _operation.Start();
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            _operationEnabled = false;
         }
 
         private void ResetPreviewFields()
@@ -489,12 +448,6 @@ namespace RPA_Explorer
             treeView1.Focus();
         }
 
-        private void treeView1_AfterSelect(object sender, EventArgs e)
-        {
-            PreviewSelectedItem();
-            GenerateArchiveInfo();
-        }
-
         private void CheckAllChildNodes(TreeNode node, bool isChecked)
         {
             if (node.Nodes.Count == 0)
@@ -528,37 +481,6 @@ namespace RPA_Explorer
             }
         }
 
-        private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
-        {
-            if (e.Action != TreeViewAction.Unknown)
-            {
-                if (e.Node.Nodes.Count == 0)
-                {
-                    if (e.Node.Parent != null)
-                    {
-                        ParentCheckControl(e.Node.Parent);
-                    }
-                }
-                else if (e.Node.Nodes.Count > 0)
-                {
-                    CheckAllChildNodes(e.Node, e.Node.Checked);
-                    if (e.Node.Parent != null)
-                    {
-                        ParentCheckControl(e.Node.Parent);
-                    }
-                }
-            }
-        }
-
-        private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
-        {
-            if (!_switchTabs)
-            {
-                e.Cancel = true;
-            }
-            _switchTabs = false;
-        }
-
         private void PlayPauseMedia()
         {
             if (videoView1.MediaPlayer is {IsPlaying: true})
@@ -571,11 +493,6 @@ namespace RPA_Explorer
                 videoView1.MediaPlayer?.Play();
                 button4.Text = GetText("Pause");
             }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            PlayPauseMedia();
         }
 
         private void SetMediaTimeLabel(long totalTimeMillies, long currentTimeMillies)
@@ -601,35 +518,6 @@ namespace RPA_Explorer
             {
                 label3.Text = timeText;
             }
-        }
-
-        private void videoView1_MediaPlayer_TimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
-        {
-            if (videoView1.MediaPlayer?.Media != null)
-            {
-                SetMediaTimeLabel(videoView1.MediaPlayer.Media.Duration, e.Time);
-            }
-        }
-
-        private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            if (videoView1.MediaPlayer?.Media != null)
-            {
-                videoView1.MediaPlayer.Volume = trackBar1.Value;
-            }
-        }
-
-        private void RpaExplorer_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (CheckIfChanged(GetText("Archive_modified_close")))
-            {
-                e.Cancel = true;
-            }
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            CreateNewArchive();
         }
 
         private void CreateNewArchive()
@@ -741,39 +629,6 @@ namespace RPA_Explorer
             return _archiveChanged;
         }
 
-        private void treeView1_DragDrop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                _fileListBackup.Clear();
-                _fileListBackup = _rpaParser.DeepCopyIndex(_rpaParser.Index);
-                _cancelAdd = false;
-                
-                foreach (string path in (string[]) e.Data.GetData(DataFormats.FileDrop))
-                {
-                    string originalPath = path;
-                    if (Directory.Exists(path))
-                    {
-                        originalPath = new DirectoryInfo(path).Parent?.FullName;
-                    }
-                    if (File.Exists(path))
-                    {
-                        originalPath = new FileInfo(path).DirectoryName;
-                    }
-                    AddPathToIndex(path, originalPath);
-                }
-
-                if (!_cancelAdd)
-                {
-                    _rpaParser.Index = _rpaParser.DeepCopyIndex(_fileListBackup);
-                }
-
-                _fileListBackup.Clear();
-
-                GenerateTreeView();
-            }
-        }
-
         private void AddPathToIndex(string path, string originalPath)
         {
             _archiveChanged = true;
@@ -819,6 +674,151 @@ namespace RPA_Explorer
                     _fileListBackup.Remove(index.RelativePath);
                 }
                 _fileListBackup.Add(index.RelativePath, index);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            LoadArchive(String.Empty);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            using FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            List<string> exportFilesList = new List<string>();
+            foreach (TreeNode node in treeView1.Nodes.All())
+            {
+                if (node.Checked && _rpaParser.Index.ContainsKey(NormalizeTreePath(node.FullPath)))
+                {
+                    exportFilesList.Add(NormalizeTreePath(node.FullPath));
+                }
+            }
+                
+            if (exportFilesList.Count == 0)
+            {
+                return;
+            }
+                
+            folderBrowserDialog.SelectedPath = _rpaParser.ArchiveInfo.DirectoryName;
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                button1.Enabled = false;
+                button2.Enabled = false;
+                button3.Enabled = true;
+                progressBar1.Value = 0;
+                label1.PerformSafely(() => label1.Text = "");
+                    
+                _operation = new Thread(() => ExportFiles(exportFilesList, folderBrowserDialog));
+                _operation.Start();
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            _operationEnabled = false;
+        }
+
+        private void treeView1_AfterSelect(object sender, EventArgs e)
+        {
+            PreviewSelectedItem();
+            GenerateArchiveInfo();
+        }
+
+        private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            if (e.Action != TreeViewAction.Unknown)
+            {
+                if (e.Node.Nodes.Count == 0)
+                {
+                    if (e.Node.Parent != null)
+                    {
+                        ParentCheckControl(e.Node.Parent);
+                    }
+                }
+                else if (e.Node.Nodes.Count > 0)
+                {
+                    CheckAllChildNodes(e.Node, e.Node.Checked);
+                    if (e.Node.Parent != null)
+                    {
+                        ParentCheckControl(e.Node.Parent);
+                    }
+                }
+            }
+        }
+
+        private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (!_switchTabs)
+            {
+                e.Cancel = true;
+            }
+            _switchTabs = false;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            PlayPauseMedia();
+        }
+
+        private void videoView1_MediaPlayer_TimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
+        {
+            if (videoView1.MediaPlayer?.Media != null)
+            {
+                SetMediaTimeLabel(videoView1.MediaPlayer.Media.Duration, e.Time);
+            }
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            if (videoView1.MediaPlayer?.Media != null)
+            {
+                videoView1.MediaPlayer.Volume = trackBar1.Value;
+            }
+        }
+
+        private void RpaExplorer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (CheckIfChanged(GetText("Archive_modified_close")))
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            CreateNewArchive();
+        }
+
+        private void treeView1_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                _fileListBackup.Clear();
+                _fileListBackup = _rpaParser.DeepCopyIndex(_rpaParser.Index);
+                _cancelAdd = false;
+                
+                foreach (string path in (string[]) e.Data.GetData(DataFormats.FileDrop))
+                {
+                    string originalPath = path;
+                    if (Directory.Exists(path))
+                    {
+                        originalPath = new DirectoryInfo(path).Parent?.FullName;
+                    }
+                    if (File.Exists(path))
+                    {
+                        originalPath = new FileInfo(path).DirectoryName;
+                    }
+                    AddPathToIndex(path, originalPath);
+                }
+
+                if (!_cancelAdd)
+                {
+                    _rpaParser.Index = _rpaParser.DeepCopyIndex(_fileListBackup);
+                }
+
+                _fileListBackup.Clear();
+
+                GenerateTreeView();
             }
         }
 
