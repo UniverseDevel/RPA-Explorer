@@ -258,7 +258,7 @@ namespace RPA_Parser
                 return 1;
             }
 
-            throw new Exception("File is either not valid RenPy Archive or version is not supported.");
+            throw new Exception("File is either not valid RenPy Archive or version is not recognized.");
         }
 
         private string[] GetMetadata()
