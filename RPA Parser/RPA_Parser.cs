@@ -407,7 +407,8 @@ namespace RPA_Parser
                 {
                     Path = kvp.Value.Path,
                     InArchive = kvp.Value.InArchive,
-                    RelativePath = kvp.Value.RelativePath
+                    RelativePath = kvp.Value.RelativePath,
+                    Length = kvp.Value.Length
                 };
                 
                 foreach (KeyValuePair<int, Tuples> kvpI in kvp.Value.Tuples)
@@ -418,7 +419,7 @@ namespace RPA_Parser
                         Offset = kvpI.Value.Offset,
                         Prefix = kvpI.Value.Prefix
                     };
-
+                    
                     archIndex.Tuples.Add(kvpI.Key, index);
                 }
                 
