@@ -13,7 +13,6 @@ using WebPWrapper;
 namespace RPA_Parser
 {
     // Inspired by: https://github.com/Shizmob/rpatool/blob/master/rpatool
-    // Inspired by: https://github.com/CensoredUsername/unrpyc
     
     public class RpaParser
     {
@@ -33,11 +32,6 @@ namespace RPA_Parser
             public const string RPA_2 = "RPA-2.0 ";
             public const string RPA_3 = "RPA-3.0 ";
             public const string RPA_3_2 = "RPA-3.2 ";
-        }
-
-        private class CompilationMagic
-        {
-            public const string RPC_2 = "RENPY RPC2";
         }
 
         public FileInfo ArchiveInfo;
@@ -136,12 +130,6 @@ namespace RPA_Parser
             ".json",
             ".yaml",
             ".csv"
-        };
-
-        public readonly string[] RpycExtList = {
-            ".rpyc",
-            ".rpymc"
-            // ".rpyb" ?
         };
 
         public void LoadArchive(string filePath)
@@ -487,11 +475,6 @@ namespace RPA_Parser
             {
                 data = new KeyValuePair<string, object>(PreviewTypes.Video, bytes);
             }
-            else if (RpycExtList.Contains(fileInfo.Extension.ToLower()))
-            {
-                bytes = DeobfuscateRPC(bytes);
-                data = new KeyValuePair<string, object>(PreviewTypes.Text, NormlizeNewLines(Encoding.UTF8.GetString(bytes, 0, bytes.Length)));
-            }
             else
             {
                 data = new KeyValuePair<string, object>(PreviewTypes.Unknown, bytes);
@@ -499,14 +482,7 @@ namespace RPA_Parser
 
             if (returnRaw)
             {
-                if (RpycExtList.Contains(fileInfo.Extension.ToLower()))
-                {
-                    data = new KeyValuePair<string, object>(data.Key, bytes);
-                }
-                else
-                {
-                    data = new KeyValuePair<string, object>(data.Key, bytes);
-                }
+                data = new KeyValuePair<string, object>(data.Key, bytes);
             }
 
             return data;
@@ -540,34 +516,6 @@ namespace RPA_Parser
             text = text.Replace(newLineSymbol, Environment.NewLine);
             
             return text;
-        }
-
-        private byte[] DeobfuscateRPC(byte[] fileData)
-        {
-            string fileText = String.Empty;
-            byte[] magicBytes = new byte[10] ;
-            Buffer.BlockCopy(fileData,0, magicBytes,0,10);
-            
-            if (Encoding.UTF8.GetString(magicBytes, 0, magicBytes.Length).StartsWith(CompilationMagic.RPC_2))
-            {
-                // TODO: rpyc parser?
-                fileText = Encoding.UTF8.GetString(fileData, 0, fileData.Length);
-                fileText = "Not yet supported."; // TODO: remove when implemented
-            }
-            else
-            {
-                // Legacy files might not have header so we should assume that its a zlib package unless zlib fails to do anything with it
-                try
-                {
-                    // TODO: handle legacy files
-                }
-                catch
-                {
-                    throw new Exception("File is either not valid RenPy Compilation or version is not supported.");
-                }
-            }
-            
-            return Encoding.UTF8.GetBytes(fileText);
         }
 
         public byte[] ExtractData(string fileName)
