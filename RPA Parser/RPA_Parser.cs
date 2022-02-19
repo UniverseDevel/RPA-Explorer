@@ -37,12 +37,12 @@ namespace RPA_Parser
         public FileInfo ArchiveInfo;
         public FileInfo IndexInfo;
         public double ArchiveVersion = Version.Unknown;
-        public long Offset;
         public int Padding = 0;
         public long Step = 0xDEADBEEF;
         public bool OptionsConfirmed = false;
         public SortedDictionary<string,ArchiveIndex> Index = new ();
         
+        private long _offset;
         private string _archivePath;
         private string _indexPath;
         private string _firstLine;
@@ -142,7 +142,7 @@ namespace RPA_Parser
             if (CheckVersion(ArchiveVersion, Version.RPA_2) || CheckVersion(ArchiveVersion, Version.RPA_3) || CheckVersion(ArchiveVersion, Version.RPA_3_2))
             {
                 _metadata = GetMetadata();
-                Offset = GetOffset();
+                _offset = GetOffset();
                 Step = GetStep();
             }
             else if (CheckVersion(ArchiveVersion, Version.RPA_1))
@@ -308,10 +308,10 @@ namespace RPA_Parser
             {
                 if (CheckVersion(ArchiveVersion, Version.RPA_2) || CheckVersion(ArchiveVersion, Version.RPA_3) || CheckVersion(ArchiveVersion, Version.RPA_3_2))
                 {
-                    reader.BaseStream.Seek(Offset, SeekOrigin.Begin);
+                    reader.BaseStream.Seek(_offset, SeekOrigin.Begin);
                 }
 
-                long blockOffset = Offset;
+                long blockOffset = _offset;
                 long blockSize = 2046;
                 long payloadSize = reader.BaseStream.Length;
                 byte[] fileCompressed = { };
