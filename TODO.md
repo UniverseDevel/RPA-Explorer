@@ -1,0 +1,2 @@
+- Add documentation to code so library and explorer are easier to be understood and used.
+- LibVLC is ~300MiB in size, any way to make it smaller with same/similar video/audio support?
