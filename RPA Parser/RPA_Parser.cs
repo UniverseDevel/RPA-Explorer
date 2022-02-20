@@ -148,6 +148,8 @@ namespace RPA_Parser
             else if (CheckVersion(ArchiveVersion, Version.RPA_1))
             {
                 GetIndexAndArchive();
+                ArchiveInfo = GetArchiveInfo();
+                IndexInfo = GetIndexInfo();
             }
 
             Index = GetIndexes();
@@ -177,9 +179,6 @@ namespace RPA_Parser
                     _indexPath = _archivePath;
                     _archivePath = Regex.Replace(_archivePath, @"\.rpi$", ".rpa", RegexOptions.IgnoreCase);
                 }
-                
-                ArchiveInfo = GetArchiveInfo();
-                IndexInfo = GetIndexInfo();
             }
         }
 
@@ -255,7 +254,11 @@ namespace RPA_Parser
 
             if (_archivePath.EndsWith(ArchiveMagic.RPA_1_RPA) || _archivePath.EndsWith(ArchiveMagic.RPA_1_RPI))
             {
-                return 1;
+                GetIndexAndArchive();
+                if (File.Exists(_archivePath) && File.Exists(_indexPath))
+                {
+                    return 1;
+                }
             }
 
             throw new Exception("File is either not valid RenPy Archive or version is not recognized.");
