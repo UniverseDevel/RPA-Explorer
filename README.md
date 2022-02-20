@@ -11,6 +11,8 @@ Supported file types for preview:
 - Audio: aac, ac3, flac, mp3, wma, wav, ogg, cpc
 - Images: jpeg, jpg, bmp, tiff, png, webp, exif, ico, gif
 
+Download link: [RPA Explorer.7z](https://github.com/UniverseDevel/RPA-Explorer/blob/master/RPA%20Explorer/bin/Release/net461/RPA%20Explorer.7z)
+
 TODO List: [TODO.md](https://github.com/UniverseDevel/RPA-Explorer/blob/master/TODO.md)
 
 Known Issues:
