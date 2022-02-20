@@ -135,6 +135,7 @@ namespace RPA_Parser
         public void LoadArchive(string filePath)
         {
             _archivePath = filePath;
+            GetIndexAndArchive();
             ArchiveInfo = GetArchiveInfo();
             _firstLine = GetFirstLine();
             ArchiveVersion = CheckSupportedVersion(GetVersion());
@@ -147,8 +148,6 @@ namespace RPA_Parser
             }
             else if (CheckVersion(ArchiveVersion, Version.RPA_1))
             {
-                GetIndexAndArchive();
-                ArchiveInfo = GetArchiveInfo();
                 IndexInfo = GetIndexInfo();
             }
 
@@ -168,17 +167,14 @@ namespace RPA_Parser
 
         private void GetIndexAndArchive()
         {
-            if (CheckVersion(ArchiveVersion, Version.RPA_1))
+            if (_archivePath.ToLower().EndsWith(ArchiveMagic.RPA_1_RPA))
             {
-                if (_archivePath.EndsWith(ArchiveMagic.RPA_1_RPA))
-                {
-                    _indexPath = Regex.Replace(_archivePath, @"\.rpa$", ".rpi", RegexOptions.IgnoreCase);
-                }
-                if (_archivePath.EndsWith(ArchiveMagic.RPA_1_RPI))
-                {
-                    _indexPath = _archivePath;
-                    _archivePath = Regex.Replace(_archivePath, @"\.rpi$", ".rpa", RegexOptions.IgnoreCase);
-                }
+                _indexPath = Regex.Replace(_archivePath, @"\.rpa$", ".rpi", RegexOptions.IgnoreCase);
+            }
+            if (_archivePath.ToLower().EndsWith(ArchiveMagic.RPA_1_RPI))
+            {
+                _indexPath = _archivePath;
+                _archivePath = Regex.Replace(_archivePath, @"\.rpi$", ".rpa", RegexOptions.IgnoreCase);
             }
         }
 
@@ -252,7 +248,7 @@ namespace RPA_Parser
                 return 2;
             }
 
-            if (_archivePath.EndsWith(ArchiveMagic.RPA_1_RPA) || _archivePath.EndsWith(ArchiveMagic.RPA_1_RPI))
+            if (_archivePath.ToLower().EndsWith(ArchiveMagic.RPA_1_RPA) || _archivePath.ToLower().EndsWith(ArchiveMagic.RPA_1_RPI))
             {
                 GetIndexAndArchive();
                 if (File.Exists(_archivePath) && File.Exists(_indexPath))
@@ -577,140 +573,187 @@ namespace RPA_Parser
 
         public string SaveArchive(string archivePath)
         {
-            if (archivePath.EndsWith(".rpi"))
+            if (archivePath.ToLower().EndsWith(".rpi"))
             {
                 archivePath = Regex.Replace(archivePath, @"\.rpi$", ".rpa", RegexOptions.IgnoreCase);
             }
             
-            if (!archivePath.EndsWith(".rpa"))
+            if (!archivePath.ToLower().EndsWith(".rpa"))
             {
                 archivePath += ".rpa";
             }
 
-            if (archivePath == _archivePath && _archivePath != String.Empty)
+            string tmpPath = Regex.Replace(archivePath, @"\.rpa$", "", RegexOptions.IgnoreCase);
+            tmpPath = tmpPath.Substring(0, Math.Min(100, tmpPath.Length - 1)) + "_" +
+                      DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + Guid.NewGuid().ToString("N");
+
+            /*if (archivePath == _archivePath && _archivePath != String.Empty)
             {
                 throw new Exception("Cannot overwrite same archive file that is loaded.");
-            }
+            }*/
 
             string indexPath = Regex.Replace(archivePath, @"\.rpa$", ".rpi", RegexOptions.IgnoreCase);
 
-            if (indexPath == _indexPath && _indexPath != String.Empty)
+            /*if (indexPath == _indexPath && _indexPath != String.Empty)
             {
                 throw new Exception("Cannot overwrite same index file that is loaded.");
-            }
+            }*/
             
-            BuildArchive(archivePath, indexPath);
+            BuildArchive(archivePath, indexPath, tmpPath);
 
             return archivePath;
         }
 
-        private void BuildArchive(string archivePath, string indexPath)
+        private void BuildArchive(string archivePath, string indexPath, string tmpPath)
         {
-            if (!File.Exists(archivePath))
+            try
             {
-                File.WriteAllBytes(archivePath, new byte[] { });
-            }
-
-            using Stream stream = File.Open(archivePath, FileMode.Truncate);
-            int archiveOffset;
-            switch (ArchiveVersion)
-            {
-                case Version.RPA_3_2:
-                    archiveOffset = 34;
-                    break;
-                case Version.RPA_3:
-                    archiveOffset = 34;
-                    break;
-                case Version.RPA_2:
-                    archiveOffset = 25;
-                    break;
-                case Version.RPA_1:
-                    archiveOffset = 0;
-                    break;
-                default:
-                    throw new Exception("Specified version is not supported.");
-            }
-
-            stream.Position = archiveOffset;
-                
-            Random rnd = new Random();
-                
-            // Update indexes
-            Hashtable indexes = new Hashtable();
-            foreach (KeyValuePair<string, ArchiveIndex> index in Index)
-            {
-                byte[] content = ExtractData(index.Key);
-
-                if (Padding > 0)
+                if (!File.Exists(tmpPath + ".rpa"))
                 {
-                    string paddingStr = String.Empty;
-                    int paddingLength = rnd.Next(1, Padding);
+                    File.WriteAllBytes(tmpPath + ".rpa", new byte[] { });
+                }
 
-                    while (paddingLength > 0)
+                using (Stream stream = File.Open(tmpPath + ".rpa", FileMode.Truncate))
+                {
+                    int archiveOffset;
+                    switch (ArchiveVersion)
                     {
-                        paddingStr += Encoding.ASCII.GetString(new [] {(byte) rnd.Next(1, 255)});
-                        paddingLength--;
+                        case Version.RPA_3_2:
+                            archiveOffset = 34;
+                            break;
+                        case Version.RPA_3:
+                            archiveOffset = 34;
+                            break;
+                        case Version.RPA_2:
+                            archiveOffset = 25;
+                            break;
+                        case Version.RPA_1:
+                            archiveOffset = 0;
+                            break;
+                        default:
+                            throw new Exception("Specified version is not supported.");
                     }
 
-                    byte[] paddingBytes = Encoding.ASCII.GetBytes(paddingStr);
-                    archiveOffset += paddingBytes.Length;
+                    stream.Position = archiveOffset;
+
+                    Random rnd = new Random();
+
+                    // Update indexes
+                    Hashtable indexes = new Hashtable();
+                    foreach (KeyValuePair<string, ArchiveIndex> index in Index)
+                    {
+                        byte[] content = ExtractData(index.Key);
+
+                        if (Padding > 0)
+                        {
+                            string paddingStr = String.Empty;
+                            int paddingLength = rnd.Next(1, Padding);
+
+                            while (paddingLength > 0)
+                            {
+                                paddingStr += Encoding.ASCII.GetString(new[] {(byte) rnd.Next(1, 255)});
+                                paddingLength--;
+                            }
+
+                            byte[] paddingBytes = Encoding.ASCII.GetBytes(paddingStr);
+                            archiveOffset += paddingBytes.Length;
+                        }
+
+                        stream.Position = archiveOffset;
+                        stream.Write(content, 0, content.Length);
+
+                        List<object[]> indexData = new List<object[]>();
+                        if (CheckVersion(ArchiveVersion, Version.RPA_3) ||
+                            CheckVersion(ArchiveVersion, Version.RPA_3_2))
+                        {
+                            indexData.Add(new object[]
+                                {archiveOffset ^ Step, content.Length ^ Step, ""}); // Last is prefix
+                        }
+                        else
+                        {
+                            indexData.Add(new object[] {archiveOffset, content.Length});
+                        }
+
+                        archiveOffset += content.Length;
+
+                        indexes.Add(index.Value.RelativePath, indexData);
+                    }
+
+                    byte[] pickledIndexes;
+                    using (Pickler pickler = new Pickler())
+                    {
+                        pickledIndexes = pickler.dumps(indexes);
+                    }
+
+                    byte[] fileCompressed = ZlibStream.CompressBuffer(pickledIndexes);
+
+                    if (!CheckVersion(ArchiveVersion, Version.RPA_1))
+                    {
+                        stream.Position = archiveOffset;
+                        stream.Write(fileCompressed, 0, fileCompressed.Length);
+
+                        string headerContent = String.Empty;
+
+                        switch (ArchiveVersion)
+                        {
+                            case Version.RPA_3_2:
+                                headerContent = ArchiveMagic.RPA_3_2 + archiveOffset.ToString("x").PadLeft(16, '0') +
+                                                " " +
+                                                Step.ToString("x").PadLeft(8, '0') + "\n";
+                                break;
+                            case Version.RPA_3:
+                                headerContent = ArchiveMagic.RPA_3 + archiveOffset.ToString("x").PadLeft(16, '0') +
+                                                " " +
+                                                Step.ToString("x").PadLeft(8, '0') + "\n";
+                                break;
+                            case Version.RPA_2:
+                                headerContent = ArchiveMagic.RPA_2 + archiveOffset.ToString("x").PadLeft(16, '0') +
+                                                "\n";
+                                break;
+                        }
+
+                        byte[] headerContentByte = Encoding.UTF8.GetBytes(headerContent);
+
+                        stream.Position = 0;
+                        stream.Write(headerContentByte, 0, headerContentByte.Length);
+                    }
+                    else
+                    {
+                        File.WriteAllBytes(tmpPath + ".rpi", fileCompressed);
+                    }
                 }
 
-                stream.Position = archiveOffset;
-                stream.Write(content, 0, content.Length);
-
-                List<object[]> indexData = new List<object[]>();
-                if (CheckVersion(ArchiveVersion, Version.RPA_3) || CheckVersion(ArchiveVersion, Version.RPA_3_2))
+                try
                 {
-                    indexData.Add(new object[] {archiveOffset ^ Step, content.Length ^ Step, ""}); // Last is prefix
+                    // Test if archive is corrupted or not
+                    RpaParser testParse = new RpaParser();
+                    testParse.LoadArchive(tmpPath + ".rpa");
                 }
-                else
+                catch (Exception ex)
                 {
-                    indexData.Add(new object[] {archiveOffset, content.Length});
+                    throw new Exception("Validation of newly created archive failed. This usually means corrupted archive file after creation. No harm was done to original archive. Parser failed with following error during validation: " + ex.Message);
                 }
 
-                archiveOffset += content.Length;
-
-                indexes.Add(index.Value.RelativePath, indexData);
-            }
-
-            byte[] pickledIndexes;
-            using (Pickler pickler = new Pickler())
-            {
-                pickledIndexes = pickler.dumps(indexes);
-            }
-            byte[] fileCompressed = ZlibStream.CompressBuffer(pickledIndexes);
-
-            if (!CheckVersion(ArchiveVersion, Version.RPA_1))
-            {
-                stream.Position = archiveOffset;
-                stream.Write(fileCompressed, 0, fileCompressed.Length);
-
-                string headerContent = String.Empty;
-
-                switch (ArchiveVersion)
+                File.Copy(tmpPath + ".rpa", archivePath, true);
+                File.Delete(tmpPath + ".rpa");
+                if (File.Exists(tmpPath + ".rpi"))
                 {
-                    case Version.RPA_3_2:
-                        headerContent = ArchiveMagic.RPA_3_2 + archiveOffset.ToString("x").PadLeft(16, '0') + " " +
-                                        Step.ToString("x").PadLeft(8, '0') + "\n";
-                        break;
-                    case Version.RPA_3:
-                        headerContent = ArchiveMagic.RPA_3 + archiveOffset.ToString("x").PadLeft(16, '0') + " " +
-                                        Step.ToString("x").PadLeft(8, '0') + "\n";
-                        break;
-                    case Version.RPA_2:
-                        headerContent = ArchiveMagic.RPA_2 + archiveOffset.ToString("x").PadLeft(16, '0') + "\n";
-                        break;
+                    File.Copy(tmpPath + ".rpi", indexPath, true);
+                    File.Delete(tmpPath + ".rpi");
+                }
+            }
+            catch
+            {
+                if (File.Exists(tmpPath + ".rpa"))
+                {
+                    File.Delete(tmpPath + ".rpa");
+                }
+                if (File.Exists(tmpPath + ".rpi"))
+                {
+                    File.Delete(tmpPath + ".rpi");
                 }
 
-                byte[] headerContentByte = Encoding.UTF8.GetBytes(headerContent);
-
-                stream.Position = 0;
-                stream.Write(headerContentByte, 0, headerContentByte.Length);
-            }
-            else
-            {
-                File.WriteAllBytes(indexPath, fileCompressed);
+                throw;
             }
         }
     }

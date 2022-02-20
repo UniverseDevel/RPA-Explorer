@@ -304,6 +304,24 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Archive loading failed.
+        /// </summary>
+        internal static string EN_Load_failed {
+            get {
+                return ResourceManager.GetString("EN_Load_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading archive failed with following error: {0}.
+        /// </summary>
+        internal static string EN_Load_failed_reason {
+            get {
+                return ResourceManager.GetString("EN_Load_failed_reason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Load file.
         /// </summary>
         internal static string EN_Load_file {
@@ -318,15 +336,6 @@ namespace RPA_Explorer {
         internal static string EN_Load_RenPy_Archive {
             get {
                 return ResourceManager.GetString("EN_Load_RenPy_Archive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Loading archive after saving failed which indicates corrupted archive. Attempting to restore changes from before save..
-        /// </summary>
-        internal static string EN_Loading_archive_after_saving_failed {
-            get {
-                return ResourceManager.GetString("EN_Loading_archive_after_saving_failed", resourceCulture);
             }
         }
         
@@ -444,6 +453,15 @@ namespace RPA_Explorer {
         internal static string EN_Save_failed {
             get {
                 return ResourceManager.GetString("EN_Save_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving new archive failed with following error: {0}.
+        /// </summary>
+        internal static string EN_Save_failed_reason {
+            get {
+                return ResourceManager.GetString("EN_Save_failed_reason", resourceCulture);
             }
         }
         

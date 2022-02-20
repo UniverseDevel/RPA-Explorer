@@ -58,8 +58,8 @@
     <data name="EN_Saving_archive" xml:space="preserve">
         <value>Saving archive...</value>
     </data>
-    <data name="EN_Loading_archive_after_saving_failed" xml:space="preserve">
-        <value>Loading archive after saving failed which indicates corrupted archive. Attempting to restore changes from before save.</value>
+    <data name="EN_Save_failed_reason" xml:space="preserve">
+        <value>Saving new archive failed with following error: {0}</value>
     </data>
     <data name="EN_Save_failed" xml:space="preserve">
         <value>Save failed</value>
@@ -168,5 +168,11 @@
     </data>
     <data name="EN_File_exists" xml:space="preserve">
         <value>File exists in archive</value>
+    </data>
+    <data name="EN_Load_failed_reason" xml:space="preserve">
+        <value>Loading archive failed with following error: {0}</value>
+    </data>
+    <data name="EN_Load_failed" xml:space="preserve">
+        <value>Archive loading failed</value>
     </data>
 </root>

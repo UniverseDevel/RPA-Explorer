@@ -193,10 +193,20 @@ namespace RPA_Explorer
                 if (openFileDialog.CheckFileExists)
                 {
                     statusBar1.Text = GetText("Loading_file") + openFileDialog.FileName;
-                        
-                    _expandedList.Clear();
-                    _rpaParser = new RpaParser();
-                    _rpaParser.LoadArchive(openFileDialog.FileName);
+
+                    try
+                    {
+                        _expandedList.Clear();
+                        _rpaParser = new RpaParser();
+                        _rpaParser.LoadArchive(openFileDialog.FileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(
+                            string.Format(GetText("Load_failed_reason"), ex.Message),
+                            GetText("Load_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
 
                     GenerateTreeView();
 
@@ -906,23 +916,13 @@ namespace RPA_Explorer
                 try
                 {
                     string saveName = _rpaParser.SaveArchive(saveFileDialog.FileName);
-                    try
-                    {
-                        LoadArchive(saveName, true);
-                    }
-                    catch
-                    {
-                        _rpaParser = _rpaParserBak;
-                        MessageBox.Show(
-                            GetText("Loading_archive_after_saving_failed"),
-                            GetText("Save_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    LoadArchive(saveName, true);
                 }
                 catch (Exception ex)
                 {
                     _rpaParser = _rpaParserBak;
                     MessageBox.Show(
-                        ex.Message,
+                        string.Format(GetText("Save_failed_reason"), ex.Message),
                         GetText("Save_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
