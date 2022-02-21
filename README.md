@@ -19,6 +19,7 @@ Known Issues:
 
 - When selecting/unselecting objects too fast will not update selections for child or parent objects, this seems to be a TreeView bug/shortcomming and there is not much I can do with it.
 - Some video/audio formats will not update time played or total video time and this seems to be LibVLC library issue.
+- When browsing trough videos, after some time (and after some ammount of videos loaded) application freezes. So far I am unable to tell if I am handling objects incorrectly or it is a LibVLC problem.
 
 Images preview:
 ![1](https://user-images.githubusercontent.com/47400898/154856556-1da3d011-5631-4100-972c-f6e844967242.png)
