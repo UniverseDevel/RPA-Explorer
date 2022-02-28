@@ -54,11 +54,13 @@ namespace RPA_Parser
             public long Length;
             public string Prefix = String.Empty;
         }
+        
         public class ArchiveIndex
         {
             public readonly SortedDictionary<int, Tuples> Tuples = new ();
-            public string Path = String.Empty;
-            public string RelativePath = String.Empty;
+            public string FullPath = String.Empty;
+            public string TreePath = String.Empty;
+            public string ParentPath = String.Empty;
             public bool InArchive;
             public long Length;
         }
@@ -356,7 +358,8 @@ namespace RPA_Parser
 
                 ArchiveIndex indexEntry = new ArchiveIndex
                 {
-                    RelativePath = (string) kvp.Key,
+                    TreePath = (string) kvp.Key,
+                    ParentPath = Path.GetDirectoryName((string) kvp.Key),
                     InArchive = true
                 };
                 int counter = 0;
@@ -375,7 +378,7 @@ namespace RPA_Parser
                     indexEntry.Tuples.Add(counter, index);
                     counter++;
                 }
-                indexList.Add(indexEntry.RelativePath, indexEntry);
+                indexList.Add(indexEntry.TreePath, indexEntry);
             }
 
             foreach (KeyValuePair<string, ArchiveIndex> kvp in indexList)
@@ -404,9 +407,10 @@ namespace RPA_Parser
             {
                 ArchiveIndex archIndex = new ArchiveIndex
                 {
-                    Path = kvp.Value.Path,
+                    FullPath = kvp.Value.FullPath,
                     InArchive = kvp.Value.InArchive,
-                    RelativePath = kvp.Value.RelativePath,
+                    TreePath = kvp.Value.TreePath,
+                    ParentPath = kvp.Value.ParentPath,
                     Length = kvp.Value.Length
                 };
                 
@@ -545,7 +549,7 @@ namespace RPA_Parser
                 return finalData;
             }
             
-            return File.ReadAllBytes(Index[fileName].Path);
+            return File.ReadAllBytes(Index[fileName].FullPath);
         }
 
         public string Extract(string fileName, string exportPath)
@@ -676,7 +680,7 @@ namespace RPA_Parser
 
                         archiveOffset += content.Length;
 
-                        indexes.Add(index.Value.RelativePath, indexData);
+                        indexes.Add(index.Value.TreePath, indexData);
                     }
 
                     byte[] pickledIndexes;

@@ -484,6 +484,15 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected object path: .
+        /// </summary>
+        internal static string EN_Selected_object_path {
+            get {
+                return ResourceManager.GetString("EN_Selected_object_path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Selected object size: .
         /// </summary>
         internal static string EN_Selected_object_size {

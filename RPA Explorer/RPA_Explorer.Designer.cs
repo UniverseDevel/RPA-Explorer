@@ -266,7 +266,7 @@ namespace RPA_Explorer
             this.trackBar1.Size = new System.Drawing.Size(170, 20);
             this.trackBar1.TabIndex = 5;
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar1.Value = 80;
+            this.trackBar1.Value = 50;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // button4

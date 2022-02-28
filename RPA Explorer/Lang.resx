@@ -175,4 +175,7 @@
     <data name="EN_Load_failed" xml:space="preserve">
         <value>Archive loading failed</value>
     </data>
+    <data name="EN_Selected_object_path" xml:space="preserve">
+        <value>Selected object path: </value>
+    </data>
 </root>
