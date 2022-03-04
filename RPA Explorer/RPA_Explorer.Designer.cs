@@ -118,7 +118,7 @@ namespace RPA_Explorer
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(344, 127);
+            this.textBox1.Size = new System.Drawing.Size(344, 157);
             this.textBox1.TabIndex = 8;
             this.textBox1.WordWrap = false;
             // 
@@ -146,10 +146,10 @@ namespace RPA_Explorer
             this.treeView1.CheckBoxes = true;
             this.treeView1.FullRowSelect = true;
             this.treeView1.HideSelection = false;
-            this.treeView1.Location = new System.Drawing.Point(12, 321);
+            this.treeView1.Location = new System.Drawing.Point(12, 351);
             this.treeView1.Name = "treeView1";
             this.treeView1.PathSeparator = "/";
-            this.treeView1.Size = new System.Drawing.Size(344, 373);
+            this.treeView1.Size = new System.Drawing.Size(344, 343);
             this.treeView1.TabIndex = 14;
             this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             this.treeView1.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeCollapse);
@@ -189,11 +189,12 @@ namespace RPA_Explorer
             // label2
             // 
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
             this.label2.Location = new System.Drawing.Point(3, 3);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(776, 632);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Start by creating/loading archive file or drag and drop archive file to this wind" + "ow to load it.";
+            this.label2.Text = "Start by creating/loading archive file or drag and drop archive file into this bo" + "x to load it.";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tabPage1
@@ -321,7 +322,7 @@ namespace RPA_Explorer
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(12, 305);
+            this.label4.Location = new System.Drawing.Point(12, 335);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(100, 13);
             this.label4.TabIndex = 17;

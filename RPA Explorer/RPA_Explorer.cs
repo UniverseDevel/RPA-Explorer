@@ -294,14 +294,18 @@ namespace RPA_Explorer
                     }
                 }
 
-                archiveInfo += GetText("Objects_count") + _rpaParser.Index.Count + Environment.NewLine;
-                archiveInfo += GetText("Unsaved_objects_count") + unsavedCount + Environment.NewLine;
+                archiveInfo += GetText("Files_count") + _rpaParser.Index.Count + Environment.NewLine;
+                archiveInfo += GetText("Unsaved_files_count") + unsavedCount + Environment.NewLine;
 
                 if (selectedSize != -1)
                 {
-                    archiveInfo += GetText("Selected_object_path") + selectedPath +
+                    if (selectedPath == String.Empty)
+                    {
+                        selectedPath = "/";
+                    }
+                    archiveInfo += GetText("Selected_file_path") + selectedPath +
                                    Environment.NewLine;
-                    archiveInfo += GetText("Selected_object_size") + PrettySize.Format(selectedSize) +
+                    archiveInfo += GetText("Selected_file_size") + PrettySize.Format(selectedSize) +
                                    Environment.NewLine;
                 }
             }
@@ -334,6 +338,14 @@ namespace RPA_Explorer
                 {
                     dialogResult = DialogResult.OK;
                     openFileDialog.FileName = openFile;
+                }
+                else
+                {
+                    MessageBox.Show(
+                        string.Format(GetText("Load_failed_reason"), GetText("Not_valid_archive_file")),
+                        GetText("Load_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    statusBar1.Text = GetText("Ready");
+                    return;
                 }
             }
 
@@ -382,8 +394,8 @@ namespace RPA_Explorer
 
         private void AddFilesToArchive(string[] pathList)
         {
-            // TODO: prompt for path to inset files into. Default can be root or selected object?
-            //       Or don't prompt and use selected object. Empty folders should be excluded.
+            // TODO: prompt for path to inset files into? Default can be root or selected object?
+            //       Or don't prompt and use selected object? Empty folders should be excluded.
             //string promptValue = Prompt.ShowDialog("Test", "123", "xx");
                 
             _fileListBackup.Clear();

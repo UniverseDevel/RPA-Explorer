@@ -61,7 +61,7 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Archive file location: .
+        ///   Looks up a localized string similar to Archive location: .
         /// </summary>
         internal static string EN_Archive_file_location {
             get {
@@ -70,7 +70,7 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Archive file size: .
+        ///   Looks up a localized string similar to Archive size: .
         /// </summary>
         internal static string EN_Archive_file_size {
             get {
@@ -259,6 +259,15 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Files count: .
+        /// </summary>
+        internal static string EN_Files_count {
+            get {
+                return ResourceManager.GetString("EN_Files_count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Image.
         /// </summary>
         internal static string EN_Image {
@@ -367,11 +376,11 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Objects count: .
+        ///   Looks up a localized string similar to Selected file is not valid archive file..
         /// </summary>
-        internal static string EN_Objects_count {
+        internal static string EN_Not_valid_archive_file {
             get {
-                return ResourceManager.GetString("EN_Objects_count", resourceCulture);
+                return ResourceManager.GetString("EN_Not_valid_archive_file", resourceCulture);
             }
         }
         
@@ -394,7 +403,7 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Preview is not supported for this file..
+        ///   Looks up a localized string similar to Preview is not supported for selected file/folder..
         /// </summary>
         internal static string EN_Preview_is_not_supported {
             get {
@@ -484,20 +493,20 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selected object path: .
+        ///   Looks up a localized string similar to Selected file path: .
         /// </summary>
-        internal static string EN_Selected_object_path {
+        internal static string EN_Selected_file_path {
             get {
-                return ResourceManager.GetString("EN_Selected_object_path", resourceCulture);
+                return ResourceManager.GetString("EN_Selected_file_path", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selected object size: .
+        ///   Looks up a localized string similar to Selected file size: .
         /// </summary>
-        internal static string EN_Selected_object_size {
+        internal static string EN_Selected_file_size {
             get {
-                return ResourceManager.GetString("EN_Selected_object_size", resourceCulture);
+                return ResourceManager.GetString("EN_Selected_file_size", resourceCulture);
             }
         }
         
@@ -511,16 +520,16 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unsaved objects count: .
+        ///   Looks up a localized string similar to Unsaved files count: .
         /// </summary>
-        internal static string EN_Unsaved_objects_count {
+        internal static string EN_Unsaved_files_count {
             get {
-                return ResourceManager.GetString("EN_Unsaved_objects_count", resourceCulture);
+                return ResourceManager.GetString("EN_Unsaved_files_count", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Choose file from list on the side to preview contents. Check and export to save it locally..
+        ///   Looks up a localized string similar to Choose file from file list on the side to preview contents. Check and export to save it locally or delete it from archive. Drag and drop files to file list to add new files into archive..
         /// </summary>
         internal static string EN_Usage_instructions_loaded {
             get {
@@ -529,7 +538,7 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start by creating/loading archive file or drag and drop archive file to this window to load it..
+        ///   Looks up a localized string similar to Start by creating/loading archive file or drag and drop archive file into this area to load it..
         /// </summary>
         internal static string EN_Usage_instructions_new {
             get {

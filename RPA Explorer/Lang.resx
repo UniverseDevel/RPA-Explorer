@@ -38,10 +38,10 @@
         <value>Save RenPy Archive</value>
     </data>
     <data name="EN_Usage_instructions_loaded" xml:space="preserve">
-        <value>Choose file from list on the side to preview contents. Check and export to save it locally.</value>
+        <value>Choose file from file list on the side to preview contents. Check and export to save it locally or delete it from archive. Drag and drop files to file list to add new files into archive.</value>
     </data>
     <data name="EN_Preview_is_not_supported" xml:space="preserve">
-        <value>Preview is not supported for this file.</value>
+        <value>Preview is not supported for selected file/folder.</value>
     </data>
     <data name="EN_Play" xml:space="preserve">
         <value>Play</value>
@@ -83,10 +83,10 @@
         <value>Archive version: </value>
     </data>
     <data name="EN_Archive_file_location" xml:space="preserve">
-        <value>Archive file location: </value>
+        <value>Archive location: </value>
     </data>
     <data name="EN_Archive_file_size" xml:space="preserve">
-        <value>Archive file size: </value>
+        <value>Archive size: </value>
     </data>
     <data name="EN_Index_file_location" xml:space="preserve">
         <value>Index file location: </value>
@@ -94,14 +94,14 @@
     <data name="EN_Index_file_size" xml:space="preserve">
         <value>Index file size: </value>
     </data>
-    <data name="EN_Objects_count" xml:space="preserve">
-        <value>Objects count: </value>
+    <data name="EN_Files_count" xml:space="preserve">
+        <value>Files count: </value>
     </data>
-    <data name="EN_Unsaved_objects_count" xml:space="preserve">
-        <value>Unsaved objects count: </value>
+    <data name="EN_Unsaved_files_count" xml:space="preserve">
+        <value>Unsaved files count: </value>
     </data>
-    <data name="EN_Selected_object_size" xml:space="preserve">
-        <value>Selected object size: </value>
+    <data name="EN_Selected_file_size" xml:space="preserve">
+        <value>Selected file size: </value>
     </data>
     <data name="EN_Explorer_title" xml:space="preserve">
         <value>RenPy Archive Explorer</value>
@@ -137,7 +137,7 @@
         <value>None</value>
     </data>
     <data name="EN_Usage_instructions_new" xml:space="preserve">
-        <value>Start by creating/loading archive file or drag and drop archive file to this window to load it.</value>
+        <value>Start by creating/loading archive file or drag and drop archive file into this area to load it.</value>
     </data>
     <data name="EN_Text" xml:space="preserve">
         <value>Text</value>
@@ -175,7 +175,10 @@
     <data name="EN_Load_failed" xml:space="preserve">
         <value>Archive loading failed</value>
     </data>
-    <data name="EN_Selected_object_path" xml:space="preserve">
-        <value>Selected object path: </value>
+    <data name="EN_Selected_file_path" xml:space="preserve">
+        <value>Selected file path: </value>
+    </data>
+    <data name="EN_Not_valid_archive_file" xml:space="preserve">
+        <value>Selected file is not valid archive file.</value>
     </data>
 </root>
