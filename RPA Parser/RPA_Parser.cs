@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,8 @@ using WebPWrapper;
 
 namespace RPA_Parser
 {
-    // Inspired by: https://github.com/Shizmob/rpatool/blob/master/rpatool
+    // Inspired by: https://github.com/Shizmob/rpatool
+    // Inspired by: https://github.com/CensoredUsername/unrpyc
     
     public class RpaParser
     {
@@ -32,6 +34,11 @@ namespace RPA_Parser
             public const string RPA_2 = "RPA-2.0 ";
             public const string RPA_3 = "RPA-3.0 ";
             public const string RPA_3_2 = "RPA-3.2 ";
+        }
+        
+        private class RPCMagic
+        {
+            public const string RPC_2 = "RENPY RPC2";
         }
 
         public FileInfo ArchiveInfo;
@@ -132,6 +139,13 @@ namespace RPA_Parser
             ".json",
             ".yaml",
             ".csv"
+        };
+
+        public readonly string[] CodeExtList = {
+            ".rpyc~",
+            ".rpyc",
+            ".rpymc~",
+            ".rpymc"
         };
 
         public void LoadArchive(string filePath)
@@ -340,7 +354,6 @@ namespace RPA_Parser
                     }
                 }
 
-
                 byte[] fileUncompressed = ZlibStream.UncompressBuffer(fileCompressed);
                 using (Unpickler unpickler = new Unpickler())
                 {
@@ -432,6 +445,56 @@ namespace RPA_Parser
             return indexCopy;
         }
 
+        public string ParseRPYC(byte[] code)
+        {
+            string decompiled = String.Empty;
+
+            if (Encoding.UTF8.GetString(code).StartsWith(RPCMagic.RPC_2))
+            {
+                long blockOffset = 10;
+                Dictionary<int, byte[]> chunkList = new Dictionary<int, byte[]>();
+
+                while (true)
+                {
+                    byte[] chunkPart = new byte[12];
+                    Buffer.BlockCopy(code, (int) blockOffset, chunkPart, 0, 12);
+                    object[] structData = StructConverter.Unpack("III", chunkPart); // slot, start, length
+                    if ((int) structData[0] == 0)
+                    {
+                        break;
+                    }
+                    blockOffset += 12;
+                    
+                    byte[] chunk = new byte[(int) structData[2]];
+                    Buffer.BlockCopy(code, (int) structData[1], chunk, 0, (int) structData[2]);
+                    
+                    chunkList.Add((int) structData[0], chunk);
+                }
+
+                byte[] fileUncompressed;
+                try
+                {
+                    fileUncompressed = ZlibStream.UncompressBuffer(chunkList[1]);
+                }
+                catch (ZlibException ex)
+                {
+                    throw new Exception("Parsed slot 1 is not Zlib BLOB. " + ex.Message);
+                }
+
+                if (!Encoding.UTF8.GetString(fileUncompressed).EndsWith("."))
+                {
+                    throw new Exception("Parsed uncompressed slot 1 is not simple pickle.");
+                }
+
+                // TODO: pickletools.dis => disassembly, seems like there is no out of the box alternative for this in C#
+
+                //decompiled = Encoding.UTF8.GetString(fileUncompressed);
+            }
+
+            throw new NotImplementedException(); // TODO: remove when done
+            return decompiled;
+        }
+
         public KeyValuePair<string, byte[]> GetPreviewRaw(string fileName)
         {
             KeyValuePair<string, object> data = GetPreview(fileName, true);
@@ -452,7 +515,7 @@ namespace RPA_Parser
 
             if (ImageExtList.Contains(fileInfo.Extension.ToLower()))
             {
-                byte[] magicBytes = new byte[16] ;
+                byte[] magicBytes = new byte[16];
                 Buffer.BlockCopy(bytes,0, magicBytes,0,16);
 
                 Image image;
@@ -470,6 +533,28 @@ namespace RPA_Parser
             else if (TextExtList.Contains(fileInfo.Extension.ToLower()))
             {
                 data = new KeyValuePair<string, object>(PreviewTypes.Text, NormalizeNewLines(Encoding.UTF8.GetString(bytes, 0, bytes.Length)));
+            }
+            else if (CodeExtList.Contains(fileInfo.Extension.ToLower()))
+            {
+                string decompiledString = String.Empty;
+                
+                try
+                {
+                    decompiledString = ParseRPYC(bytes);
+                }
+                catch
+                {
+                    // Ignored
+                }
+
+                if (decompiledString == String.Empty)
+                {
+                    data = new KeyValuePair<string, object>(PreviewTypes.Unknown, bytes);
+                }
+                else
+                {
+                    data = new KeyValuePair<string, object>(PreviewTypes.Text, decompiledString);
+                }
             }
             else if (AudioExtList.Contains(fileInfo.Extension.ToLower()))
             {
@@ -759,6 +844,246 @@ namespace RPA_Parser
 
                 throw;
             }
+        }
+    }
+
+    // https://stackoverflow.com/a/28418846/3650856
+    public class StructConverter
+    {
+        // We use this function to provide an easier way to make type-agnostic call via GetBytes method of the BitConverter class.
+        // This means we can have much cleaner code below.
+        private static byte[] TypeAgnosticGetBytes(object o)
+        {
+            switch (o)
+            {
+                case char c:
+                    return BitConverter.GetBytes(c);
+                case int i:
+                    return BitConverter.GetBytes(i);
+                case uint u:
+                    return BitConverter.GetBytes(u);
+                case long l:
+                    return BitConverter.GetBytes(l);
+                case ulong @ulong:
+                    return BitConverter.GetBytes(@ulong);
+                case short s:
+                    return BitConverter.GetBytes(s);
+                case ushort @ushort:
+                    return BitConverter.GetBytes(@ushort);
+                case byte _:
+                case sbyte _:
+                    return new[] { (byte)o };
+                default:
+                    throw new ArgumentException("Unsupported object type found");
+            }
+        }
+
+        private static string GetFormatSpecifierFor(object o)
+        {
+            switch (o)
+            {
+                case char _:
+                    return "c";
+                case int _:
+                    return "i";
+                case uint _:
+                    return "I";
+                case long _:
+                    return "q";
+                case ulong _:
+                    return "Q";
+                case short _:
+                    return "h";
+                case ushort _:
+                    return "H";
+                case byte _:
+                    return "B";
+                case sbyte _:
+                    return "b";
+                default:
+                    throw new ArgumentException("Unsupported object type found");
+            }
+        }
+
+        /// <summary>
+        /// Convert a byte array into an array of objects based on Python's "struct.unpack" protocol.
+        /// </summary>
+        /// <param name="fmt">A "struct.pack"-compatible format string</param>
+        /// <param name="bytes">An array of bytes to convert to objects</param>
+        /// <returns>Array of objects.</returns>
+        /// <remarks>You are responsible for casting the objects in the array back to their proper types.</remarks>
+        public static object[] Unpack(string fmt, byte[] bytes)
+        {
+            Debug.WriteLine("Format string is length {0}, {1} bytes provided.", fmt.Length, bytes.Length);
+
+            // First we parse the format string to make sure it's proper.
+            if (fmt.Length < 1) throw new ArgumentException("Format string cannot be empty.");
+
+            bool endianFlip = false;
+            if (fmt.Substring(0, 1) == "<")
+            {
+                Debug.WriteLine("  Endian marker found: little endian");
+                // Little endian.
+                // Do we need to flip endianness?
+                if (BitConverter.IsLittleEndian == false) endianFlip = true;
+                fmt = fmt.Substring(1);
+            }
+            else if (fmt.Substring(0, 1) == ">")
+            {
+                Debug.WriteLine("  Endian marker found: big endian");
+                // Big endian.
+                // Do we need to flip endianness?
+                if (BitConverter.IsLittleEndian) endianFlip = true;
+                fmt = fmt.Substring(1);
+            }
+
+            // Now, we find out how long the byte array needs to be
+            int totalByteLength = 0;
+            foreach (char c in fmt)
+            {
+                Debug.WriteLine("  Format character found: {0}", c);
+                switch (c)
+                {
+                    case 'q':
+                    case 'Q':
+                        totalByteLength += 8;
+                        break;
+                    case 'i':
+                    case 'I':
+                        totalByteLength += 4;
+                        break;
+                    case 'h':
+                    case 'H':
+                        totalByteLength += 2;
+                        break;
+                    case 'b':
+                    case 'B':
+                    case 'x':
+                        totalByteLength += 1;
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid character found in format string.");
+                }
+            }
+
+            Debug.WriteLine("Endianness will {0}be flipped.", (object)(endianFlip ? "" : "NOT "));
+            Debug.WriteLine("The byte array is expected to be {0} bytes long.", totalByteLength);
+
+            // Test the byte array length to see if it contains as many bytes as is needed for the string.
+            if (bytes.Length != totalByteLength) throw new ArgumentException("The number of bytes provided does not match the total length of the format string.");
+
+            // Ok, we can go ahead and start parsing bytes!
+            int byteArrayPosition = 0;
+            var outputList = new List<object>();
+
+            Debug.WriteLine("Processing byte array...");
+            foreach (char c in fmt)
+            {
+                byte[] buf;
+                switch (c)
+                {
+                    case 'q':
+                        outputList.Add(BitConverter.ToInt64(bytes, byteArrayPosition));
+                        byteArrayPosition += 8;
+                        Debug.WriteLine("  Added signed 64-bit integer.");
+                        break;
+                    case 'Q':
+                        outputList.Add(BitConverter.ToUInt64(bytes, byteArrayPosition));
+                        byteArrayPosition += 8;
+                        Debug.WriteLine("  Added unsigned 64-bit integer.");
+                        break;
+                    case 'i':
+                        outputList.Add(BitConverter.ToInt32(bytes, byteArrayPosition));
+                        byteArrayPosition += 4;
+                        Debug.WriteLine("  Added signed 32-bit integer.");
+                        break;
+                    case 'I':
+                        outputList.Add(BitConverter.ToUInt32(bytes, byteArrayPosition));
+                        byteArrayPosition += 4;
+                        Debug.WriteLine("  Added unsigned 32-bit integer.");
+                        break;
+                    case 'h':
+                        outputList.Add(BitConverter.ToInt16(bytes, byteArrayPosition));
+                        byteArrayPosition += 2;
+                        Debug.WriteLine("  Added signed 16-bit integer.");
+                        break;
+                    case 'H':
+                        if (endianFlip)
+                        {
+                            var deezBytes = bytes.Reverse().Skip(byteArrayPosition).Take(2).ToArray();
+                            outputList.Add(BitConverter.ToUInt16(deezBytes, 0));
+                        }
+                        else
+                        {
+                            outputList.Add(BitConverter.ToUInt16(bytes, byteArrayPosition));
+                        }
+
+                        byteArrayPosition += 2;
+                        Debug.WriteLine("  Added unsigned 16-bit integer.");
+                        break;
+                    case 'b':
+                        buf = new byte[1];
+                        Array.Copy(bytes, byteArrayPosition, buf, 0, 1);
+                        outputList.Add((sbyte)buf[0]);
+                        byteArrayPosition++;
+                        Debug.WriteLine("  Added signed byte");
+                        break;
+                    case 'B':
+                        buf = new byte[1];
+                        Array.Copy(bytes, byteArrayPosition, buf, 0, 1);
+                        outputList.Add(buf[0]);
+                        byteArrayPosition++;
+                        Debug.WriteLine("  Added unsigned byte");
+                        break;
+                    case 'x':
+                        byteArrayPosition++;
+                        Debug.WriteLine("  Ignoring a byte");
+                        break;
+                    default:
+                        throw new ArgumentException("You should not be here.");
+                }
+            }
+            return outputList.ToArray();
+        }
+
+        /// <summary>
+        /// Convert an array of objects to a byte array, along with a string that can be used with Unpack.
+        /// </summary>
+        /// <param name="items">An object array of items to convert</param>
+        /// <param name="littleEndian">Set to False if you want to use big endian output.</param>
+        /// <param name="neededFormatStringToRecover">Variable to place an 'Unpack'-compatible format string into.</param>
+        /// <returns>A Byte array containing the objects provided in binary format.</returns>
+        public static byte[] Pack(object[] items, bool littleEndian, out string neededFormatStringToRecover)
+        {
+
+            // make a byte list to hold the bytes of output
+            var outputBytes = new List<byte>();
+
+            // should we be flipping bits for proper endianness?
+            bool endianFlip = (littleEndian != BitConverter.IsLittleEndian);
+
+            // start working on the output string
+            string outString = (littleEndian == false ? ">" : "<");
+
+            // convert each item in the objects to the representative bytes
+            foreach (object o in items)
+            {
+                byte[] theseBytes = TypeAgnosticGetBytes(o);
+                if (endianFlip) theseBytes = theseBytes.Reverse().ToArray();
+                outString += GetFormatSpecifierFor(o);
+                outputBytes.AddRange(theseBytes);
+            }
+
+            neededFormatStringToRecover = outString;
+
+            return outputBytes.ToArray();
+
+        }
+
+        public static byte[] Pack(object[] items)
+        {
+            string dummy = "";
+            return Pack(items, true, out dummy);
         }
     }
 }
