@@ -181,4 +181,7 @@
     <data name="EN_Not_valid_archive_file" xml:space="preserve">
         <value>Selected file is not valid archive file.</value>
     </data>
+    <data name="EN_Search_next" xml:space="preserve">
+        <value>Search next</value>
+    </data>
 </root>

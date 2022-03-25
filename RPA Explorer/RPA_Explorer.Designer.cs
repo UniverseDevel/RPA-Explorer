@@ -46,6 +46,8 @@ namespace RPA_Explorer
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.button8 = new System.Windows.Forms.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
@@ -221,6 +223,8 @@ namespace RPA_Explorer
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.button8);
+            this.tabPage2.Controls.Add(this.textBox3);
             this.tabPage2.Controls.Add(this.textBox2);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -230,16 +234,35 @@ namespace RPA_Explorer
             this.tabPage2.Text = "Text";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // button8
+            // 
+            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button8.Location = new System.Drawing.Point(665, 6);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(111, 23);
+            this.button8.TabIndex = 2;
+            this.button8.Text = "Search next";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // textBox3
+            // 
+            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox3.Location = new System.Drawing.Point(6, 8);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(653, 20);
+            this.textBox3.TabIndex = 1;
+            // 
             // textBox2
             // 
-            this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
-            this.textBox2.Location = new System.Drawing.Point(3, 3);
+            this.textBox2.Location = new System.Drawing.Point(3, 36);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(776, 632);
+            this.textBox2.Size = new System.Drawing.Size(776, 599);
             this.textBox2.TabIndex = 0;
             // 
             // tabPage3
@@ -415,6 +438,9 @@ namespace RPA_Explorer
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Button button8;
 
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
 

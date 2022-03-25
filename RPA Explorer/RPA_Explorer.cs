@@ -28,7 +28,7 @@ namespace RPA_Explorer
         private MemoryStream _memoryStreamVlc;
         private StreamMediaInput _streamMediaInputVlc;
         private Media _mediaVlc;
-
+        private int _searchStartIndex = 0;
         private readonly FileInfo _appInfo = new (System.Reflection.Assembly.GetEntryAssembly()?.Location ?? throw new InvalidOperationException());
 
         private static readonly System.ComponentModel.ComponentResourceManager Lang = new (typeof(Lang));
@@ -115,6 +115,7 @@ namespace RPA_Explorer
             label4.Text = GetText("File_list");
             button6.Text = GetText("Remove_checked");
             button7.Text = GetText("Save_archive");
+            button8.Text = GetText("Search_next");
 
             GenerateArchiveInfo();
         }
@@ -557,6 +558,30 @@ namespace RPA_Explorer
             }
         }
 
+        private void Search(TextBox tb, string pattern)
+        {
+            int index;
+
+            tb.Focus();
+            
+            if ((index = tb.Text.IndexOf(pattern, _searchStartIndex, StringComparison.Ordinal)) != -1)
+            {
+                tb.Select(index, pattern.Length);
+                _searchStartIndex = tb.SelectionStart + tb.SelectionLength;
+            }
+            else
+            {
+                _searchStartIndex = 0;
+                if ((index = tb.Text.IndexOf(pattern, _searchStartIndex, StringComparison.Ordinal)) != -1)
+                {
+                    tb.Select(index, pattern.Length);
+                    _searchStartIndex = tb.SelectionStart + tb.SelectionLength;
+                }
+            }
+
+            tb.ScrollToCaret();
+        }
+
         private string NormalizeTreePath(string path)
         {
             return Regex.Replace(path, "^/+", "");
@@ -617,6 +642,7 @@ namespace RPA_Explorer
                     }
                     else if (data.Key == RpaParser.PreviewTypes.Text)
                     {
+                        _searchStartIndex = 0;
                         textBox2.Text = (string) data.Value;
                         _switchTabs = true;
                         tabControl1.SelectedTab = tabPage2;
@@ -980,6 +1006,14 @@ namespace RPA_Explorer
         {
             LoadLanguage(toolStripComboBox1.SelectedItem.ToString());
             LoadTexts();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (textBox3.Text.Trim() != String.Empty)
+            {
+                Search(textBox2, textBox3.Text.Trim());
+            }
         }
     }
     
