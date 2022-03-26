@@ -184,4 +184,7 @@
     <data name="EN_Search_next" xml:space="preserve">
         <value>Search next</value>
     </data>
+    <data name="EN_Search" xml:space="preserve">
+        <value>Search</value>
+    </data>
 </root>

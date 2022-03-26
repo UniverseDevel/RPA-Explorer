@@ -493,6 +493,15 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        internal static string EN_Search {
+            get {
+                return ResourceManager.GetString("EN_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search next.
         /// </summary>
         internal static string EN_Search_next {
