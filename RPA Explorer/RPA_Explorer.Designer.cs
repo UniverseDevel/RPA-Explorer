@@ -63,7 +63,6 @@ namespace RPA_Explorer
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage0.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -225,7 +224,6 @@ namespace RPA_Explorer
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.textBox4);
             this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.button8);
             this.tabPage2.Controls.Add(this.textBox3);
@@ -409,14 +407,6 @@ namespace RPA_Explorer
             this.toolStripComboBox1.Size = new System.Drawing.Size(121, 23);
             this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
             // 
-            // textBox4
-            // 
-            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox4.Location = new System.Drawing.Point(101, 309);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(581, 20);
-            this.textBox4.TabIndex = 4;
-            // 
             // RpaExplorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -458,8 +448,6 @@ namespace RPA_Explorer
             this.ResumeLayout(false);
             this.PerformLayout();
         }
-
-        private System.Windows.Forms.TextBox textBox4;
 
         private System.Windows.Forms.Label label5;
 
