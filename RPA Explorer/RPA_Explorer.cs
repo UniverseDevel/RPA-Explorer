@@ -116,7 +116,7 @@ namespace RPA_Explorer
             button6.Text = GetText("Remove_checked");
             button7.Text = GetText("Save_archive");
             button8.Text = GetText("Search_next");
-            button8.Text = GetText("Search");
+            label5.Text = GetText("Search");
 
             GenerateArchiveInfo();
         }
