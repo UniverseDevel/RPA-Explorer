@@ -616,7 +616,7 @@ namespace RPA_Parser
 
             if (Index[fileName].InArchive)
             {
-                using BinaryReader reader = new BinaryReader(File.Open(_archivePath, FileMode.Open), Encoding.UTF8);
+                using BinaryReader reader = new BinaryReader(File.OpenRead(_archivePath), Encoding.UTF8);
                 byte[] finalData = { };
 
                 foreach (KeyValuePair<int, Tuples> kvpI in Index[fileName].Tuples)

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using LibVLCSharp.Shared;
+using Microsoft.Win32;
 using NeoSmart.PrettySize;
 using RPA_Parser;
 
@@ -857,6 +859,53 @@ namespace RPA_Explorer
                 _operation.Start();
             }
         }
+
+        private void RemoveAssociation()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+        
+        private static void SetAssociation(string extension, string keyName, string openWith, string fileDescription)
+        {
+            RegistryKey baseKey = Registry.ClassesRoot.CreateSubKey(extension);
+            if (baseKey != null)
+            {
+                baseKey.SetValue("", keyName);
+
+                RegistryKey openMethod = Registry.ClassesRoot.CreateSubKey(keyName);
+                if (openMethod != null)
+                {
+                    openMethod.SetValue("", fileDescription);
+                    openMethod.CreateSubKey("DefaultIcon")?.SetValue("", "\"" + openWith + "\",0");
+                    RegistryKey shell = openMethod.CreateSubKey("Shell");
+                    if (shell != null)
+                    {
+                        shell.CreateSubKey("edit")?.CreateSubKey("command")
+                            ?.SetValue("", "\"" + openWith + "\"" + " \"%1\"");
+                        shell.CreateSubKey("open")?.CreateSubKey("command")
+                            ?.SetValue("", "\"" + openWith + "\"" + " \"%1\"");
+                        baseKey.Close();
+                        openMethod.Close();
+                        shell.Close();
+                    }
+                }
+            }
+
+            // Delete the key instead of trying to change it
+            RegistryKey currentUser = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\" + extension, true);
+            if (currentUser != null)
+            {
+                currentUser.DeleteSubKey("UserChoice", false);
+                currentUser.Close();
+            }
+
+            // Tell explorer the file association has been changed
+            SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+        }
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
 
         private void button3_Click(object sender, EventArgs e)
         {

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ikb3ckTCYsDdqZ8rXRebGJLvLb58T6aEcXjj6O8Ha6uG03Hk8UPgJCZmaHYC0/TedoNO6cB0bhKBbIyL4kzH2A==",
+  "dgSpecHash": "JsGnXjfeeQXf+FA7Cx59Yp1E/we0M7Ov9H/peJYZw2f8RRXQLfsevV+kZ32OGThOKppce/n4fMNqWDz8lBrpOw==",
   "success": true,
-  "projectFilePath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
+  "projectFilePath": "W:\\Projects\\.NET\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\ionic.zlib\\1.9.1.5\\ionic.zlib.1.9.1.5.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\libvlcsharp\\3.6.5\\libvlcsharp.3.6.5.nupkg.sha512",

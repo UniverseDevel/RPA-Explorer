@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj": {}
+    "W:\\Projects\\.NET\\RPA Explorer\\RPA Parser\\RPAParser.csproj": {}
   },
   "projects": {
-    "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj": {
+    "W:\\Projects\\.NET\\RPA Explorer\\RPA Parser\\RPAParser.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj",
+        "projectUniqueName": "W:\\Projects\\.NET\\RPA Explorer\\RPA Parser\\RPAParser.csproj",
         "projectName": "RPAParser",
-        "projectPath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\RPAParser.csproj",
+        "projectPath": "W:\\Projects\\.NET\\RPA Explorer\\RPA Parser\\RPAParser.csproj",
         "packagesPath": "C:\\Users\\Martin Suchy\\.nuget\\packages\\",
-        "outputPath": "W:\\Visual Studio\\Projects\\RPA Explorer\\RPA Parser\\obj\\",
+        "outputPath": "W:\\Projects\\.NET\\RPA Explorer\\RPA Parser\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback",
@@ -54,7 +54,7 @@
               "version": "[4.19.0, )"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.406\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.407\\RuntimeIdentifierGraph.json"
         }
       }
     }
