@@ -187,4 +187,26 @@
     <data name="EN_Search" xml:space="preserve">
         <value>Search</value>
     </data>
+    <data name="EN_Options" xml:space="preserve">
+        <value>Options</value>
+    </data>
+    <data name="EN_File_association" xml:space="preserve">
+        <value>Associate RPA/RPI extensions</value>
+    </data>
+    <data name="EN_About" xml:space="preserve">
+        <value>About</value>
+    </data>
+    <data name="EN_About_text" xml:space="preserve">
+        <value>RPA Explorer v{0}
+Created by {1}
+GitHub: {2}
+
+Inspired by rpatool and unrpyc.
+
+Translations credits:
+{3}
+
+Contributors credits:
+{4}</value>
+    </data>
 </root>

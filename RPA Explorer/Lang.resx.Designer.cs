@@ -61,6 +61,34 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string EN_About {
+            get {
+                return ResourceManager.GetString("EN_About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RPA Explorer v{0}
+        ///Created by {1}
+        ///GitHub: {2}
+        ///
+        ///Inspired by rpatool and unrpyc.
+        ///
+        ///Translations credits:
+        ///{3}
+        ///
+        ///Contributors credits:
+        ///{4}.
+        /// </summary>
+        internal static string EN_About_text {
+            get {
+                return ResourceManager.GetString("EN_About_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Archive location: .
         /// </summary>
         internal static string EN_Archive_file_location {
@@ -241,6 +269,15 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Associate RPA/RPI extensions.
+        /// </summary>
+        internal static string EN_File_association {
+            get {
+                return ResourceManager.GetString("EN_File_association", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File exists in archive.
         /// </summary>
         internal static string EN_File_exists {
@@ -381,6 +418,15 @@ namespace RPA_Explorer {
         internal static string EN_Not_valid_archive_file {
             get {
                 return ResourceManager.GetString("EN_Not_valid_archive_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        internal static string EN_Options {
+            get {
+                return ResourceManager.GetString("EN_Options", resourceCulture);
             }
         }
         

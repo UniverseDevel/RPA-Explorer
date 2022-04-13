@@ -2314,3 +2314,4 @@ W:\Projects\.NET\RPA Explorer\RPA Explorer\obj\Release\net461\RPA Explorer.cspro
 W:\Projects\.NET\RPA Explorer\RPA Explorer\obj\Release\net461\RPA Explorer.csproj.CopyComplete
 W:\Projects\.NET\RPA Explorer\RPA Explorer\obj\Release\net461\RPA Explorer.exe
 W:\Projects\.NET\RPA Explorer\RPA Explorer\obj\Release\net461\RPA Explorer.pdb
+W:\Projects\.NET\RPA Explorer\RPA Explorer\obj\Release\net461\RPA_Explorer.About.resources

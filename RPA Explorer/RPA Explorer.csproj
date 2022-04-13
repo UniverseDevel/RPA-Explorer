@@ -34,6 +34,7 @@
       <Compile Update="RPA_Explorer.Designer.cs">
         <DependentUpon>RPA_Explorer.cs</DependentUpon>
       </Compile>
+      <EmbeddedResource Include="About.resx" />
       <EmbeddedResource Include="Lang.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>Lang.resx.Designer.cs</LastGenOutput>
@@ -59,6 +60,9 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Lang</DependentUpon>
+      </Compile>
+      <Compile Update="About.cs">
+        <SubType>Form</SubType>
       </Compile>
     </ItemGroup>
 

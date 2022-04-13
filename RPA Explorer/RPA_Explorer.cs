@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -119,6 +120,9 @@ namespace RPA_Explorer
             button7.Text = GetText("Save_archive");
             button8.Text = GetText("Search_next");
             label5.Text = GetText("Search");
+            optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem.Text = GetText("Options");
+            associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem.Text = GetText("File_association");
+            aboutToolStripMenuItem.Text = GetText("About");
 
             GenerateArchiveInfo();
         }
@@ -860,52 +864,59 @@ namespace RPA_Explorer
             }
         }
 
-        private void RemoveAssociation()
+        public class FileAssociation
         {
-            // TODO
-            throw new NotImplementedException();
+            public string Extension { get; set; }
+            public string ProgId { get; set; }
+            public string FileTypeDescription { get; set; }
+            public string ExecutableFilePath { get; set; }
         }
-        
-        private static void SetAssociation(string extension, string keyName, string openWith, string fileDescription)
-        {
-            RegistryKey baseKey = Registry.ClassesRoot.CreateSubKey(extension);
-            if (baseKey != null)
-            {
-                baseKey.SetValue("", keyName);
 
-                RegistryKey openMethod = Registry.ClassesRoot.CreateSubKey(keyName);
-                if (openMethod != null)
+        public class FileAssociations
+        {
+            // needed so that Explorer windows get refreshed after the registry is updated
+            [DllImport("Shell32.dll")]
+            private static extern int SHChangeNotify(int eventId, int flags, IntPtr item1, IntPtr item2);
+
+            private const int SHCNE_ASSOCCHANGED = 0x8000000;
+            private const int SHCNF_FLUSH = 0x1000;
+
+
+            public static void EnsureAssociationsSet(params FileAssociation[] associations)
+            {
+                bool madeChanges = false;
+                foreach (FileAssociation association in associations)
                 {
-                    openMethod.SetValue("", fileDescription);
-                    openMethod.CreateSubKey("DefaultIcon")?.SetValue("", "\"" + openWith + "\",0");
-                    RegistryKey shell = openMethod.CreateSubKey("Shell");
-                    if (shell != null)
-                    {
-                        shell.CreateSubKey("edit")?.CreateSubKey("command")
-                            ?.SetValue("", "\"" + openWith + "\"" + " \"%1\"");
-                        shell.CreateSubKey("open")?.CreateSubKey("command")
-                            ?.SetValue("", "\"" + openWith + "\"" + " \"%1\"");
-                        baseKey.Close();
-                        openMethod.Close();
-                        shell.Close();
-                    }
+                    madeChanges |= SetAssociation(
+                        association.Extension,
+                        association.ProgId,
+                        association.FileTypeDescription,
+                        association.ExecutableFilePath);
+                }
+
+                if (madeChanges)
+                {
+                    SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
                 }
             }
 
-            // Delete the key instead of trying to change it
-            RegistryKey currentUser = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\" + extension, true);
-            if (currentUser != null)
+            private static bool SetAssociation(string extension, string progId, string fileTypeDescription, string applicationFilePath)
             {
-                currentUser.DeleteSubKey("UserChoice", false);
-                currentUser.Close();
+                bool madeChanges = false;
+                madeChanges |= SetKeyDefaultValue(@"Software\Classes\" + extension, progId);
+                madeChanges |= SetKeyDefaultValue(@"Software\Classes\" + progId, fileTypeDescription);
+                madeChanges |= SetKeyDefaultValue($@"Software\Classes\{progId}\shell\open\command", "\"" + applicationFilePath + "\" \"%1\"");
+                return madeChanges;
             }
 
-            // Tell explorer the file association has been changed
-            SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+            private static bool SetKeyDefaultValue(string keyPath, string value)
+            {
+                using var key = Registry.CurrentUser.CreateSubKey(keyPath);
+                if (key == null || key.GetValue(null) as string == value) return false;
+                key.SetValue(null, value);
+                return true;
+            }
         }
-
-        [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -1068,6 +1079,35 @@ namespace RPA_Explorer
             {
                 Search(textBox2, textBox3.Text.Trim());
             }
+        }
+
+        private void associateRPARPIExtensionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProcessModule processModule = Process.GetCurrentProcess().MainModule;
+            if (processModule != null)
+            {
+                string filePath = processModule.FileName;
+                FileAssociations.EnsureAssociationsSet(
+                    new FileAssociation
+                    {
+                        Extension = ".rpi",
+                        ProgId = "RPA Explorer",
+                        FileTypeDescription = "RenPy Index File",
+                        ExecutableFilePath = filePath
+                    },
+                    new FileAssociation
+                    {
+                        Extension = ".rpa",
+                        ProgId = "RPA Explorer",
+                        FileTypeDescription = "RenPy Archive File",
+                        ExecutableFilePath = filePath
+                    });
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new About().ShowDialog();
         }
     }
     

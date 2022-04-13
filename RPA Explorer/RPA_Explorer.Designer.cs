@@ -63,6 +63,9 @@ namespace RPA_Explorer
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
+            this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage0.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -385,7 +388,7 @@ namespace RPA_Explorer
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.toolStripTextBox1, this.toolStripComboBox1});
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.toolStripTextBox1, this.toolStripComboBox1, this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem, this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1164, 27);
@@ -406,6 +409,27 @@ namespace RPA_Explorer
             this.toolStripComboBox1.Name = "toolStripComboBox1";
             this.toolStripComboBox1.Size = new System.Drawing.Size(121, 23);
             this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
+            // 
+            // optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem});
+            this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem.Name = "optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem";
+            this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem.Size = new System.Drawing.Size(61, 23);
+            this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem.Text = "Options";
+            // 
+            // associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem
+            // 
+            this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem.Name = "associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuI" + "temassociateRPARPIExtensionsToolStripMenuItem";
+            this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem.Text = "Associate RPA/RPI extensions";
+            this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem.Click += new System.EventHandler(this.associateRPARPIExtensionsToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 23);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // RpaExplorer
             // 
@@ -448,6 +472,11 @@ namespace RPA_Explorer
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem;
 
         private System.Windows.Forms.Label label5;
 
