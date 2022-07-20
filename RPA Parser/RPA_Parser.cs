@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -59,7 +59,7 @@ namespace RPA_Parser
         {
             public long Offset;
             public long Length;
-            public string Prefix = String.Empty;
+            public byte[] Prefix;
         }
         
         public class ArchiveIndex
@@ -385,7 +385,14 @@ namespace RPA_Parser
                     };
                     if ((long) value.Length == 3)
                     {
-                        index.Prefix = (string) value.GetValue(2);
+                        if (value.GetValue(2).GetType() == typeof(byte[]))
+                        {
+                            index.Prefix = (byte[]) value.GetValue(2);
+                        }
+                        else
+                        {
+                            index.Prefix = Encoding.UTF8.GetBytes((string) value.GetValue(2));
+                        }
                     }
 
                     indexEntry.Tuples.Add(counter, index);
@@ -622,7 +629,7 @@ namespace RPA_Parser
                 foreach (KeyValuePair<int, Tuples> kvpI in Index[fileName].Tuples)
                 {
                     reader.BaseStream.Seek(kvpI.Value.Offset, SeekOrigin.Begin);
-                    byte[] prefixData = Encoding.UTF8.GetBytes(kvpI.Value.Prefix);
+                    byte[] prefixData = kvpI.Value.Prefix;
                     byte[] fileData = reader.ReadBytes((int) kvpI.Value.Length - kvpI.Value.Prefix.Length); // Exported file max size ~2.14 GB
                     byte[] partData = new byte[finalData.Length + prefixData.Length + fileData.Length];
                     Buffer.BlockCopy(finalData, 0, partData, 0, finalData.Length);
