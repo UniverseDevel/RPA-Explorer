@@ -11,7 +11,7 @@
 
     <ItemGroup>
       <PackageReference Include="Ionic.Zlib" Version="1.9.1.5" />
-      <PackageReference Include="Razorvine.Pyrolite" Version="4.19.0" />
+      <PackageReference Include="Razorvine.Pickle" Version="1.2.1" />
     </ItemGroup>
 
 </Project>

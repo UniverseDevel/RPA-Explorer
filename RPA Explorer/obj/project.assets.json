@@ -91,25 +91,16 @@
           "lib/net40/NeoSmart.PrettySize.dll": {}
         }
       },
-      "Razorvine.Pyrolite/4.19.0": {
+      "Razorvine.Pickle/1.2.1": {
         "type": "package",
         "dependencies": {
-          "Razorvine.Serpent": "1.18.0"
+          "System.Memory": "4.5.2"
         },
         "compile": {
-          "lib/net40/Razorvine.Pyrolite.dll": {}
+          "lib/netstandard2.0/Razorvine.Pickle.dll": {}
         },
         "runtime": {
-          "lib/net40/Razorvine.Pyrolite.dll": {}
-        }
-      },
-      "Razorvine.Serpent/1.18.0": {
-        "type": "package",
-        "compile": {
-          "lib/net40/Razorvine.Serpent.dll": {}
-        },
-        "runtime": {
-          "lib/net40/Razorvine.Serpent.dll": {}
+          "lib/netstandard2.0/Razorvine.Pickle.dll": {}
         }
       },
       "System.Buffers/4.5.1": {
@@ -206,7 +197,7 @@
         "framework": ".NETFramework,Version=v4.6.1",
         "dependencies": {
           "Ionic.Zlib": "1.9.1.5",
-          "Razorvine.Pyrolite": "4.19.0"
+          "Razorvine.Pickle": "1.2.1"
         },
         "compile": {
           "bin/placeholder/RPAParser.dll": {}
@@ -827,28 +818,16 @@
         "neosmart.prettysize.nuspec"
       ]
     },
-    "Razorvine.Pyrolite/4.19.0": {
-      "sha512": "dMzWr5TnoRYJ3Vf0kR7RRZ04fu7ad2c76YwGyNJXk/+liOhvnC3/OJgM8AN1iKJ6whZJD0Cda1HsdaDZkxIsRA==",
+    "Razorvine.Pickle/1.2.1": {
+      "sha512": "a5xf8pDkLxwAFX1ssRgDLbe8XBWzS+4FVLAPaT6JiiluIKxIAbtv1kBA4DctS4twYfkZAqm2bZ22jpNEpPQ4CA==",
       "type": "package",
-      "path": "razorvine.pyrolite/4.19.0",
+      "path": "razorvine.pickle/1.2.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net40/Razorvine.Pyrolite.dll",
-        "razorvine.pyrolite.4.19.0.nupkg.sha512",
-        "razorvine.pyrolite.nuspec"
-      ]
-    },
-    "Razorvine.Serpent/1.18.0": {
-      "sha512": "VbjNim6OFqjgwrt3B/ZJjMlJVBoTm3hMy3eOajGIjp6IO5+ODY0Cu34lAEsW3+z0wK+wTfNw6XBwY66g/vmopw==",
-      "type": "package",
-      "path": "razorvine.serpent/1.18.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40/Razorvine.Serpent.dll",
-        "razorvine.serpent.1.18.0.nupkg.sha512",
-        "razorvine.serpent.nuspec"
+        "lib/netstandard2.0/Razorvine.Pickle.dll",
+        "razorvine.pickle.1.2.1.nupkg.sha512",
+        "razorvine.pickle.nuspec"
       ]
     },
     "System.Buffers/4.5.1": {
@@ -2480,7 +2459,7 @@
             "version": "[3.0.16, )"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.407\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
       }
     }
   }

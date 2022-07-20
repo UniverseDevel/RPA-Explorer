@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "JsGnXjfeeQXf+FA7Cx59Yp1E/we0M7Ov9H/peJYZw2f8RRXQLfsevV+kZ32OGThOKppce/n4fMNqWDz8lBrpOw==",
+  "dgSpecHash": "CkF9yEP98jKCy5zCh2S1UWgpF2xm9yU2ZhWOCP2AiA2qcwOpGnrOqNyU/p5v0SnolqQNDzxQDNDDajEQiaK15w==",
   "success": true,
   "projectFilePath": "W:\\Projects\\.NET\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
   "expectedPackageFiles": [
@@ -13,8 +13,7 @@
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.0\\microsoft.netframework.referenceassemblies.1.0.0.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net461\\1.0.0\\microsoft.netframework.referenceassemblies.net461.1.0.0.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\neosmart.prettysize\\2.1.0\\neosmart.prettysize.2.1.0.nupkg.sha512",
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.pyrolite\\4.19.0\\razorvine.pyrolite.4.19.0.nupkg.sha512",
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.serpent\\1.18.0\\razorvine.serpent.1.18.0.nupkg.sha512",
+    "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.pickle\\1.2.1\\razorvine.pickle.1.2.1.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
