@@ -115,8 +115,8 @@
     <data name="EN_Archive_save_padding" xml:space="preserve">
         <value>Data padding:</value>
     </data>
-    <data name="EN_Archive_save_step" xml:space="preserve">
-        <value>Data step:</value>
+    <data name="EN_Archive_save_obfuscationkey" xml:space="preserve">
+        <value>Obfuscation key:</value>
     </data>
     <data name="EN_Archive_save_continue" xml:space="preserve">
         <value>Continue</value>

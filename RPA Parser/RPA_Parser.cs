@@ -45,7 +45,7 @@ namespace RPA_Parser
         public FileInfo IndexInfo;
         public double ArchiveVersion = Version.Unknown;
         public int Padding = 0;
-        public long Step = 0xDEADBEEF;
+        public long ObfuscationKey = 0xDEADBEEF;
         public bool OptionsConfirmed = false;
         public SortedDictionary<string,ArchiveIndex> Index = new ();
         
@@ -160,7 +160,7 @@ namespace RPA_Parser
             {
                 _metadata = GetMetadata();
                 _offset = GetOffset();
-                Step = GetStep();
+                ObfuscationKey = GetObfuscationKey();
             }
             else if (CheckVersion(ArchiveVersion, Version.RPA_1))
             {
@@ -286,26 +286,26 @@ namespace RPA_Parser
             return Convert.ToInt64(_metadata[1], 16);
         }
 
-        private long GetStep()
+        private long GetObfuscationKey()
         {
-            long step = 0;
+            long key = 0;
             
             if (CheckVersion(ArchiveVersion, Version.RPA_3))
             {
                 for(int i = 2; i < _metadata.Length; i++)
                 {
-                    step ^= Convert.ToInt64(_metadata[i], 16);
+                    key ^= Convert.ToInt64(_metadata[i], 16);
                 }
             }
             else if (CheckVersion(ArchiveVersion, Version.RPA_3_2))
             {
                 for(int i = 3; i < _metadata.Length; i++)
                 {
-                    step ^= Convert.ToInt64(_metadata[i], 16);
+                    key ^= Convert.ToInt64(_metadata[i], 16);
                 }
             }
 
-            return step;
+            return key;
         }
         
         private SortedDictionary<string,ArchiveIndex> GetIndexes()
@@ -394,6 +394,10 @@ namespace RPA_Parser
                             index.Prefix = Encoding.UTF8.GetBytes((string) value.GetValue(2));
                         }
                     }
+                    else
+                    {
+                        index.Prefix = Array.Empty<byte>();
+                    }
 
                     indexEntry.Tuples.Add(counter, index);
                     counter++;
@@ -408,8 +412,8 @@ namespace RPA_Parser
                     // Deobfuscate index data
                     if (ArchiveVersion >= Version.RPA_3)
                     {
-                        kvpI.Value.Offset ^= Step;
-                        kvpI.Value.Length ^= Step;
+                        kvpI.Value.Offset ^= ObfuscationKey;
+                        kvpI.Value.Length ^= ObfuscationKey;
                     }
 
                     kvp.Value.Length += kvpI.Value.Length;
@@ -763,7 +767,7 @@ namespace RPA_Parser
                             CheckVersion(ArchiveVersion, Version.RPA_3_2))
                         {
                             indexData.Add(new object[]
-                                {archiveOffset ^ Step, content.Length ^ Step, ""}); // Last is prefix
+                                {archiveOffset ^ ObfuscationKey, content.Length ^ ObfuscationKey, ""}); // Last is prefix
                         }
                         else
                         {
@@ -795,12 +799,12 @@ namespace RPA_Parser
                             case Version.RPA_3_2:
                                 headerContent = ArchiveMagic.RPA_3_2 + archiveOffset.ToString("x").PadLeft(16, '0') +
                                                 " " +
-                                                Step.ToString("x").PadLeft(8, '0') + "\n";
+                                                ObfuscationKey.ToString("x").PadLeft(8, '0') + "\n";
                                 break;
                             case Version.RPA_3:
                                 headerContent = ArchiveMagic.RPA_3 + archiveOffset.ToString("x").PadLeft(16, '0') +
                                                 " " +
-                                                Step.ToString("x").PadLeft(8, '0') + "\n";
+                                                ObfuscationKey.ToString("x").PadLeft(8, '0') + "\n";
                                 break;
                             case Version.RPA_2:
                                 headerContent = ArchiveMagic.RPA_2 + archiveOffset.ToString("x").PadLeft(16, '0') +

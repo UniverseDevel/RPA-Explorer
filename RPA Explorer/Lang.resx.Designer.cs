@@ -161,20 +161,20 @@ namespace RPA_Explorer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Obfuscation key:.
+        /// </summary>
+        internal static string EN_Archive_save_obfuscationkey {
+            get {
+                return ResourceManager.GetString("EN_Archive_save_obfuscationkey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data padding:.
         /// </summary>
         internal static string EN_Archive_save_padding {
             get {
                 return ResourceManager.GetString("EN_Archive_save_padding", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Data step:.
-        /// </summary>
-        internal static string EN_Archive_save_step {
-            get {
-                return ResourceManager.GetString("EN_Archive_save_step", resourceCulture);
             }
         }
         

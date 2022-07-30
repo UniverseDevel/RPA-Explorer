@@ -87,7 +87,7 @@ namespace RPA_Explorer
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 18);
             this.label3.TabIndex = 4;
-            this.label3.Text = "Data step:";
+            this.label3.Text = "Obfuscation key:";
             // 
             // button1
             // 

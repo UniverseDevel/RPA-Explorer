@@ -23,7 +23,7 @@ namespace RPA_Explorer
             comboBox1.SelectedItem = _rpaParser.CheckVersion(_rpaParser.ArchiveVersion, RpaParser.Version.Unknown) ? RpaParser.Version.RPA_3 : _rpaParser.ArchiveVersion;
 
             textBox1.Text = _rpaParser.Padding.ToString();
-            textBox2.Text = _rpaParser.Step.ToString();
+            textBox2.Text = _rpaParser.ObfuscationKey.ToString();
 
         }
 
@@ -32,7 +32,7 @@ namespace RPA_Explorer
             Text = RpaExplorer.GetText("Archive_save_title");
             label1.Text = RpaExplorer.GetText("Archive_save_version");
             label2.Text = RpaExplorer.GetText("Archive_save_padding");
-            label3.Text = RpaExplorer.GetText("Archive_save_step");
+            label3.Text = RpaExplorer.GetText("Archive_save_obfuscationkey");
             button1.Text = RpaExplorer.GetText("Archive_save_continue");
             button2.Text = RpaExplorer.GetText("Archive_save_cancel");
         }
@@ -43,7 +43,7 @@ namespace RPA_Explorer
             {
                 _rpaParser.ArchiveVersion = _rpaParser.CheckSupportedVersion((double) comboBox1.SelectedItem);
                 _rpaParser.Padding = Convert.ToInt32(textBox1.Text);
-                _rpaParser.Step = Convert.ToInt64(textBox2.Text);
+                _rpaParser.ObfuscationKey = Convert.ToInt64(textBox2.Text);
                 _rpaParser.OptionsConfirmed = true;
                 Close();
             }
@@ -72,8 +72,10 @@ namespace RPA_Explorer
                     textBox2.Text = 0.ToString();
                     break;
                 case RpaParser.Version.RPA_2:
+                    textBox1.Enabled = true;
                     textBox2.Enabled = false;
 
+                    textBox1.Text = _rpaParser.Padding.ToString();
                     textBox2.Text = 0.ToString();
                     break;
                 default:
@@ -81,9 +83,8 @@ namespace RPA_Explorer
                     textBox1.Enabled = true;
                     textBox2.Enabled = true;
                     
-                    comboBox1.SelectedItem = _rpaParser.ArchiveVersion;
                     textBox1.Text = _rpaParser.Padding.ToString();
-                    textBox2.Text = _rpaParser.Step.ToString();
+                    textBox2.Text = _rpaParser.ObfuscationKey.ToString();
                     break;
             }
         }
