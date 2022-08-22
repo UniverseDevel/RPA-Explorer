@@ -209,4 +209,31 @@ Translations credits:
 Contributors credits:
 {4}</value>
     </data>
+    <data name="EN_UNRPYC_script" xml:space="preserve">
+        <value>unrpyc script</value>
+    </data>
+    <data name="EN_Locate_unrpyc_script" xml:space="preserve">
+        <value>Locate unrpyc script</value>
+    </data>
+    <data name="EN_Python_interpreter" xml:space="preserve">
+        <value>Python interpreter</value>
+    </data>
+    <data name="EN_Locate_Python_Interpreter" xml:space="preserve">
+        <value>Locate Python interpreter</value>
+    </data>
+    <data name="EN_Locate_unrpyc" xml:space="preserve">
+        <value>Define unrpyc location</value>
+    </data>
+    <data name="EN_Locate_python" xml:space="preserve">
+        <value>Define Python 2.7 location</value>
+    </data>
+    <data name="EN_Preview_failed" xml:space="preserve">
+    <value>Preview load failed</value>
+  </data>
+    <data name="EN_Preview_failed_reason" xml:space="preserve">
+    <value>Loading preview failed with following error: {0}</value>
+  </data>
+    <data name="EN_Preview_failed_reason_hint" xml:space="preserve">
+        <value>Loading preview failed with error: {0} Use 'Options' to define external locations for this preview.</value>
+    </data>
 </root>

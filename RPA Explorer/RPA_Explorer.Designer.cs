@@ -63,8 +63,10 @@ namespace RPA_Explorer
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
-            this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.associateRPARPIExtensionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defineUnrpycLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.definePythonLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage0.SuspendLayout();
@@ -388,7 +390,7 @@ namespace RPA_Explorer
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.toolStripTextBox1, this.toolStripComboBox1, this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem, this.aboutToolStripMenuItem});
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.toolStripTextBox1, this.toolStripComboBox1, this.optionsToolStripMenuItem, this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1164, 27);
@@ -412,17 +414,31 @@ namespace RPA_Explorer
             // 
             // optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem
             // 
-            this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem});
-            this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem.Name = "optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem";
-            this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem.Size = new System.Drawing.Size(61, 23);
-            this.optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem.Text = "Options";
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.associateRPARPIExtensionsToolStripMenuItem, this.defineUnrpycLocationToolStripMenuItem, this.definePythonLocationToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 23);
+            this.optionsToolStripMenuItem.Text = "Options";
             // 
             // associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem
             // 
-            this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem.Name = "associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuI" + "temassociateRPARPIExtensionsToolStripMenuItem";
-            this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
-            this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem.Text = "Associate RPA/RPI extensions";
-            this.associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem.Click += new System.EventHandler(this.associateRPARPIExtensionsToolStripMenuItem_Click);
+            this.associateRPARPIExtensionsToolStripMenuItem.Name = "associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuI" + "temassociateRPARPIExtensionsToolStripMenuItem";
+            this.associateRPARPIExtensionsToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.associateRPARPIExtensionsToolStripMenuItem.Text = "Associate RPA/RPI extensions";
+            this.associateRPARPIExtensionsToolStripMenuItem.Click += new System.EventHandler(this.associateRPARPIExtensionsToolStripMenuItem_Click);
+            // 
+            // defineUnrpycLocationToolStripMenuItem
+            // 
+            this.defineUnrpycLocationToolStripMenuItem.Name = "defineUnrpycLocationToolStripMenuItem";
+            this.defineUnrpycLocationToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.defineUnrpycLocationToolStripMenuItem.Text = "Define unrpyc location";
+            this.defineUnrpycLocationToolStripMenuItem.Click += new System.EventHandler(this.defineUnrpycLocationToolStripMenuItem_Click);
+            // 
+            // definePython27LocationToolStripMenuItem
+            // 
+            this.definePythonLocationToolStripMenuItem.Name = "definePythonLocationToolStripMenuItem";
+            this.definePythonLocationToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.definePythonLocationToolStripMenuItem.Text = "Define Python location";
+            this.definePythonLocationToolStripMenuItem.Click += new System.EventHandler(this.definePythonLocationToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -473,10 +489,13 @@ namespace RPA_Explorer
             this.PerformLayout();
         }
 
+        private System.Windows.Forms.ToolStripMenuItem defineUnrpycLocationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem definePythonLocationToolStripMenuItem;
+
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 
-        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem associateRPARPIExtensionsToolStripMenuItem;
 
         private System.Windows.Forms.Label label5;
 

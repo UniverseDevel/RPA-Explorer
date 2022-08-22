@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -32,29 +33,31 @@ namespace RPA_Explorer
         private StreamMediaInput _streamMediaInputVlc;
         private Media _mediaVlc;
         private int _searchStartIndex = 0;
-        private readonly FileInfo _appInfo = new (System.Reflection.Assembly.GetEntryAssembly()?.Location ?? throw new InvalidOperationException());
-
+        private static readonly FileInfo _appInfo = new (System.Reflection.Assembly.GetEntryAssembly()?.Location ?? throw new InvalidOperationException());
+        private static readonly FileInfo _appName = new (System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name ?? throw new InvalidOperationException());
+        private readonly string settingsPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/" + _appName + @"/settings.ini";
+        
         private static readonly System.ComponentModel.ComponentResourceManager Lang = new (typeof(Lang));
-        private static string _language = "EN";
 
+        private static Settings settings;
+        
         public RpaExplorer()
         {
             // Form initiation
             InitializeComponent();
             
-            // Language initiation
-            toolStripComboBox1.Items.Add("English");
-            //toolStripComboBox1.Items.Add("TEST"); // For testing purposes
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/" + _appName);
 
-            string storedLanguage = "English";
-            if (File.Exists(_appInfo.DirectoryName + @"/lang.ini"))
+            settings = new Settings(settingsPath);
+            
+            // Language initiation
+            foreach (Settings.Language lang in settings.LangList)
             {
-                storedLanguage = File.ReadAllText(_appInfo.DirectoryName + @"/lang.ini");
+                toolStripComboBox1.Items.Add(lang.Name);
             }
 
-            toolStripComboBox1.SelectedItem = toolStripComboBox1.Items.Contains(storedLanguage) ? storedLanguage : "English";
-
-            LoadLanguage(toolStripComboBox1.SelectedItem.ToString());
+            toolStripComboBox1.SelectedItem = settings.GetLang().Name;
+            
             LoadTexts();
 
             // LibVLC initiation
@@ -81,25 +84,6 @@ namespace RPA_Explorer
             }
         }
 
-        private void LoadLanguage(string language)
-        {
-            switch (language)
-            {
-                case "English":
-                    _language = "EN";
-                    break;
-                case "TEST":
-                    _language = "TEST";
-                    break;
-                default:
-                    language = "English";
-                    _language = "EN";
-                    break;
-            }
-            
-            File.WriteAllText(_appInfo.DirectoryName + @"/lang.ini", language);
-        }
-
         private void LoadTexts()
         {
             Text = GetText("Explorer_title");
@@ -120,8 +104,10 @@ namespace RPA_Explorer
             button7.Text = GetText("Save_archive");
             button8.Text = GetText("Search_next");
             label5.Text = GetText("Search");
-            optionsToolStripMenuItemoptionsToolStripMenuItemoptionsToolStripMenuItem.Text = GetText("Options");
-            associateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItemassociateRPARPIExtensionsToolStripMenuItem.Text = GetText("File_association");
+            optionsToolStripMenuItem.Text = GetText("Options");
+            associateRPARPIExtensionsToolStripMenuItem.Text = GetText("File_association");
+            defineUnrpycLocationToolStripMenuItem.Text = GetText("Locate_unrpyc");
+            definePythonLocationToolStripMenuItem.Text = GetText("Locate_python");
             aboutToolStripMenuItem.Text = GetText("About");
 
             GenerateArchiveInfo();
@@ -129,9 +115,9 @@ namespace RPA_Explorer
 
         internal static string GetText(string name)
         {
-            if (Lang.GetObject(_language + "_" + name) != null)
+            if (Lang.GetObject(settings.GetLang().Abbrev + "_" + name) != null)
             {
-                return Lang.GetObject(_language + "_" + name)?.ToString();
+                return Lang.GetObject(settings.GetLang().Abbrev + "_" + name)?.ToString();
             }
 
             return " {!!! MISSING TRANSLATION !!!} ";
@@ -334,6 +320,13 @@ namespace RPA_Explorer
             using OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Title = GetText("Load_RenPy_Archive");
             openFileDialog.Filter = GetText("RPA_RPI_files") + @" (*.rpa,*.rpi)|*.rpa;*.rpi";
+            
+            string archivePath = settings.GetArchive();
+            if (!string.IsNullOrEmpty(archivePath))
+            {
+                FileInfo fi = new FileInfo(archivePath);
+                openFileDialog.InitialDirectory = fi.DirectoryName;
+            }
 
             DialogResult dialogResult = DialogResult.None;
             if (string.IsNullOrEmpty(openFile))
@@ -361,12 +354,33 @@ namespace RPA_Explorer
             {
                 if (openFileDialog.CheckFileExists)
                 {
+                    settings.SetArchive(openFileDialog.FileName);
                     statusBar1.Text = GetText("Loading_file") + openFileDialog.FileName;
 
                     try
                     {
                         _expandedList.Clear();
                         _rpaParser = new RpaParser();
+
+                        // If settings contain value use settings value, if not and parser has auto-detected Python interpreter
+                        // store that value in settings
+                        if (!string.IsNullOrEmpty(settings.GetPython()))
+                        {
+                            _rpaParser.PythonLocation = settings.GetPython();
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(_rpaParser.PythonLocation))
+                            {
+                                settings.SetPython(_rpaParser.PythonLocation);
+                            }
+                        }
+                        // If settings contain value use settings value
+                        if (!string.IsNullOrEmpty(settings.GetUnrpyc()))
+                        {
+                            _rpaParser.UnrpycLocation = settings.GetUnrpyc();
+                        }
+                        
                         _rpaParser.LoadArchive(openFileDialog.FileName);
                     }
                     catch (Exception ex)
@@ -642,36 +656,66 @@ namespace RPA_Explorer
                 
                 if (node.IsSelected && _rpaParser.Index.ContainsKey(NormalizeTreePath(node.FullPath)))
                 {
-                    KeyValuePair<string, object> data = _rpaParser.GetPreview(NormalizeTreePath(node.FullPath));
-                    if (data.Key == RpaParser.PreviewTypes.Image)
+                    KeyValuePair<string, object> data = new KeyValuePair<string, object>();
+                    try
                     {
-                        pictureBox1.Image = (Image) data.Value;
-                        _switchTabs = true;
-                        tabControl1.SelectedTab = tabPage1;
-                        _switchTabs = false;
-                        unsupportedFile = false;
+                        data = _rpaParser.GetPreview(NormalizeTreePath(node.FullPath));
+
+                        if (data.Key == RpaParser.PreviewTypes.Image)
+                        {
+                            pictureBox1.Image = (Image) data.Value;
+                            _switchTabs = true;
+                            tabControl1.SelectedTab = tabPage1;
+                            _switchTabs = false;
+                            unsupportedFile = false;
+                        }
+                        else if (data.Key == RpaParser.PreviewTypes.Text)
+                        {
+                            _searchStartIndex = 0;
+                            textBox2.Text = (string) data.Value;
+                            _switchTabs = true;
+                            tabControl1.SelectedTab = tabPage2;
+                            _switchTabs = false;
+                            unsupportedFile = false;
+                        }
+                        else if (data.Key == RpaParser.PreviewTypes.Audio || data.Key == RpaParser.PreviewTypes.Video)
+                        {
+                            _memoryStreamVlc = new MemoryStream((byte[]) data.Value);
+                            _streamMediaInputVlc = new StreamMediaInput(_memoryStreamVlc);
+                            _mediaVlc = new Media(_libVlc, _streamMediaInputVlc);
+                            SetMediaTimeLabel(_mediaVlc.Duration, 0);
+                            if (videoView1.MediaPlayer != null) videoView1.MediaPlayer.Play(_mediaVlc);
+                            videoView1.BackgroundImage = data.Key == RpaParser.PreviewTypes.Audio
+                                ? Resources.videoView1_BackgroundImage
+                                : null;
+                            _switchTabs = true;
+                            tabControl1.SelectedTab = tabPage3;
+                            _switchTabs = false;
+                            unsupportedFile = false;
+                        }
                     }
-                    else if (data.Key == RpaParser.PreviewTypes.Text)
+                    catch (Exception ex)
                     {
-                        _searchStartIndex = 0;
-                        textBox2.Text = (string) data.Value;
-                        _switchTabs = true;
-                        tabControl1.SelectedTab = tabPage2;
-                        _switchTabs = false;
-                        unsupportedFile = false;
-                    }
-                    else if (data.Key == RpaParser.PreviewTypes.Audio || data.Key == RpaParser.PreviewTypes.Video)
-                    {
-                        _memoryStreamVlc = new MemoryStream((byte[]) data.Value);
-                        _streamMediaInputVlc = new StreamMediaInput(_memoryStreamVlc);
-                        _mediaVlc = new Media(_libVlc, _streamMediaInputVlc);
-                        SetMediaTimeLabel(_mediaVlc.Duration, 0);
-                        if (videoView1.MediaPlayer != null) videoView1.MediaPlayer.Play(_mediaVlc);
-                        videoView1.BackgroundImage = data.Key == RpaParser.PreviewTypes.Audio ? Resources.videoView1_BackgroundImage : null;
-                        _switchTabs = true;
-                        tabControl1.SelectedTab = tabPage3;
-                        _switchTabs = false;
-                        unsupportedFile = false;
+                        bool skipGeneral = false;
+                        FileInfo fileInfo = new FileInfo(node.FullPath);
+                        if (((IList) _rpaParser.CodeExtList).Contains(fileInfo.Extension.ToLower()))
+                        {
+                            if (ex.Message.StartsWith(_rpaParser.rpycInfoBanner))
+                            {
+                                skipGeneral = true;
+                                MessageBox.Show(
+                                    string.Format(GetText("Preview_failed_reason_hint"), ex.Message),
+                                    GetText("Preview_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+
+                        if (!skipGeneral)
+                        {
+                            MessageBox.Show(
+                                string.Format(GetText("Preview_failed_reason"), ex.Message),
+                                GetText("Preview_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            //throw;
+                        }
                     }
 
                     break;
@@ -1069,7 +1113,7 @@ namespace RPA_Explorer
 
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadLanguage(toolStripComboBox1.SelectedItem.ToString());
+            settings.SetLang(toolStripComboBox1.SelectedItem.ToString());
             LoadTexts();
         }
 
@@ -1108,6 +1152,72 @@ namespace RPA_Explorer
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new About().ShowDialog();
+        }
+
+        private void defineUnrpycLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string unrpycPath = settings.GetUnrpyc();
+            using OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = GetText("Locate_unrpyc_script");
+            openFileDialog.Filter = GetText("UNRPYC_script") + @" (unrpyc.py)|unrpyc.py";
+
+            DialogResult dialogResult = DialogResult.None;
+            if (!string.IsNullOrEmpty(unrpycPath))
+            {
+                FileInfo fi = new FileInfo(unrpycPath);
+                openFileDialog.InitialDirectory = fi.DirectoryName;
+            }
+            
+            dialogResult = openFileDialog.ShowDialog();
+
+            if (dialogResult == DialogResult.OK)
+            {
+                if (openFileDialog.CheckFileExists)
+                {
+                    settings.SetUnrpyc(openFileDialog.FileName);
+                    try
+                    {
+                        _rpaParser.UnrpycLocation = openFileDialog.FileName;
+                    }
+                    catch
+                    {
+                        // Ignore
+                    }
+                }
+            }
+        }
+
+        private void definePythonLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string pythonPath = settings.GetPython();
+            using OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = GetText("Locate_Python_Interpreter");
+            openFileDialog.Filter = GetText("Python_interpreter") + @" (python.exe)|python.exe";
+
+            DialogResult dialogResult = DialogResult.None;
+            if (!string.IsNullOrEmpty(pythonPath))
+            {
+                FileInfo fi = new FileInfo(pythonPath);
+                openFileDialog.InitialDirectory = fi.DirectoryName;
+            }
+            
+            dialogResult = openFileDialog.ShowDialog();
+
+            if (dialogResult == DialogResult.OK)
+            {
+                if (openFileDialog.CheckFileExists)
+                {
+                    settings.SetPython(openFileDialog.FileName);
+                    try
+                    {
+                        _rpaParser.PythonLocation = openFileDialog.FileName;
+                    }
+                    catch
+                    {
+                        // Ignore
+                    }
+                }
+            }
         }
     }
     

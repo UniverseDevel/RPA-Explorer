@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Ionic.Zlib;
+using Microsoft.Win32;
 using Razorvine.Pickle;
 using WebPWrapper;
 
@@ -48,6 +49,9 @@ namespace RPA_Parser
         public long ObfuscationKey = 0xDEADBEEF;
         public bool OptionsConfirmed = false;
         public SortedDictionary<string,ArchiveIndex> Index = new ();
+
+        public string PythonLocation = GetPythonPath("2.7", "2.7");
+        public string UnrpycLocation = String.Empty;
         
         private long _offset;
         private string _archivePath;
@@ -147,6 +151,101 @@ namespace RPA_Parser
             ".rpymc~",
             ".rpymc"
         };
+        
+        // Original: https://stackoverflow.com/a/60757602/3650856
+        private static string GetPythonPath(string requiredVersion = "", string maxVersion = "") {
+            string[] possiblePythonLocations = new string[3] {
+                @"HKLM\SOFTWARE\Python\PythonCore\",
+                @"HKCU\SOFTWARE\Python\PythonCore\",
+                @"HKLM\SOFTWARE\Wow6432Node\Python\PythonCore\"
+            };
+
+            //Version number, install path
+            Dictionary<string, string> pythonLocations = new Dictionary<string, string>();
+
+            foreach (string possibleLocation in possiblePythonLocations) {
+                string regKey = possibleLocation.Substring(0, 4), actualPath = possibleLocation.Substring(5);
+                RegistryKey theKey = (regKey == "HKLM" ? Registry.LocalMachine : Registry.CurrentUser);
+                RegistryKey theValue = theKey.OpenSubKey(actualPath);
+
+                if (theValue != null)
+                {
+                    foreach (string value in theValue.GetSubKeyNames())
+                    {
+                        RegistryKey productKey = theValue.OpenSubKey(value);
+                        if (productKey != null)
+                        {
+                            try
+                            {
+                                string pythonExePath = productKey.OpenSubKey("InstallPath")
+                                    ?.GetValue("ExecutablePath")
+                                    ?.ToString();
+
+                                // Get (Default) value instead if not found in ExecutablePath value
+                                if (string.IsNullOrEmpty(pythonExePath))
+                                {
+                                    pythonExePath = productKey.OpenSubKey("InstallPath")
+                                        ?.GetValue("")
+                                        .ToString();
+                                    if (!string.IsNullOrEmpty(pythonExePath))
+                                    {
+                                        pythonExePath += "python.exe";
+                                    }
+                                }
+
+                                if (!string.IsNullOrEmpty(pythonExePath))
+                                {
+                                    if (!pythonLocations.ContainsKey(value) && File.Exists(pythonExePath))
+                                    {
+                                        Debug.WriteLine("Got python version; " + value + " at path; " + pythonExePath);
+                                        pythonLocations.Add(value, pythonExePath);
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                // Object doesn't exist
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (pythonLocations.Count > 0)
+            {
+                System.Version desiredVersion = new System.Version(requiredVersion == "" ? "0.0.1" : requiredVersion);
+                System.Version maxPVersion = new System.Version(maxVersion == "" ? "999.999.999" : maxVersion);
+
+                string highestVersion = "";
+                string highestVersionPath = "";
+
+                foreach (KeyValuePair<string, string> pVersion in pythonLocations) {
+                    // TODO; if on 64-bit machine, prefer the 64 bit version over 32 and vice versa
+                    int index = pVersion.Key.IndexOf("-", StringComparison.Ordinal);
+                    string formattedVersion = index > 0 ? pVersion.Key.Substring(0, index) : pVersion.Key;
+
+                    System.Version thisVersion = new System.Version(formattedVersion);
+                    int comparison = desiredVersion.CompareTo(thisVersion);
+                    int maxComparison = maxPVersion.CompareTo(thisVersion);
+
+                    if (comparison <= 0) {
+                        // Version is greater or equal
+                        if (maxComparison >= 0) {
+                            desiredVersion = thisVersion;
+
+                            highestVersion = pVersion.Key;
+                            highestVersionPath = pVersion.Value;
+                        }
+                    }
+                }
+
+                Debug.WriteLine(highestVersion);
+                Debug.WriteLine(highestVersionPath);
+                return highestVersionPath;
+            }
+
+            return String.Empty;
+        }
 
         public void LoadArchive(string filePath)
         {
@@ -455,10 +554,83 @@ namespace RPA_Parser
             
             return indexCopy;
         }
+        
+        public string rpycInfoBanner =
+            "RPYC file contains compiled RenPy code. To preview code we need to use external script called unrpyc for decompilation and Python 2.7 environment to run this script.";
 
-        public string ParseRPYC(byte[] code)
+        public string ParseRPYC(byte[] file)
         {
             string decompiled = String.Empty;
+            if (PythonLocation == String.Empty)
+            {
+                throw new Exception(rpycInfoBanner + Environment.NewLine + Environment.NewLine + "ERROR: Python environment is not defined.");
+            }
+            
+            if (!File.Exists(PythonLocation))
+            {
+                throw new Exception(rpycInfoBanner + Environment.NewLine + Environment.NewLine + "ERROR: Defined Python environment cannot be found (" + PythonLocation + ").");
+            }
+
+            if (UnrpycLocation == String.Empty)
+            {
+                throw new Exception(rpycInfoBanner + Environment.NewLine + Environment.NewLine + "ERROR: Location of unrpyc script is not defined.");
+            }
+            
+            if (!File.Exists(UnrpycLocation))
+            {
+                throw new Exception(rpycInfoBanner + Environment.NewLine + Environment.NewLine + "ERROR: Defined location of unrpyc script cannot be found (" + UnrpycLocation + ").");
+            }
+
+            string tmpFile = Path.GetTempFileName();
+            string decompiledFile = tmpFile + ".rpy";
+            tmpFile += ".rpyc";
+            string result = String.Empty;
+            
+            try
+            {
+                File.WriteAllBytes(tmpFile, file);
+                
+                ProcessStartInfo start = new ProcessStartInfo();
+                start.FileName = PythonLocation;
+                start.Arguments = string.Format(@"{0} {1} ""{2}""", UnrpycLocation, "--try-harder", tmpFile);
+                start.UseShellExecute = false;
+                start.RedirectStandardOutput = true;
+                start.RedirectStandardError = true;
+                start.CreateNoWindow = true;
+                using(Process process = Process.Start(start))
+                {
+                    using(StreamReader reader = process.StandardOutput)
+                    {
+                        result += reader.ReadToEnd();
+                    }
+                    using(StreamReader reader = process.StandardError)
+                    {
+                        result += reader.ReadToEnd();
+                    }
+                }
+                
+                decompiled = NormalizeNewLines(File.ReadAllText(decompiledFile));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("ERROR: Decompilation failed with following error:" + Environment.NewLine + 
+                                    Environment.NewLine + ex.Message + Environment.NewLine + Environment.NewLine + 
+                                    "Return from unrpyc:" + Environment.NewLine + Environment.NewLine + result);
+            }
+            finally
+            {
+                if (File.Exists(tmpFile))
+                {
+                    File.Delete(tmpFile);
+                }
+                if (File.Exists(decompiledFile))
+                {
+                    File.Delete(decompiledFile);
+                }
+            }
+            
+            /*
+            // Attempt to port unrpyc from Python to C#
 
             if (Encoding.UTF8.GetString(code).StartsWith(RPCMagic.RPC_2))
             {
@@ -503,6 +675,8 @@ namespace RPA_Parser
             }
 
             throw new NotImplementedException(); // TODO: remove when done
+            /**/
+            
             return decompiled;
         }
 
@@ -547,16 +721,7 @@ namespace RPA_Parser
             }
             else if (CodeExtList.Contains(fileInfo.Extension.ToLower()))
             {
-                string decompiledString = String.Empty;
-                
-                try
-                {
-                    decompiledString = ParseRPYC(bytes);
-                }
-                catch
-                {
-                    // Ignored
-                }
+                string decompiledString = ParseRPYC(bytes);
 
                 if (decompiledString == String.Empty)
                 {
