@@ -659,7 +659,29 @@ namespace RPA_Explorer
                     KeyValuePair<string, object> data = new KeyValuePair<string, object>();
                     try
                     {
-                        data = _rpaParser.GetPreview(NormalizeTreePath(node.FullPath));
+                        try
+                        {
+                            data = _rpaParser.GetPreview(NormalizeTreePath(node.FullPath));
+                        }
+                        catch (Exception ex)
+                        {
+                            FileInfo fileInfo = new FileInfo(node.FullPath);
+                            if (((IList) _rpaParser.CodeExtList).Contains(fileInfo.Extension.ToLower()))
+                            {
+                                if (ex.Message.StartsWith(_rpaParser.rpycInfoBanner))
+                                {
+                                    data = new KeyValuePair<string, object>(RpaParser.PreviewTypes.Text,
+                                        string.Format(GetText("Preview_failed_reason_hint"), ex.Message));
+                                    /*MessageBox.Show(
+                                        string.Format(GetText("Preview_failed_reason_hint"), ex.Message),
+                                        GetText("Preview_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);*/
+                                }
+                                else
+                                {
+                                    throw;
+                                }
+                            }
+                        }
 
                         if (data.Key == RpaParser.PreviewTypes.Image)
                         {
@@ -696,26 +718,10 @@ namespace RPA_Explorer
                     }
                     catch (Exception ex)
                     {
-                        bool skipGeneral = false;
-                        FileInfo fileInfo = new FileInfo(node.FullPath);
-                        if (((IList) _rpaParser.CodeExtList).Contains(fileInfo.Extension.ToLower()))
-                        {
-                            if (ex.Message.StartsWith(_rpaParser.rpycInfoBanner))
-                            {
-                                skipGeneral = true;
-                                MessageBox.Show(
-                                    string.Format(GetText("Preview_failed_reason_hint"), ex.Message),
-                                    GetText("Preview_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                        }
-
-                        if (!skipGeneral)
-                        {
-                            MessageBox.Show(
-                                string.Format(GetText("Preview_failed_reason"), ex.Message),
-                                GetText("Preview_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //throw;
-                        }
+                        MessageBox.Show(
+                            string.Format(GetText("Preview_failed_reason"), ex.Message),
+                            GetText("Preview_failed"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        //throw;
                     }
 
                     break;
