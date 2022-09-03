@@ -1,6 +1,6 @@
 # RPA Explorer
 
-Graphical explorer for RenPy Archives. This tool brings ability to extract, create new or change existing RPA archives all in one window. It also provides content preview for most common files in these packages. Initial parser code was inspired by [RPATools](https://github.com/Shizmob/rpatool), so in case you find this tool usefull, go give them a thumbs up as well. Now it even can try to preview compiled RenPy files (conditions apply see <sup>[[1]](#note1)</sup>).
+Graphical explorer for RenPy Archives. This tool brings ability to extract, create new or change existing RPA archives all in one window. It also provides content preview for most common files in these packages. Initial parser code was inspired by [RPATools](https://github.com/Shizmob/rpatool), so in case you find this tool useful, go give them a thumbs up as well. Now it even can try to preview compiled RenPy files (conditions apply, see <sup>[[1]](#reference1)</sup>).
 
 #### Note:
 
@@ -12,11 +12,11 @@ This is a fan made application and there is no guarantee of further development 
 - Video: 3gp, flv, mov, mp4, ogv, swf, mpg, mpeg, avi, mkv, wmv, .webm
 - Audio: aac, ac3, flac, mp3, wma, wav, ogg, cpc
 - Images: jpeg, jpg, bmp, tiff, png, webp, exif, ico, gif
-- Compilations<sup>[[1]](#note1)</sup>: .rpyc~, .rpymc~, .rpyc, .rpymc
+- Compilations<sup>[[1]](#reference1)</sup>: .rpyc~, .rpymc~, .rpyc, .rpymc
 
 ### References
 
-<a name="note1"></a>[1]: Path to Python environment and [unrpyc](https://github.com/CensoredUsername/unrpyc) on your local machine must be provided to attempt decompilation.
+<a name="reference1"></a>[1]: Path to Python 2.7 environment and [unrpyc](https://github.com/CensoredUsername/unrpyc) on your local machine must be provided to attempt decompilation.
 
 ---
 
