@@ -1,6 +1,6 @@
 # RPA Explorer
 
-Graphical explorer for RenPy Archives. This tool brings ability to extract, create new or change existing RPA archives all in one window. It also provides content preview for most common files in these packages. Initial parser code was inspired by [RPATools](https://github.com/Shizmob/rpatool), so in case you find this tool usefull, go give them a thumbs up as well.
+Graphical explorer for RenPy Archives. This tool brings ability to extract, create new or change existing RPA archives all in one window. It also provides content preview for most common files in these packages. Initial parser code was inspired by [RPATools](https://github.com/Shizmob/rpatool), so in case you find this tool usefull, go give them a thumbs up as well. Now it even can try to preview compiled RenPy files (conditions apply see <sup>[[1]](#note1)</sup>).
 
 Note: This is a fan made application and there is no guarantee of further development or fixes. For video support LibVLC library is used and this library has ~300MiB in size so this is the reason why this application is so big, I haven't found a better way around this yet.
 
@@ -10,8 +10,16 @@ Supported file types for preview:
 - Video: 3gp, flv, mov, mp4, ogv, swf, mpg, mpeg, avi, mkv, wmv, .webm
 - Audio: aac, ac3, flac, mp3, wma, wav, ogg, cpc
 - Images: jpeg, jpg, bmp, tiff, png, webp, exif, ico, gif
+- Compilations<sup>[[1]](#note1)</sup>: .rpyc~, .rpymc~, .rpyc, .rpymc
+
+### References
+<a name="note1"></a>[1]: Path to Python environment and [unrpyc](https://github.com/CensoredUsername/unrpyc) on your local machine must be provided to attempt decompilation.
+
+---
 
 Download link: [RPA Explorer.7z](https://github.com/UniverseDevel/RPA-Explorer/blob/master/RPA%20Explorer/bin/Release/net461/RPA%20Explorer.7z)
+
+---
 
 TODO List: [TODO.md](https://github.com/UniverseDevel/RPA-Explorer/blob/master/TODO.md)
 
