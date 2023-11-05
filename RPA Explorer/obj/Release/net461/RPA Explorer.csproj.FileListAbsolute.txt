@@ -2409,3 +2409,4 @@ W:\Projects\.NET\RPA Explorer\RPA Explorer\bin\Release\net461\System.Xml.XmlDocu
 W:\Projects\.NET\RPA Explorer\RPA Explorer\bin\Release\net461\System.Xml.XmlSerializer.dll
 W:\Projects\.NET\RPA Explorer\RPA Explorer\bin\Release\net461\System.Xml.XPath.dll
 W:\Projects\.NET\RPA Explorer\RPA Explorer\bin\Release\net461\System.Xml.XPath.XDocument.dll
+W:\Projects\.NET\RPA Explorer\RPA Explorer\obj\Release\net461\RPA Explorer.csproj.SuggestedBindingRedirects.cache

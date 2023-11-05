@@ -10,24 +10,17 @@
         "projectUniqueName": "W:\\Projects\\.NET\\RPA Explorer\\RPA Parser\\RPAParser.csproj",
         "projectName": "RPAParser",
         "projectPath": "W:\\Projects\\.NET\\RPA Explorer\\RPA Parser\\RPAParser.csproj",
-        "packagesPath": "C:\\Users\\Martin Suchy\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\KayaNatsumi\\.nuget\\packages\\",
         "outputPath": "W:\\Projects\\.NET\\RPA Explorer\\RPA Parser\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Martin Suchy\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+          "C:\\Users\\KayaNatsumi\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net461"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://www.nuget.org/api/v2/": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net461": {
@@ -49,12 +42,18 @@
               "target": "Package",
               "version": "[1.9.1.5, )"
             },
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.2, )",
+              "autoReferenced": true
+            },
             "Razorvine.Pickle": {
               "target": "Package",
               "version": "[1.2.1, )"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\KayaNatsumi\\.dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -665,7 +665,7 @@ namespace RPA_Explorer
                         }
                         catch (Exception ex)
                         {
-                            FileInfo fileInfo = new FileInfo(node.FullPath);
+                            FileInfo fileInfo = new FileInfo(NormalizeTreePath(node.FullPath));
                             if (((IList) _rpaParser.CodeExtList).Contains(fileInfo.Extension.ToLower()))
                             {
                                 if (ex.Message.StartsWith(_rpaParser.rpycInfoBanner))

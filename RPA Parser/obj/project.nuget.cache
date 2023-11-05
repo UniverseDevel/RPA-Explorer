@@ -1,15 +1,17 @@
 {
   "version": 2,
-  "dgSpecHash": "xrfBhUl5GmIWaopiRwTQiHVCmVrpUo8XTlbAZ9NU2mPyFoY8jgOP74hsClYrK16Z2qJgr6ybC9PTZdAE/v9kPg==",
+  "dgSpecHash": "ZIEeN5nsTOuQn5EFCBb1dHA3+TNJGtkPi3o69PtRIEuTHugz8Mpajt0YX2vvEdT+sHzgay+M/nxhmqUFqY7bKA==",
   "success": true,
   "projectFilePath": "W:\\Projects\\.NET\\RPA Explorer\\RPA Parser\\RPAParser.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\ionic.zlib\\1.9.1.5\\ionic.zlib.1.9.1.5.nupkg.sha512",
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\razorvine.pickle\\1.2.1\\razorvine.pickle.1.2.1.nupkg.sha512",
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.memory\\4.5.2\\system.memory.4.5.2.nupkg.sha512",
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
+    "C:\\Users\\KayaNatsumi\\.nuget\\packages\\ionic.zlib\\1.9.1.5\\ionic.zlib.1.9.1.5.nupkg.sha512",
+    "C:\\Users\\KayaNatsumi\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.2\\microsoft.netframework.referenceassemblies.1.0.2.nupkg.sha512",
+    "C:\\Users\\KayaNatsumi\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net461\\1.0.2\\microsoft.netframework.referenceassemblies.net461.1.0.2.nupkg.sha512",
+    "C:\\Users\\KayaNatsumi\\.nuget\\packages\\razorvine.pickle\\1.2.1\\razorvine.pickle.1.2.1.nupkg.sha512",
+    "C:\\Users\\KayaNatsumi\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
+    "C:\\Users\\KayaNatsumi\\.nuget\\packages\\system.memory\\4.5.2\\system.memory.4.5.2.nupkg.sha512",
+    "C:\\Users\\KayaNatsumi\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
+    "C:\\Users\\KayaNatsumi\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
   ],
   "logs": []
 }

@@ -592,7 +592,7 @@ namespace RPA_Parser
                 
                 ProcessStartInfo start = new ProcessStartInfo();
                 start.FileName = PythonLocation;
-                start.Arguments = string.Format(@"{0} {1} ""{2}""", UnrpycLocation, "--try-harder", tmpFile);
+                start.Arguments = string.Format(@"""{0}"" {1} ""{2}""", UnrpycLocation, "--try-harder", tmpFile);
                 start.UseShellExecute = false;
                 start.RedirectStandardOutput = true;
                 start.RedirectStandardError = true;

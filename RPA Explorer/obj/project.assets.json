@@ -18,10 +18,14 @@
           "System.ValueTuple": "4.5.0"
         },
         "compile": {
-          "lib/net40/LibVLCSharp.dll": {}
+          "lib/net40/LibVLCSharp.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net40/LibVLCSharp.dll": {}
+          "lib/net40/LibVLCSharp.dll": {
+            "related": ".xml"
+          }
         }
       },
       "LibVLCSharp.WinForms/3.6.5": {
@@ -30,10 +34,14 @@
           "LibVLCSharp": "3.6.5"
         },
         "compile": {
-          "lib/net40/LibVLCSharp.WinForms.dll": {}
+          "lib/net40/LibVLCSharp.WinForms.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net40/LibVLCSharp.WinForms.dll": {}
+          "lib/net40/LibVLCSharp.WinForms.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Microsoft.Bcl/1.1.8": {
@@ -57,26 +65,38 @@
           "System.Net"
         ],
         "compile": {
-          "lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.dll": {},
-          "lib/net40/Microsoft.Threading.Tasks.Extensions.dll": {},
-          "lib/net40/Microsoft.Threading.Tasks.dll": {}
+          "lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.dll": {
+            "related": ".xml"
+          },
+          "lib/net40/Microsoft.Threading.Tasks.Extensions.dll": {
+            "related": ".Desktop.xml;.xml"
+          },
+          "lib/net40/Microsoft.Threading.Tasks.dll": {
+            "related": ".Extensions.Desktop.xml;.Extensions.xml;.xml"
+          }
         },
         "runtime": {
-          "lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.dll": {},
-          "lib/net40/Microsoft.Threading.Tasks.Extensions.dll": {},
-          "lib/net40/Microsoft.Threading.Tasks.dll": {}
+          "lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.dll": {
+            "related": ".xml"
+          },
+          "lib/net40/Microsoft.Threading.Tasks.Extensions.dll": {
+            "related": ".Desktop.xml;.xml"
+          },
+          "lib/net40/Microsoft.Threading.Tasks.dll": {
+            "related": ".Extensions.Desktop.xml;.Extensions.xml;.xml"
+          }
         }
       },
       "Microsoft.Bcl.Build/1.0.14": {
         "type": "package"
       },
-      "Microsoft.NETFramework.ReferenceAssemblies/1.0.0": {
+      "Microsoft.NETFramework.ReferenceAssemblies/1.0.2": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETFramework.ReferenceAssemblies.net461": "1.0.0"
+          "Microsoft.NETFramework.ReferenceAssemblies.net461": "1.0.2"
         }
       },
-      "Microsoft.NETFramework.ReferenceAssemblies.net461/1.0.0": {
+      "Microsoft.NETFramework.ReferenceAssemblies.net461/1.0.2": {
         "type": "package",
         "build": {
           "build/Microsoft.NETFramework.ReferenceAssemblies.net461.targets": {}
@@ -109,10 +129,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net45/System.Buffers.dll": {}
+          "ref/net45/System.Buffers.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Buffers.dll": {}
+          "lib/net461/System.Buffers.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Memory/4.5.4": {
@@ -127,10 +151,14 @@
           "mscorlib"
         ],
         "compile": {
-          "lib/net461/System.Memory.dll": {}
+          "lib/net461/System.Memory.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Memory.dll": {}
+          "lib/net461/System.Memory.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Numerics.Vectors/4.5.0": {
@@ -140,10 +168,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net46/System.Numerics.Vectors.dll": {}
+          "ref/net46/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net46/System.Numerics.Vectors.dll": {}
+          "lib/net46/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Resources.Extensions/6.0.2-mauipre.1.22054.8": {
@@ -152,10 +184,14 @@
           "System.Memory": "4.5.4"
         },
         "compile": {
-          "lib/net461/System.Resources.Extensions.dll": {}
+          "lib/net461/System.Resources.Extensions.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Resources.Extensions.dll": {}
+          "lib/net461/System.Resources.Extensions.dll": {
+            "related": ".xml"
+          }
         },
         "build": {
           "buildTransitive/net461/System.Resources.Extensions.targets": {}
@@ -167,10 +203,14 @@
           "mscorlib"
         ],
         "compile": {
-          "ref/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "ref/net461/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/net461/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.ValueTuple/4.5.0": {
@@ -183,7 +223,9 @@
           "ref/net461/System.ValueTuple.dll": {}
         },
         "runtime": {
-          "lib/net461/System.ValueTuple.dll": {}
+          "lib/net461/System.ValueTuple.dll": {
+            "related": ".xml"
+          }
         }
       },
       "VideoLAN.LibVLC.Windows/3.0.16": {
@@ -465,21 +507,21 @@
         "tools/Uninstall.ps1"
       ]
     },
-    "Microsoft.NETFramework.ReferenceAssemblies/1.0.0": {
-      "sha512": "7D2TMufjGiowmt0E941kVoTIS+GTNzaPopuzM1/1LSaJAdJdBrVP0SkZW7AgDd0a2U1DjsIeaKG1wxGVBNLDMw==",
+    "Microsoft.NETFramework.ReferenceAssemblies/1.0.2": {
+      "sha512": "5/cSEVld+px/CuRrbohO/djfg6++eR6zGpy88MgqloXvkj//WXWpFZyu/OpkXPN0u5m+dN/EVwLNYFUxD4h2+A==",
       "type": "package",
-      "path": "microsoft.netframework.referenceassemblies/1.0.0",
+      "path": "microsoft.netframework.referenceassemblies/1.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "microsoft.netframework.referenceassemblies.1.0.0.nupkg.sha512",
+        "microsoft.netframework.referenceassemblies.1.0.2.nupkg.sha512",
         "microsoft.netframework.referenceassemblies.nuspec"
       ]
     },
-    "Microsoft.NETFramework.ReferenceAssemblies.net461/1.0.0": {
-      "sha512": "t4HKFwTQk/TkCCe1Sr2veze2QU6/RkRHkSQrZMHo2oFAoPANBg1l93O2Gh+ogqKRLFCRBbInm9hvEeSKVsuepw==",
+    "Microsoft.NETFramework.ReferenceAssemblies.net461/1.0.2": {
+      "sha512": "8shzGaD5pZi4npuJYCM3de6pl0zlefcbyTIvXIiCdsTqauZ7lAhdaJVtJSqlhYid9VosFAOygBykoJ1SEOlGWA==",
       "type": "package",
-      "path": "microsoft.netframework.referenceassemblies.net461/1.0.0",
+      "path": "microsoft.netframework.referenceassemblies.net461/1.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -800,7 +842,7 @@
         "build/.NETFramework/v4.6.1/sysglobl.dll",
         "build/.NETFramework/v4.6.1/sysglobl.xml",
         "build/Microsoft.NETFramework.ReferenceAssemblies.net461.targets",
-        "microsoft.netframework.referenceassemblies.net461.1.0.0.nupkg.sha512",
+        "microsoft.netframework.referenceassemblies.net461.1.0.2.nupkg.sha512",
         "microsoft.netframework.referenceassemblies.net461.nuspec"
       ]
     },
@@ -2375,7 +2417,7 @@
     ".NETFramework,Version=v4.6.1": [
       "LibVLCSharp >= 3.6.5",
       "LibVLCSharp.WinForms >= 3.6.5",
-      "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.0",
+      "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.2",
       "NeoSmart.PrettySize >= 2.1.0",
       "RPAParser >= 1.0.0",
       "System.Resources.Extensions >= 6.0.2-mauipre.1.22054.8",
@@ -2383,9 +2425,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Martin Suchy\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\KayaNatsumi\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -2393,24 +2433,17 @@
       "projectUniqueName": "W:\\Projects\\.NET\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
       "projectName": "RPA Explorer",
       "projectPath": "W:\\Projects\\.NET\\RPA Explorer\\RPA Explorer\\RPA Explorer.csproj",
-      "packagesPath": "C:\\Users\\Martin Suchy\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\KayaNatsumi\\.nuget\\packages\\",
       "outputPath": "W:\\Projects\\.NET\\RPA Explorer\\RPA Explorer\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Martin Suchy\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Users\\KayaNatsumi\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net461"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://www.nuget.org/api/v2/": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net461": {
@@ -2443,7 +2476,7 @@
           "Microsoft.NETFramework.ReferenceAssemblies": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[1.0.0, )",
+            "version": "[1.0.2, )",
             "autoReferenced": true
           },
           "NeoSmart.PrettySize": {
@@ -2459,7 +2492,7 @@
             "version": "[3.0.16, )"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Users\\KayaNatsumi\\.dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }
