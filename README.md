@@ -9,10 +9,10 @@ This is a fan made application and there is no guarantee of further development 
 ### Supported file types for preview:
 
 - Text: py, rpy~, rpy, txt, log, nfo, htm, html, xml, json, yaml, csv
-- Video: 3gp, flv, mov, mp4, ogv, swf, mpg, mpeg, avi, mkv, wmv, .webm
+- Video: 3gp, flv, mov, mp4, ogv, swf, mpg, mpeg, avi, mkv, wmv, webm
 - Audio: aac, ac3, flac, mp3, wma, wav, ogg, cpc
 - Images: jpeg, jpg, bmp, tiff, png, webp, exif, ico, gif
-- Compilations<sup>[[1]](#reference1)</sup>: .rpyc~, .rpymc~, .rpyc, .rpymc
+- Compilations<sup>[[1]](#reference1)</sup>: rpyc~, rpymc~, rpyc, rpymc
 
 ### References
 
