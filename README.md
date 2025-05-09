@@ -35,6 +35,7 @@ This is a fan made application and there is no guarantee of further development 
 - When selecting/unselecting objects too fast will not update selections for child or parent objects, this seems to be a TreeView bug/shortcomming and there is not much I can do with it.
 - Some video/audio formats will not update time played or total video time and this seems to be LibVLC library issue.
 - When browsing trough videos, after some time (and after some ammount of videos loaded) application freezes. So far I am unable to tell if I am handling objects incorrectly or it is a LibVLC problem.
+- Installing Python version with a non-standard version number will cause RPA Explorer to fail (e.g. install Python 3.13 threaded version which will add a registry entry for Python with version "3.13t" - which in turn will cause a FormatException when trying to parse that version number. See <code>System.Version thisVersion = new System.Version(formattedVersion);</code> in <code>RpaParser.GetPythonString()</code>)
 
 #### Images preview:
 ![1](https://user-images.githubusercontent.com/47400898/154856556-1da3d011-5631-4100-972c-f6e844967242.png)
