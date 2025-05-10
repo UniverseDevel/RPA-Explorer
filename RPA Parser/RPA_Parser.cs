@@ -220,9 +220,9 @@ namespace RPA_Parser
                 string highestVersionPath = "";
 
                 foreach (KeyValuePair<string, string> pVersion in pythonLocations) {
-                    // TODO; if on 64-bit machine, prefer the 64 bit version over 32 and vice versa
+                    // TODO: if on 64-bit machine, prefer the 64 bit version over 32 and vice versa
                     int index = pVersion.Key.IndexOf("-", StringComparison.Ordinal);
-                    string formattedVersion = index > 0 ? pVersion.Key.Substring(0, index) : pVersion.Key;
+                    string formattedVersion = Regex.Replace(index > 0 ? pVersion.Key.Substring(0, index) : pVersion.Key, @"[^0-9.]", "");
 
                     System.Version thisVersion = new System.Version(formattedVersion);
                     int comparison = desiredVersion.CompareTo(thisVersion);
